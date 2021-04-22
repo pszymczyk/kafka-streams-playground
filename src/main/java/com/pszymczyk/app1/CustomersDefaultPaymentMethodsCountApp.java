@@ -25,11 +25,11 @@ public class CustomersDefaultPaymentMethodsCountApp {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
-            "favourite-color-app-1",
+            "customers-default-payment-methods-count-app-main",
             builder,
-            new NewTopic("customer-preferences", 1, (short) 1),
-            new NewTopic("user-id-to-default-payment-method", 1, (short) 1),
-            new NewTopic("payment-methods-count", 1, (short) 1));
+            new NewTopic(CUSTOMER_PREFERENCES_TOPIC, 1, (short) 1),
+            new NewTopic(USER_ID_TO_DEFAULT_PAYMENT_METHOD_TOPIC, 1, (short) 1),
+            new NewTopic(PAYMENT_METHODS_COUNT_TOPIC, 1, (short) 1));
     }
 
     public static StreamsBuilder buildKafkaStreamsTopology() {

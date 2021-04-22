@@ -14,7 +14,7 @@ import spock.lang.Specification
 
 abstract class IntegrationSpec extends Specification {
 
-    protected static Logger logger = LoggerFactory.getLogger(CustomersDefaultPaymentMethodsCountAppTest.class)
+    protected static Logger logger = LoggerFactory.getLogger(CustomersDefaultPaymentMethodsCountAppSpec.class)
     protected static KafkaTemplate<String, String> kafkaTemplate
     protected static String bootstrapServers
 
