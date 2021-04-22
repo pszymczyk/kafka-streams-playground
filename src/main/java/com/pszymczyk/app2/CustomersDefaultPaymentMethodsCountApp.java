@@ -34,6 +34,7 @@ public class CustomersDefaultPaymentMethodsCountApp {
 
     public static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
+
         KStream<String, CustomerPreferencesEvent> allCustomerPreferences = builder.stream(CUSTOMER_PREFERENCES_TOPIC,
             Consumed.with(Serdes.String(), JsonSerdes.forA(CustomerPreferencesEvent.class)));
 
@@ -50,7 +51,7 @@ public class CustomersDefaultPaymentMethodsCountApp {
 
         KTable<String, Long> paymentMethodsCount = usersAndDefaultPaymentMethods
             .groupBy((user, colour) -> new KeyValue<>(colour, colour))
-            .count(Named.as("PaymentMethodsCount"));
+            .count();
 
         paymentMethodsCount
             .toStream()

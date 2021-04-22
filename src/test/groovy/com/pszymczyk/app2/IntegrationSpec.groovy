@@ -39,6 +39,7 @@ abstract class IntegrationSpec extends Specification {
                         ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest",
                         ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
                         ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
+                        ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 3,
                         ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false)
         )
     }
