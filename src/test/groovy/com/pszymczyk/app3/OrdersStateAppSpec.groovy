@@ -37,7 +37,6 @@ class OrdersStateAppSpec extends IntegrationSpec {
             def pampers = "pampers"
             def kindle = "kindle"
             def fairy = "fairy"
-
             def orderOne = UUID.randomUUID().toString()
             def orderTwo = UUID.randomUUID().toString()
             def orderThree = UUID.randomUUID().toString()
