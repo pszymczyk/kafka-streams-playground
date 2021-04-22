@@ -1,4 +1,4 @@
-package com.pszymczyk.app1;
+package com.pszymczyk.app2;
 
 import org.testcontainers.containers.KafkaContainer;
 

@@ -1,4 +1,4 @@
-package com.pszymczyk.app1
+package com.pszymczyk.app2
 
 import com.pszymczyk.common.StreamsRunner
 import org.apache.kafka.clients.admin.NewTopic
@@ -7,9 +7,9 @@ import spock.lang.Shared
 
 import java.time.Duration
 
-import static com.pszymczyk.app1.CustomersDefaultPaymentMethodsCountApp.CUSTOMER_PREFERENCES_TOPIC
-import static com.pszymczyk.app1.CustomersDefaultPaymentMethodsCountApp.PAYMENT_METHODS_COUNT_TOPIC
-import static com.pszymczyk.app1.CustomersDefaultPaymentMethodsCountApp.USER_ID_TO_DEFAULT_PAYMENT_METHOD_TOPIC
+import static com.pszymczyk.app2.CustomersDefaultPaymentMethodsCountApp.CUSTOMER_PREFERENCES_TOPIC
+import static com.pszymczyk.app2.CustomersDefaultPaymentMethodsCountApp.PAYMENT_METHODS_COUNT_TOPIC
+import static com.pszymczyk.app2.CustomersDefaultPaymentMethodsCountApp.USER_ID_TO_DEFAULT_PAYMENT_METHOD_TOPIC
 
 class CustomersDefaultPaymentMethodsCountAppSpec extends IntegrationSpec {
 

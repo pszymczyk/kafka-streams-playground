@@ -1,4 +1,4 @@
-package com.pszymczyk.app1;
+package com.pszymczyk.app2;
 
 import com.pszymczyk.common.JsonSerdes;
 import com.pszymczyk.common.StreamsRunner;
