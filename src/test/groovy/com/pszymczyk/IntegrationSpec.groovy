@@ -1,4 +1,4 @@
-package com.pszymczyk.app2
+package com.pszymczyk
 
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -14,7 +14,7 @@ import spock.lang.Specification
 
 abstract class IntegrationSpec extends Specification {
 
-    protected static Logger logger = LoggerFactory.getLogger(CustomersDefaultPaymentMethodsCountAppSpec.class)
+    protected static Logger logger = LoggerFactory.getLogger(IntegrationSpec.class)
     protected static KafkaTemplate<String, String> kafkaTemplate
     protected static String bootstrapServers
 

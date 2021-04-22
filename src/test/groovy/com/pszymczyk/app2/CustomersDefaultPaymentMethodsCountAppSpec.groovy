@@ -1,5 +1,6 @@
 package com.pszymczyk.app2
 
+import com.pszymczyk.IntegrationSpec
 import com.pszymczyk.common.StreamsRunner
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.streams.KafkaStreams

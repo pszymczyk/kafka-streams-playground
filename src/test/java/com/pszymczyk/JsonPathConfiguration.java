@@ -1,4 +1,4 @@
-package com.pszymczyk.app2;
+package com.pszymczyk;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
