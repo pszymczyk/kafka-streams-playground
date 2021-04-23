@@ -189,5 +189,28 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                 assert it.read('$.itemsDetails.fairy.category', String) == "home"
                 assert it.read('$.itemsDetails.fairy.price', String) == "10PLN"
             }
+        when: "item category changed"
+            kafkaTemplate.send(ITEMS_DETAILS, fairy,
+                    """
+                        {
+                            "name": "$fairy",                           
+                            "price": "10PLN",
+                            "description": "Fairy mint",
+                            "category": "grocery"
+                        }
+                        """.toString())
+        and: "we collect all order events again"
+            def yetAnotherConsumer = kafkaConsumer("${this.class.simpleName}- ${UUID.randomUUID().toString().substring(0,5)}")
+            yetAnotherConsumer.subscribe([ORDERS_WITH_DETAILS_STATE])
+            def ordersAfterItemDetailsChange= [:]
+            10.times {
+                def consumerRecords = yetAnotherConsumer.poll(Duration.ofMillis(500))
+                logger.info("Received {} events", consumerRecords.size())
+                consumerRecords.each {
+                    ordersAfterItemDetailsChange.put(it.key(), it.value())
+                }
+            }
+        then: "nothing happens in order with details view"
+            orders == ordersAfterItemDetailsChange
     }
 }

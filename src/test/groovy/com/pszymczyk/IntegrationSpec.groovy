@@ -31,11 +31,11 @@ abstract class IntegrationSpec extends Specification {
         kafkaConsumer = kafkaConsumer()
     }
 
-    protected Consumer<String, String> kafkaConsumer() {
+    protected Consumer<String, String> kafkaConsumer(String groupId = this.class.simpleName) {
         new KafkaConsumer<>(
                 Map.of(
                         ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
-                        ConsumerConfig.GROUP_ID_CONFIG, this.class.simpleName,
+                        ConsumerConfig.GROUP_ID_CONFIG, groupId,
                         ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest",
                         ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
                         ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
