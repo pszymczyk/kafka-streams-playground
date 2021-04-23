@@ -3,21 +3,22 @@ package com.pszymczyk.app4;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ItemAdded implements OrderEvent {
+class ItemAdded implements OrderEvent {
 
-    public static final String TYPE = "ItemAdded";
+    static final String TYPE = "ItemAdded";
 
     private final String orderId;
     private final String item;
 
     @JsonCreator
-    public ItemAdded(
+    ItemAdded(
         @JsonProperty("orderId") String orderId,
         @JsonProperty("item") String item) {
         this.orderId = orderId;
         this.item = item;
     }
 
+    @Override
     public String getItem() {
         return item;
     }

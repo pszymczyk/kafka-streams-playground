@@ -3,15 +3,15 @@ package com.pszymczyk.app3;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ItemRemoved implements OrderEvent {
+class ItemRemoved implements OrderEvent {
 
-    public static final String TYPE = "ItemRemoved";
+    static final String TYPE = "ItemRemoved";
 
     private final String orderId;
     private final String item;
 
     @JsonCreator
-    public ItemRemoved(
+    ItemRemoved(
         @JsonProperty("orderId") String orderId,
         @JsonProperty("item") String item) {
         this.orderId = orderId;

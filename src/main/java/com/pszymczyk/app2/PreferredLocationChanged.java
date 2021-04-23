@@ -3,14 +3,14 @@ package com.pszymczyk.app2;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PreferredLocationChanged implements CustomerPreferencesEvent {
-    public static final String TYPE = "PreferredLocationChanged";
+class PreferredLocationChanged implements CustomerPreferencesEvent {
+    static final String TYPE = "PreferredLocationChanged";
 
     private final String userId;
     private final String newLocation;
 
     @JsonCreator
-    public PreferredLocationChanged(
+    PreferredLocationChanged(
         @JsonProperty("userId") String userId,
         @JsonProperty("newLocation") String newLocation) {
         this.userId = userId;

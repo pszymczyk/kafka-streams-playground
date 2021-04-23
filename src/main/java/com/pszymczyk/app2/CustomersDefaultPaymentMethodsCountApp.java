@@ -14,13 +14,13 @@ import org.apache.kafka.streams.kstream.Produced;
 import java.util.Objects;
 import java.util.Set;
 
-public class CustomersDefaultPaymentMethodsCountApp {
+class CustomersDefaultPaymentMethodsCountApp {
 
-    public static final String CUSTOMER_PREFERENCES_TOPIC = "customer-preferences";
-    public static final String USER_ID_TO_DEFAULT_PAYMENT_METHOD_TOPIC = "user-id-to-default-payment-method";
-    public static final String PAYMENT_METHODS_COUNT_TOPIC = "payment-methods-count";
+    static final String CUSTOMER_PREFERENCES_TOPIC = "customer-preferences";
+    static final String USER_ID_TO_DEFAULT_PAYMENT_METHOD_TOPIC = "user-id-to-default-payment-method";
+    static final String PAYMENT_METHODS_COUNT_TOPIC = "payment-methods-count";
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
@@ -31,7 +31,7 @@ public class CustomersDefaultPaymentMethodsCountApp {
             new NewTopic(PAYMENT_METHODS_COUNT_TOPIC, 1, (short) 1));
     }
 
-    public static StreamsBuilder buildKafkaStreamsTopology() {
+    static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
         KStream<String, CustomerPreferencesEvent> allCustomerPreferences = builder.stream(CUSTOMER_PREFERENCES_TOPIC,

@@ -13,12 +13,12 @@ import org.apache.kafka.streams.kstream.Produced;
 
 import java.util.Set;
 
-public class OrderStateApp {
+class OrderStateApp {
 
-    public static final String ORDERS = "orders";
-    public static final String ORDERS_STATE = "orders-state";
+    static final String ORDERS = "orders";
+    static final String ORDERS_STATE = "orders-state";
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
@@ -28,7 +28,7 @@ public class OrderStateApp {
             new NewTopic(ORDERS_STATE, 1, (short) 1));
     }
 
-    public static StreamsBuilder buildKafkaStreamsTopology() {
+    static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
         KStream<String, OrderEvent> allOrdersEvents = builder.stream(ORDERS,

@@ -8,8 +8,9 @@ import java.util.Map;
 
 public class OrderState {
 
+    private final Map<String, Long> items;
+
     private String orderId;
-    private Map<String, Long> items;
 
     static OrderState create() {
         return new OrderState(null, new HashMap<>());

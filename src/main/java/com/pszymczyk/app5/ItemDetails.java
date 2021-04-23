@@ -3,14 +3,14 @@ package com.pszymczyk.app5;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ItemDetails {
+class ItemDetails {
     private final String name;
     private final String description;
     private final String price;
     private final String category;
 
     @JsonCreator
-    public ItemDetails(
+    ItemDetails(
         @JsonProperty("name") String name,
         @JsonProperty("description") String description,
         @JsonProperty("price") String price,
@@ -21,19 +21,19 @@ public class ItemDetails {
         this.category = category;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public String getPrice() {
+    String getPrice() {
         return price;
     }
 
-    public String getCategory() {
+    String getCategory() {
         return category;
     }
 
-    public String getDescription() {
+    String getDescription() {
         return description;
     }
 }

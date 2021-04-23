@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OrderStateWithItemDetails {
+class OrderStateWithItemDetails {
 
     private String orderId;
     private Map<String, Long> items;
@@ -17,7 +17,7 @@ public class OrderStateWithItemDetails {
     }
 
     @JsonCreator
-    public OrderStateWithItemDetails(
+    OrderStateWithItemDetails(
         @JsonProperty("orderId") String orderId,
         @JsonProperty("items") Map<String, Long> items,
         @JsonProperty("itemsDetails") Map<String, ItemDetails> itemsDetails) {
@@ -26,19 +26,19 @@ public class OrderStateWithItemDetails {
         this.itemsDetails = itemsDetails;
     }
 
-    public String getOrderId() {
+    String getOrderId() {
         return orderId;
     }
 
-    public Map<String, Long> getItems() {
+    Map<String, Long> getItems() {
         return items;
     }
 
-    public Map<String, ItemDetails> getItemsDetails() {
+    Map<String, ItemDetails> getItemsDetails() {
         return itemsDetails;
     }
 
-    public OrderStateWithItemDetails add(OrderItemWithDetails orderItemWithDetails) {
+    OrderStateWithItemDetails add(OrderItemWithDetails orderItemWithDetails) {
         items.put(orderItemWithDetails.getOrderItem().getItem(), orderItemWithDetails.getOrderItem().getCount());
         itemsDetails.put(orderItemWithDetails.getOrderItem().getItem(), orderItemWithDetails.getItemDetails());
         return this;

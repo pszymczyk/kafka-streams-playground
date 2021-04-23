@@ -15,13 +15,13 @@ import org.apache.kafka.streams.kstream.Produced;
 
 import java.util.Set;
 
-public class OrderStateWithItemDetailsApp {
+class OrderStateWithItemDetailsApp {
 
-    public static final String ORDERS = "orders";
-    public static final String ORDERS_WITH_DETAILS_STATE = "orders-with-details-state";
-    public static final String ITEMS_DETAILS = "items-details";
+    static final String ORDERS = "orders";
+    static final String ORDERS_WITH_DETAILS_STATE = "orders-with-details-state";
+    static final String ITEMS_DETAILS = "items-details";
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
@@ -32,7 +32,7 @@ public class OrderStateWithItemDetailsApp {
             new NewTopic(ITEMS_DETAILS, 1, (short) 1));
     }
 
-    public static StreamsBuilder buildKafkaStreamsTopology() {
+    static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
         KTable<String, ItemDetails> itemDetailsTable = builder.table(ITEMS_DETAILS,

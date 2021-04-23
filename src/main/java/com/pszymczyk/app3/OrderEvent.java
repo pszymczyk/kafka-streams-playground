@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = ItemAdded.class, name = ItemAdded.TYPE),
     @JsonSubTypes.Type(value = ItemRemoved.class, name = ItemRemoved.TYPE)
 })
-public interface OrderEvent {
+interface OrderEvent {
     String getOrderId();
     String getItem();
     String getType();

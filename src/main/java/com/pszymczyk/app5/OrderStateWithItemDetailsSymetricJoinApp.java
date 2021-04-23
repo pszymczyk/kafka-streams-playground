@@ -4,7 +4,6 @@ import com.pszymczyk.common.JsonSerdes;
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Grouped;
@@ -12,18 +11,16 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
-import org.apache.kafka.streams.kstream.ValueJoiner;
 
 import java.util.Set;
-import java.util.function.Function;
 
-public class OrderStateWithItemDetailsSymetricJoinApp {
+class OrderStateWithItemDetailsSymetricJoinApp {
 
-    public static final String ORDERS = "symetric_orders";
-    public static final String ORDERS_WITH_DETAILS_STATE = "symetric_orders-with-details-state";
-    public static final String ITEMS_DETAILS = "symetric_items-details";
+    static final String ORDERS = "symetric_orders";
+    static final String ORDERS_WITH_DETAILS_STATE = "symetric_orders-with-details-state";
+    static final String ITEMS_DETAILS = "symetric_items-details";
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
@@ -34,7 +31,7 @@ public class OrderStateWithItemDetailsSymetricJoinApp {
             new NewTopic(ITEMS_DETAILS, 1, (short) 1));
     }
 
-    public static StreamsBuilder buildKafkaStreamsTopology() {
+    static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
         KTable<String, ItemDetails> itemDetailsTable = builder.table(ITEMS_DETAILS,

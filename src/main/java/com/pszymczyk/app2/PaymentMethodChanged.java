@@ -3,22 +3,22 @@ package com.pszymczyk.app2;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PaymentMethodChanged implements CustomerPreferencesEvent {
+class PaymentMethodChanged implements CustomerPreferencesEvent {
 
-    public static final String TYPE = "PaymentMethodChanged";
+    static final String TYPE = "PaymentMethodChanged";
 
     private final String userId;
     private final String newPaymentMethod;
 
     @JsonCreator
-    public PaymentMethodChanged(
+    PaymentMethodChanged(
         @JsonProperty("userId") String userId,
         @JsonProperty("newPaymentMethod") String newPaymentMethod) {
         this.userId = userId;
         this.newPaymentMethod = newPaymentMethod;
     }
 
-    public String getNewPaymentMethod() {
+    String getNewPaymentMethod() {
         return newPaymentMethod;
     }
 

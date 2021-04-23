@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = PaymentMethodChanged.class, name = PaymentMethodChanged.TYPE),
     @JsonSubTypes.Type(value = PreferredLocationChanged.class, name = PreferredLocationChanged.TYPE)
 })
-public interface CustomerPreferencesEvent {
+interface CustomerPreferencesEvent {
     String getUserId();
     String getType();
 }
