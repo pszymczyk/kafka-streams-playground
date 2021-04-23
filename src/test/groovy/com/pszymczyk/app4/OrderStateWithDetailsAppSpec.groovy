@@ -2,7 +2,6 @@ package com.pszymczyk.app4
 
 import com.jayway.jsonpath.JsonPath
 import com.pszymczyk.IntegrationSpec
-import com.pszymczyk.app3.OrderStateApp
 import com.pszymczyk.common.StreamsRunner
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.streams.KafkaStreams
@@ -86,7 +85,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                     """
                         {
                             "orderId": "$orderOne",                           
-                            "type": "${com.pszymczyk.app3.ItemAdded.TYPE}",
+                            "type": "${ItemAdded.TYPE}",
                             "item": "$iphone"
                         }
                         """.toString())
@@ -94,7 +93,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                     """
                         {
                             "orderId": "$orderOne",                           
-                            "type": "${com.pszymczyk.app3.ItemAdded.TYPE}",
+                            "type": "${ItemAdded.TYPE}",
                             "item": "$pampers"
                         }
                         """.toString())
@@ -102,7 +101,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                     """
                         {
                             "orderId": "$orderOne",                           
-                            "type": "${com.pszymczyk.app3.ItemAdded.TYPE}",
+                            "type": "${ItemAdded.TYPE}",
                             "item": "$pampers"
                         }
                         """.toString())
@@ -110,7 +109,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                     """
                         {
                             "orderId": "$orderOne",                           
-                            "type": "${com.pszymczyk.app3.ItemAdded.TYPE}",
+                            "type": "${ItemAdded.TYPE}",
                             "item": "$pampers"
                         }
                         """.toString())
@@ -118,7 +117,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                     """
                         {
                             "orderId": "$orderTwo",                           
-                            "type": "${com.pszymczyk.app3.ItemAdded.TYPE}",
+                            "type": "${ItemAdded.TYPE}",
                             "item": "$kindle"
                         }
                         """.toString())
@@ -126,7 +125,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                     """
                         {
                             "orderId": "$orderThree",                           
-                            "type": "${com.pszymczyk.app3.ItemAdded.TYPE}",
+                            "type": "${ItemAdded.TYPE}",
                             "item": "$fairy"
                         }
                         """.toString())
@@ -134,16 +133,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                     """
                         {
                             "orderId": "$orderThree",                           
-                            "type": "${com.pszymczyk.app3.ItemAdded.TYPE}",
-                            "item": "$fairy"
-                        }
-                        """.toString())
-
-            kafkaTemplate.send(ORDERS,
-                    """
-                        {
-                            "orderId": "$orderThree",                           
-                            "type": "${com.pszymczyk.app3.ItemAdded.TYPE}",
+                            "type": "${ItemAdded.TYPE}",
                             "item": "$fairy"
                         }
                         """.toString())
@@ -152,7 +142,16 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                     """
                         {
                             "orderId": "$orderThree",                           
-                            "type": "${com.pszymczyk.app3.ItemAdded.TYPE}",
+                            "type": "${ItemAdded.TYPE}",
+                            "item": "$fairy"
+                        }
+                        """.toString())
+
+            kafkaTemplate.send(ORDERS,
+                    """
+                        {
+                            "orderId": "$orderThree",                           
+                            "type": "${ItemAdded.TYPE}",
                             "item": "$fairy"
                         }
                         """.toString())
