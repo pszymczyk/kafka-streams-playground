@@ -18,7 +18,7 @@ public class MobileDevicesMarketShareApp {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
-            "mobile-devices-market-share-main",
+            "mobile-devices-market-share-app-main",
             builder,
             new NewTopic(CLICKS_TOPIC, 1, (short) 1),
             new NewTopic(CLICKS_COUNT, 1, (short) 1));

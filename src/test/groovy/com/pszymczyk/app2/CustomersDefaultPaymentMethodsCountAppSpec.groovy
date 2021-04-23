@@ -73,6 +73,16 @@ class CustomersDefaultPaymentMethodsCountAppSpec extends IntegrationSpec {
                             "newPaymentMethod": "blik"
                         }
                         """.toString())
+        and: "we send some not important it this case events"
+            kafkaTemplate.send(CUSTOMER_PREFERENCES_TOPIC,
+                    """
+                        {
+                            "userId": "$kazik",                           
+                            "type": "${CommunicationAgreementRevoked.TYPE}",
+                            "revokedAgreement": "phone"
+                        }
+                        """.toString())
+        and: "send some PaymentMethodChanged events"
             kafkaTemplate.send(CUSTOMER_PREFERENCES_TOPIC,
                     """
                         {
