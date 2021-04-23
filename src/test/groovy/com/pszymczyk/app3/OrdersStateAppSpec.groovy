@@ -41,7 +41,7 @@ class OrdersStateAppSpec extends IntegrationSpec {
             def orderTwo = UUID.randomUUID().toString()
             def orderThree = UUID.randomUUID().toString()
             kafkaConsumer.subscribe([ORDERS_STATE])
-        when: "we send some not important it this case events"
+        when: "we send some order events"
             kafkaTemplate.send(ORDERS,
                     """
                         {

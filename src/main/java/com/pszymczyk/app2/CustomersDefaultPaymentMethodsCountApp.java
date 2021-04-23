@@ -37,14 +37,14 @@ public class CustomersDefaultPaymentMethodsCountApp {
         KStream<String, CustomerPreferencesEvent> allCustomerPreferences = builder.stream(CUSTOMER_PREFERENCES_TOPIC,
             Consumed.with(Serdes.String(), JsonSerdes.forA(CustomerPreferencesEvent.class)));
 
-        KStream<String, String> usersAndColours = allCustomerPreferences
+        KStream<String, String> usersDefaultPaymentsTopic = allCustomerPreferences
             .filter((key, value) -> Objects.equals(value.getType(), PaymentMethodChanged.TYPE))
             .selectKey((key, value) -> value.getUserId())
             .mapValues(PaymentMethodChanged.class::cast)
             .mapValues(PaymentMethodChanged::getNewPaymentMethod)
             .filter((user, newPaymentMethod) -> Set.of("card", "cash", "blik", "bank_transfer").contains(newPaymentMethod.toLowerCase()));
 
-        usersAndColours.to(USER_ID_TO_DEFAULT_PAYMENT_METHOD_TOPIC);
+        usersDefaultPaymentsTopic.to(USER_ID_TO_DEFAULT_PAYMENT_METHOD_TOPIC);
 
         KTable<String, String> usersAndDefaultPaymentMethods = builder.table("user-id-to-default-payment-method");
 

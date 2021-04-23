@@ -34,7 +34,7 @@ public class OrderStateApp {
         KStream<String, OrderEvent> allOrdersEvents = builder.stream(ORDERS,
             Consumed.with(Serdes.String(), JsonSerdes.forA(OrderEvent.class)));
 
-        KTable<String, OrderState> usersAndColours = allOrdersEvents
+        KTable<String, OrderState> ordersStateTable = allOrdersEvents
             .filter((key, value) -> Set.of(ItemAdded.TYPE, ItemRemoved.TYPE).contains(value.getType()))
             .selectKey((key, value) -> value.getOrderId())
             .groupByKey()
@@ -44,11 +44,11 @@ public class OrderStateApp {
                     switch (value.getType()) {
                         case ItemAdded.TYPE -> aggregate.apply((ItemAdded) value);
                         case ItemRemoved.TYPE -> aggregate.apply((ItemRemoved) value);
-                        default -> throw new IllegalStateException("");
+                        default -> throw new IllegalStateException("Unknown event types should be filtered before!");
                     },
                 Materialized.with(Serdes.String(), JsonSerdes.forA(OrderState.class)));
 
-        usersAndColours.toStream().to(ORDERS_STATE, Produced.with(Serdes.String(), JsonSerdes.forA(OrderState.class)));
+        ordersStateTable.toStream().to(ORDERS_STATE, Produced.with(Serdes.String(), JsonSerdes.forA(OrderState.class)));
 
         return builder;
     }
