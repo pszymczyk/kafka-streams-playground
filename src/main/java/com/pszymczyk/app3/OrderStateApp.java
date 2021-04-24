@@ -11,6 +11,7 @@ import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 
+import java.util.Map;
 import java.util.Set;
 
 class OrderStateApp {
@@ -24,6 +25,7 @@ class OrderStateApp {
             "localhost:9092",
             "orders-app-main",
             builder,
+            Map.of(),
             new NewTopic(ORDERS, 1, (short) 1),
             new NewTopic(ORDERS_STATE, 1, (short) 1));
     }

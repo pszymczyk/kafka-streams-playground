@@ -24,6 +24,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                 bootstrapServers,
                 "order-with-details-state-app-v1",
                 OrderStateWithItemDetailsApp.buildKafkaStreamsTopology(),
+                [:],
                 new NewTopic(ITEMS_DETAILS, 1, (short) 1),
                 new NewTopic(ORDERS, 1, (short) 1),
                 new NewTopic(ORDERS_WITH_DETAILS_STATE, 1, (short) 1))

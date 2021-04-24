@@ -11,6 +11,7 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Produced;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -21,11 +22,11 @@ class CustomersDefaultPaymentMethodsCountApp {
     static final String PAYMENT_METHODS_COUNT_TOPIC = "payment-methods-count";
 
     static void main(String[] args) {
-        StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
             "customers-default-payment-methods-count-app-main",
-            builder,
+            buildKafkaStreamsTopology(),
+            Map.of(),
             new NewTopic(CUSTOMER_PREFERENCES_TOPIC, 1, (short) 1),
             new NewTopic(USER_ID_TO_DEFAULT_PAYMENT_METHOD_TOPIC, 1, (short) 1),
             new NewTopic(PAYMENT_METHODS_COUNT_TOPIC, 1, (short) 1));

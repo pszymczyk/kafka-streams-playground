@@ -23,6 +23,7 @@ class OrdersStateAppSpec extends IntegrationSpec {
                 bootstrapServers,
                 "order-state-app-v1",
                 OrderStateApp.buildKafkaStreamsTopology(),
+                [:],
                 new NewTopic(ORDERS, 1, (short) 1),
                 new NewTopic(ORDERS_STATE, 1, (short) 1))
     }

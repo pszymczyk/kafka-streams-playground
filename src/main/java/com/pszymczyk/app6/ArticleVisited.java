@@ -5,22 +5,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 class ArticleVisited {
 
-    private final String articleId;
-    private final String time;
+    private final String articleTitle;
+    private final Long time;
 
     @JsonCreator
     ArticleVisited(
-        @JsonProperty("articleId") String articleId,
-        @JsonProperty("time") String time) {
-        this.articleId = articleId;
+        @JsonProperty("articleTitle") String articleTitle,
+        @JsonProperty("time") Long time) {
+        this.articleTitle = articleTitle;
         this.time = time;
     }
 
-    String getArticleId() {
-        return articleId;
+    String getArticleTitle() {
+        return articleTitle;
     }
 
-    String getTime() {
+    Long getTime() {
         return time;
     }
 }

@@ -21,6 +21,7 @@ class MobileDevicesMarketShareAppSpec extends IntegrationSpec {
                 bootstrapServers,
                 "mobile-devices-market-share-main-v1",
                 MobileDevicesMarketShareApp.buildKafkaStreamsTopology(),
+                [:],
                 new NewTopic(CLICKS_TOPIC, 1, (short) 1),
                 new NewTopic(CLICKS_COUNT, 1, (short) 1))
     }

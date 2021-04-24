@@ -21,7 +21,12 @@ public class StreamsRunner {
 
     private KafkaStreams kafkaStreams;
 
-    public KafkaStreams run(String bootstrapServers, String applicationId, StreamsBuilder streamsBuilder, NewTopic... newTopics) {
+    public KafkaStreams run(String bootstrapServers,
+                            String applicationId,
+                            StreamsBuilder streamsBuilder,
+                            Map<String, Object> customProperties,
+                            NewTopic... newTopics) {
+
         AdminClient adminClient = AdminClient.create(Map.of(
             "bootstrap.servers", bootstrapServers,
             "group.id", "create-topics-admin"));
@@ -38,6 +43,10 @@ public class StreamsRunner {
 
         // disable caching to see all operations results immediately
         config.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, "0");
+
+        customProperties.entrySet().forEach(entry ->
+            config.put(entry.getKey(), entry.getValue())
+        );
 
         Topology topology = streamsBuilder.build();
         logger.info(topology.describe().toString());

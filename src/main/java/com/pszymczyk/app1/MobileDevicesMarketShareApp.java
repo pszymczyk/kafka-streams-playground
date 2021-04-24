@@ -9,6 +9,8 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 
+import java.util.Map;
+
 class MobileDevicesMarketShareApp {
 
     static final String CLICKS_TOPIC = "clicks";
@@ -20,6 +22,7 @@ class MobileDevicesMarketShareApp {
             "localhost:9092",
             "mobile-devices-market-share-app-main",
             builder,
+            Map.of(),
             new NewTopic(CLICKS_TOPIC, 1, (short) 1),
             new NewTopic(CLICKS_COUNT, 1, (short) 1));
     }

@@ -23,6 +23,7 @@ class OrderStateWithItemDetailsSymmetricJoinAppSpec extends IntegrationSpec {
                 bootstrapServers,
                 "order-with-details-state-symmetric-app-v1",
                 OrderStateWithItemDetailsSymmetricJoinApp.buildKafkaStreamsTopology(),
+                [:],
                 new NewTopic(ITEMS_DETAILS, 1, (short) 1),
                 new NewTopic(ORDERS, 1, (short) 1),
                 new NewTopic(ORDERS_WITH_DETAILS_STATE, 1, (short) 1))

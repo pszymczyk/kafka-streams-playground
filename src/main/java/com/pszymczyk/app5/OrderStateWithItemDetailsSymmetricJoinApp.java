@@ -12,6 +12,7 @@ import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -53,6 +54,7 @@ class OrderStateWithItemDetailsSymmetricJoinApp {
             "localhost:9092",
             "order-with-details-symmetric-app-main",
             builder,
+            Map.of(),
             new NewTopic(ORDERS, 1, (short) 1),
             new NewTopic(ORDERS_WITH_DETAILS_STATE, 1, (short) 1),
             new NewTopic(ITEMS_DETAILS, 1, (short) 1));
