@@ -1,8 +1,10 @@
-package com.pszymczyk.app5
+package com.pszymczyk.app6
 
 import com.jayway.jsonpath.JsonPath
 import com.pszymczyk.IntegrationSpec
-import com.pszymczyk.app4.OrderStateWithItemDetailsApp
+import com.pszymczyk.app5.ItemAdded
+import com.pszymczyk.app5.ItemRemoved
+import com.pszymczyk.app5.OrderStateWithItemDetailsSymmetricJoinApp
 import com.pszymczyk.common.StreamsRunner
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.streams.KafkaStreams
@@ -10,11 +12,7 @@ import spock.lang.Shared
 
 import java.time.Duration
 
-import static com.pszymczyk.app5.OrderStateWithItemDetailsSymetricJoinApp.ITEMS_DETAILS
-import static com.pszymczyk.app5.OrderStateWithItemDetailsSymetricJoinApp.ORDERS
-import static com.pszymczyk.app5.OrderStateWithItemDetailsSymetricJoinApp.ORDERS_WITH_DETAILS_STATE
-
-class OrderStateWithItemDetailsSymetricJoinAppSpec extends IntegrationSpec {
+class TopFiveArticlesLastFiveDaysAppSpec extends IntegrationSpec {
 
     @Shared
     KafkaStreams kafkaStreams
@@ -22,11 +20,11 @@ class OrderStateWithItemDetailsSymetricJoinAppSpec extends IntegrationSpec {
     def setupSpec() {
         kafkaStreams = new StreamsRunner().run(
                 bootstrapServers,
-                "order-with-details-state-symetric-app-v1",
-                OrderStateWithItemDetailsSymetricJoinApp.buildKafkaStreamsTopology(),
-                new NewTopic(ITEMS_DETAILS, 1, (short) 1),
-                new NewTopic(ORDERS, 1, (short) 1),
-                new NewTopic(ORDERS_WITH_DETAILS_STATE, 1, (short) 1))
+                "order-with-details-state-symmetric-app-v1",
+                OrderStateWithItemDetailsSymmetricJoinApp.buildKafkaStreamsTopology(),
+                new NewTopic(OrderStateWithItemDetailsSymmetricJoinApp.ITEMS_DETAILS, 1, (short) 1),
+                new NewTopic(OrderStateWithItemDetailsSymmetricJoinApp.ORDERS, 1, (short) 1),
+                new NewTopic(OrderStateWithItemDetailsSymmetricJoinApp.ORDERS_WITH_DETAILS_STATE, 1, (short) 1))
     }
 
     def cleanupSpec() {
@@ -37,9 +35,9 @@ class OrderStateWithItemDetailsSymetricJoinAppSpec extends IntegrationSpec {
         given:
             def iphone = "iphone"
             def orderOne = "order-one-key"
-            kafkaConsumer.subscribe([ORDERS_WITH_DETAILS_STATE])
+            kafkaConsumer.subscribe([OrderStateWithItemDetailsSymmetricJoinApp.ORDERS_WITH_DETAILS_STATE])
         when: "we send some item details"
-            kafkaTemplate.send(ITEMS_DETAILS, iphone,
+            kafkaTemplate.send(OrderStateWithItemDetailsSymmetricJoinApp.ITEMS_DETAILS, iphone,
                     """
                         {
                             "name": "$iphone",                           
@@ -49,7 +47,7 @@ class OrderStateWithItemDetailsSymetricJoinAppSpec extends IntegrationSpec {
                         }
                         """.toString())
         and: "send some order events"
-            kafkaTemplate.send(ORDERS,
+            kafkaTemplate.send(OrderStateWithItemDetailsSymmetricJoinApp.ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
@@ -57,7 +55,7 @@ class OrderStateWithItemDetailsSymetricJoinAppSpec extends IntegrationSpec {
                             "item": "$iphone"
                         }
                         """.toString())
-            kafkaTemplate.send(ORDERS,
+            kafkaTemplate.send(OrderStateWithItemDetailsSymmetricJoinApp.ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
@@ -65,7 +63,7 @@ class OrderStateWithItemDetailsSymetricJoinAppSpec extends IntegrationSpec {
                             "item": "$iphone"
                         }
                         """.toString())
-            kafkaTemplate.send(ORDERS,
+            kafkaTemplate.send(OrderStateWithItemDetailsSymmetricJoinApp.ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
@@ -73,7 +71,7 @@ class OrderStateWithItemDetailsSymetricJoinAppSpec extends IntegrationSpec {
                             "item": "$iphone"
                         }
                         """.toString())
-            kafkaTemplate.send(ORDERS,
+            kafkaTemplate.send(OrderStateWithItemDetailsSymmetricJoinApp.ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
@@ -99,7 +97,7 @@ class OrderStateWithItemDetailsSymetricJoinAppSpec extends IntegrationSpec {
                 assert it.read('$.itemsDetails.iphone.price', String) == "1000PLN"
             }
         when: "item price changed"
-            kafkaTemplate.send(ITEMS_DETAILS, iphone,
+            kafkaTemplate.send(OrderStateWithItemDetailsSymmetricJoinApp.ITEMS_DETAILS, iphone,
                     """
                         {
                             "name": "$iphone",                           
@@ -110,7 +108,7 @@ class OrderStateWithItemDetailsSymetricJoinAppSpec extends IntegrationSpec {
                         """.toString())
         and: "we collect all order events again"
             def yetAnotherConsumer = kafkaConsumer("${this.class.simpleName}- ${UUID.randomUUID().toString().substring(0,5)}")
-            yetAnotherConsumer.subscribe([ORDERS_WITH_DETAILS_STATE])
+            yetAnotherConsumer.subscribe([OrderStateWithItemDetailsSymmetricJoinApp.ORDERS_WITH_DETAILS_STATE])
             def ordersAfterItemDetailsChange= [:]
             10.times {
                 def consumerRecords = yetAnotherConsumer.poll(Duration.ofMillis(500))

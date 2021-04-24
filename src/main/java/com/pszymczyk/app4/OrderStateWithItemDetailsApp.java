@@ -6,8 +6,8 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.GlobalKTable;
 import org.apache.kafka.streams.kstream.Grouped;
-import org.apache.kafka.streams.kstream.Joined;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Materialized;
@@ -35,7 +35,7 @@ class OrderStateWithItemDetailsApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        KTable<String, ItemDetails> itemDetailsTable = builder.table(ITEMS_DETAILS,
+        GlobalKTable<String, ItemDetails> itemDetailsTable = builder.globalTable(ITEMS_DETAILS,
             Consumed.with(Serdes.String(), JsonSerdes.forA(ItemDetails.class)));
 
         KStream<String, OrderEvent> allOrdersEvents = builder.stream(ORDERS,
@@ -43,11 +43,11 @@ class OrderStateWithItemDetailsApp {
 
         KTable<String, OrderStateWithItemDetails> ordersStateWithDetailsTable = allOrdersEvents
             .filter((key, value) -> Set.of(ItemAdded.TYPE, ItemRemoved.TYPE).contains(value.getType()))
-            .selectKey((key, value) -> value.getItem())
             .join(itemDetailsTable,
-                (orderEvent, itemDetails) -> new EnrichedOrderEvent(itemDetails, orderEvent),
-                Joined.with(Serdes.String(), JsonSerdes.forA(OrderEvent.class), JsonSerdes.forA(ItemDetails.class)))
-            .groupBy((key, enrichedOrderEvent) -> enrichedOrderEvent.getOrderEvent().getOrderId(), Grouped.with(Serdes.String(), JsonSerdes.forA(EnrichedOrderEvent.class)))
+                (key, orderEvent) -> orderEvent.getItem(),
+                (orderEvent, itemDetails) -> new EnrichedOrderEvent(itemDetails, orderEvent))
+            .groupBy((key, enrichedOrderEvent) -> enrichedOrderEvent.getOrderEvent().getOrderId(), Grouped.with(Serdes.String(),
+                JsonSerdes.forA(EnrichedOrderEvent.class)))
             .aggregate(
                 OrderStateWithItemDetails::create,
                 (key, value, aggregate) ->
