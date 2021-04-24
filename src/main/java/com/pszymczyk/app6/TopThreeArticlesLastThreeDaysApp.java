@@ -11,6 +11,7 @@ import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 import org.apache.kafka.streams.kstream.TimeWindows;
+import org.apache.kafka.streams.kstream.ValueMapper;
 import org.apache.kafka.streams.kstream.Windowed;
 
 import java.time.Duration;
@@ -48,8 +49,9 @@ class TopThreeArticlesLastThreeDaysApp {
             );
 
         articlesRankingTable
+            .mapValues(ArticlesRanking::top3)
             .toStream((key, value) -> String.format("%s-%s-%s", key.window().startTime(), key.window().endTime(), key.key()))
-            .to(ARTICLES_VISITS_TOP_FIVE, Produced.with(Serdes.String(), JsonSerdes.forA(ArticlesRanking.class)));
+            .to(ARTICLES_VISITS_TOP_FIVE, Produced.with(Serdes.String(), JsonSerdes.forA(Top3ArticlesRanking.class)));
 
         return builder;
     }

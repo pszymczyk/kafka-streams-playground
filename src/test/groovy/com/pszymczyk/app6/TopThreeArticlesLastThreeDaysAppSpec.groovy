@@ -1,5 +1,6 @@
 package com.pszymczyk.app6
 
+import com.jayway.jsonpath.JsonPath
 import com.pszymczyk.IntegrationSpec
 import com.pszymczyk.common.StreamsRunner
 import org.apache.kafka.clients.admin.NewTopic
@@ -102,7 +103,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         }
                         """.toString()).get()
             }
-            2.times {
+            3.times {
                 kafkaTemplate.send(ARTICLES_VISITS,
                         """
                         {
@@ -120,7 +121,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         }
                         """.toString()).get()
             }
-            8.times {
+            3.times {
                 kafkaTemplate.send(ARTICLES_VISITS,
                         """
                         {
@@ -129,7 +130,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         }
                         """.toString()).get()
             }
-            10.times {
+            2.times {
                 kafkaTemplate.send(ARTICLES_VISITS,
                         """
                         {
@@ -139,7 +140,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString()).get()
             }
         and: "simulate today clicks"
-            13.times {
+            15.times {
                 kafkaTemplate.send(ARTICLES_VISITS,
                         """
                         {
@@ -186,7 +187,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
             }
         and: "collect all events"
             Map<String, String> visitsRankingTable = [:]
-            100.times {
+            75.times {
                 def consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500))
                 logger.info("Received {} events", consumerRecords.size())
                 consumerRecords.each {
@@ -194,37 +195,32 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                 }
             }
         then: "day before yesterday ranking"
-//            @Language("JSON") def dayBeforeYesterdayRanking = """
-//              {
-//                "articlesRanking": {
-//                  "Insurance startup Superscript used this pitch deck to raise 10 million in a funding round backed by Seedcamp": 31,
-//                  "Watch SpaceX launch 4 astronauts aboard a recycled Crew Dragon spaceship for NASA on Friday": 19,
-//                  "The 93rd Academy Awards will honor the best films of the year here's how to watch live this Sunday to see all the winners": 18
-//                }
-//              }
-//            """
-//            visitsRankingTable.get("2007-12-13T00:00:00Z-2007-12-16T00:00:00Z-ranking") == dayBeforeYesterdayRanking
-//        and: "yesterday ranking"
-//            @Language("JSON") def yesterdayRanking = """
-//              {
-//                "articlesRanking": {
-//                  "Watch SpaceX launch 4 astronauts aboard a recycled Crew Dragon spaceship for NASA on Friday": 32,
-//                  "Insurance startup Superscript used this pitch deck to raise 10 million in a funding round backed by Seedcamp": 30,
-//                  "The 93rd Academy Awards will honor the best films of the year here's how to watch live this Sunday to see all the winners": 18
-//                }
-//              }
-//            """
-//            visitsRankingTable.get("2007-12-13T00:00:00Z-2007-12-16T00:00:00Z-ranking") == dayBeforeYesterdayRanking
-        and: "todays ranking"
-            @Language("JSON") def todayRanking = """
-              {
-                "articlesRanking": {
-                  "Monzo and Innocent Drinks founders among high-profile execs floated for new Amazon TV show about startups": 13,
-                  "Watch SpaceX launch 4 astronauts aboard a recycled Crew Dragon spaceship for NASA on Friday": 7,
-                  "The 93rd Academy Awards will honor the best films of the year here's how to watch live this Sunday to see all the winners": 18
-                }
-              }
-            """
-            visitsRankingTable.get("2007-12-13T00:00:00Z-2007-12-16T00:00:00Z-ranking") == dayBeforeYesterdayRanking
+            JsonPath.parse(visitsRankingTable.get("2007-12-11T00:00:00Z-2007-12-14T00:00:00Z-ranking")).with {
+                assert it.read('$.gold.title', String) == spacexArticle
+                assert it.read('$.gold.views', Long) == 10
+                assert it.read('$.silver.title', String) == academyAwardsArticle
+                assert it.read('$.silver.views', Long) == 7
+                assert it.read('$.bronze.title', String) == cloudKitchensArticle
+                assert it.read('$.bronze.views', Long) == 3
+            }
+        and: "yesterday's ranking"
+            JsonPath.parse(visitsRankingTable.get("2007-12-12T00:00:00Z-2007-12-15T00:00:00Z-ranking")).with {
+                assert it.read('$.gold.title', String) == spacexArticle
+                assert it.read('$.gold.views', Long) == 13
+                assert it.read('$.silver.title', String) == academyAwardsArticle
+                assert it.read('$.silver.views', Long) == 10
+                assert it.read('$.bronze.title', String) == monzoArticle
+                assert it.read('$.bronze.views', Long) == 6
+            }
+        and: "today's ranking"
+            JsonPath.parse(visitsRankingTable.get("2007-12-13T00:00:00Z-2007-12-16T00:00:00Z-ranking")).with {
+                assert it.read('$.gold.title', String) == monzoArticle
+                assert it.read('$.gold.views', Long) == 21
+                assert it.read('$.silver.title', String) == spacexArticle
+                assert it.read('$.silver.views', Long) == 20
+                assert it.read('$.bronze.title', String) == academyAwardsArticle
+                assert it.read('$.bronze.views', Long) == 15
+            }
+
     }
 }
