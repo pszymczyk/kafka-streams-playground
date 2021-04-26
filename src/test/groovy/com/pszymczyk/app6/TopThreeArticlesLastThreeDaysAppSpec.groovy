@@ -6,7 +6,6 @@ import com.pszymczyk.common.StreamsRunner
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsConfig
-import org.intellij.lang.annotations.Language
 import spock.lang.Shared
 
 import java.time.Duration
