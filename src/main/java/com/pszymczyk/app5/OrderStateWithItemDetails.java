@@ -39,6 +39,7 @@ class OrderStateWithItemDetails {
     }
 
     OrderStateWithItemDetails add(OrderItemWithDetails orderItemWithDetails) {
+        orderId = orderItemWithDetails.getOrderItem().getOrderId();
         items.put(orderItemWithDetails.getOrderItem().getItem(), orderItemWithDetails.getOrderItem().getCount());
         itemsDetails.put(orderItemWithDetails.getOrderItem().getItem(), orderItemWithDetails.getItemDetails());
         return this;

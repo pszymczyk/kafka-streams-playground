@@ -9,6 +9,7 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Grouped;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 
@@ -44,7 +45,8 @@ class OrderStateWithItemDetailsSymmetricJoinApp {
 
         KTable<String, OrderItem> orderItems = allOrdersEvents
             .filter((key, value) -> Set.of(ItemAdded.TYPE, ItemRemoved.TYPE).contains(value.getType()))
-            .groupBy((key, orderEvent) -> orderEvent.getOrderId(), Grouped.with(Serdes.String(), JsonSerdes.forA(OrderEvent.class)))
+            .groupBy((key, orderEvent) -> String.format("%s-%s", orderEvent.getOrderId(),  orderEvent.getItem()),
+                Grouped.with(Serdes.String(), JsonSerdes.forA(OrderEvent.class)))
             .aggregate(
                 OrderItem::create,
                 (key, value, aggregate) ->
@@ -63,7 +65,7 @@ class OrderStateWithItemDetailsSymmetricJoinApp {
 
         KTable<String, OrderStateWithItemDetails> ordersStateWithDetails = orderItemsWithDetails
             .toStream()
-            .groupByKey()
+            .groupBy((key, orderItemWithDetails) -> orderItemWithDetails.getOrderItem().getOrderId())
             .aggregate(OrderStateWithItemDetails::create,
                 (key, orderItemWithDetails, aggregate) -> aggregate.add(orderItemWithDetails),
                 Materialized.with(Serdes.String(), JsonSerdes.forA(OrderStateWithItemDetails.class)));
