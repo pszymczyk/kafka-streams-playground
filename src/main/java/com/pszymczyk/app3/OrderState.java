@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class OrderState {
 
@@ -42,5 +43,22 @@ public class OrderState {
 
     public Map<String, Long> getItems() {
         return items;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        OrderState that = (OrderState) o;
+        return items.equals(that.items) && Objects.equals(orderId, that.orderId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(items, orderId);
     }
 }
