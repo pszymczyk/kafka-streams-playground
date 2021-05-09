@@ -16,7 +16,7 @@ class MobileDevicesMarketShareApp {
     static final String CLICKS_TOPIC = "clicks";
     static final String CLICKS_COUNT = "clicks-count";
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
