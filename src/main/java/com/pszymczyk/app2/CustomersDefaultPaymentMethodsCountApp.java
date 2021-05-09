@@ -21,7 +21,7 @@ class CustomersDefaultPaymentMethodsCountApp {
     static final String USER_ID_TO_DEFAULT_PAYMENT_METHOD_TOPIC = "user-id-to-default-payment-method";
     static final String PAYMENT_METHODS_COUNT_TOPIC = "payment-methods-count";
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         new StreamsRunner().run(
             "localhost:9092",
             "customers-default-payment-methods-count-app-main",

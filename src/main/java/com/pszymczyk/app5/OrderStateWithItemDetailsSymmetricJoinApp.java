@@ -22,7 +22,7 @@ class OrderStateWithItemDetailsSymmetricJoinApp {
     static final String ORDERS_WITH_DETAILS_STATE = "symmetric_orders-with-details-state";
     static final String ITEMS_DETAILS = "symmetric_items-details";
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",

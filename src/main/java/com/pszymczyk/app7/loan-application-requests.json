@@ -1,0 +1,80 @@
+{
+  "valid requests": [
+    {
+      "amount": "2000",
+      "requester": "wioletta g."
+    },
+    {
+      "amount": "100000",
+      "requester": "radoslaw s."
+    },
+    {
+      "amount": "100",
+      "requester": "wanda g."
+    },
+    {
+      "amount": "5000",
+      "requester": "mieczyslaw s."
+    },
+    {
+      "amount": "10000000",
+      "requester": "aleksandra r."
+    },
+    {
+      "amount": "90000",
+      "requester": "adrian c."
+    }
+  ],
+  "debtors requests": [
+    {
+      "amount": "2000",
+      "requester": "jan k."
+    },
+    {
+      "amount": "100000",
+      "requester": "wincenty f."
+    },
+    {
+      "amount": "2000",
+      "requester": "zenon j."
+    },
+    {
+      "amount": "2000",
+      "requester": "amanda .d"
+    },
+    {
+      "amount": "2000",
+      "requester": "teresa b."
+    },
+    {
+      "amount": "2000",
+      "requester": "anna g."
+    }
+  ],
+  "blacklist requests": [
+    {
+      "amount": "2000",
+      "requester": "andrzej k."
+    },
+    {
+      "amount": "100000",
+      "requester": "jacek b."
+    },
+    {
+      "amount": "2000",
+      "requester": "marzena j."
+    },
+    {
+      "amount": "2000",
+      "requester": "pawel s."
+    },
+    {
+      "amount": "2000",
+      "requester": "lucyna j."
+    },
+    {
+      "amount": "2000",
+      "requester": "waldemar g."
+    }
+  ]
+}

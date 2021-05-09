@@ -22,7 +22,7 @@ class TopThreeArticlesLastThreeDaysApp {
     static final String ARTICLES_VISITS = "articles-visit";
     static final String ARTICLES_VISITS_TOP_FIVE = "articles-visit-top-three";
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",

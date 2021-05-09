@@ -19,7 +19,7 @@ class OrderStateApp {
     static final String ORDERS = "orders";
     static final String ORDERS_STATE = "orders-state";
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
