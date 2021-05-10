@@ -50,7 +50,7 @@ class CustomersDefaultPaymentMethodsCountApp {
         KTable<String, String> usersAndDefaultPaymentMethods = builder.table(USER_ID_TO_DEFAULT_PAYMENT_METHOD_TOPIC);
 
         KTable<String, Long> paymentMethodsCount = usersAndDefaultPaymentMethods
-            .groupBy((user, colour) -> new KeyValue<>(colour, "_"))
+            .groupBy((user, defaultPaymentMethod) -> new KeyValue<>(defaultPaymentMethod, "_"))
             .count();
 
         paymentMethodsCount
