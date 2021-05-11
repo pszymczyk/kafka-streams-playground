@@ -12,7 +12,7 @@ import java.time.Duration
 import static com.pszymczyk.app7.LoanApplicationProcessorApp.LOAN_APPLICATION_DECISIONS
 import static com.pszymczyk.app7.LoanApplicationProcessorApp.LOAN_APPLICATION_REQUESTS
 
-class LoanApplicationProcessorAppSpec extends IntegrationSpec {
+class SortingEventsAppSpec extends IntegrationSpec {
 
     @Shared
     KafkaStreams kafkaStreams
