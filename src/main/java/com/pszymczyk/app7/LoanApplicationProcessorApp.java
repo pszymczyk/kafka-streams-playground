@@ -15,8 +15,8 @@ import java.util.Map;
 
 class LoanApplicationProcessorApp {
 
-    static final String LOAN_APPLICATION_REQUESTS = "loan-application-requests2";
-    static final String LOAN_APPLICATION_DECISIONS = "loan-application-decisions2";
+    static final String LOAN_APPLICATION_REQUESTS = "loan-application-requests";
+    static final String LOAN_APPLICATION_DECISIONS = "loan-application-decisions";
 
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
