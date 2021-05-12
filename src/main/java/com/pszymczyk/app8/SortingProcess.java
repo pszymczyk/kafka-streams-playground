@@ -23,7 +23,7 @@ public class SortingProcess implements Transformer<String, SomeUnsortedEvent, Ke
     public void init(ProcessorContext context) {
         this.context = context;
         this.unsortedEventsStore = context.getStateStore("unsorted-events");
-        context.schedule(Duration.ofMinutes(5), PunctuationType.WALL_CLOCK_TIME,
+        context.schedule(Duration.ofMillis(5), PunctuationType.WALL_CLOCK_TIME,
             timestamp -> unsortedEventsStore.all()
                 .forEachRemaining(kV -> {
                     if (hasExpired(kV.value.getLastModification().toEpochMilli(), timestamp)) {
