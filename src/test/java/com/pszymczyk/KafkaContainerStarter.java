@@ -1,6 +1,7 @@
 package com.pszymczyk;
 
 import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.utility.DockerImageName;
 
 class KafkaContainerStarter {
 
@@ -8,7 +9,7 @@ class KafkaContainerStarter {
 
     static void start() {
         if (kafkaContainer == null) {
-            kafkaContainer = new KafkaContainer();
+            kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.0.0"));
             kafkaContainer.start();
             System.setProperty("spring.kafka.bootstrap-servers", kafkaContainer.getBootstrapServers());
             Runtime.getRuntime().addShutdownHook(new Thread(() -> kafkaContainer.close()));

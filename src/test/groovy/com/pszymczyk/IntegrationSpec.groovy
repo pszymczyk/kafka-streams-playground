@@ -3,19 +3,21 @@ package com.pszymczyk
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
+import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.kafka.core.DefaultKafkaProducerFactory
-import org.springframework.kafka.core.KafkaTemplate
 import spock.lang.Specification
+
+import java.util.concurrent.TimeUnit
 
 abstract class IntegrationSpec extends Specification {
 
     protected static Logger logger = LoggerFactory.getLogger(IntegrationSpec.class)
-    protected static KafkaTemplate<String, String> kafkaTemplate
+    protected static KafkaProducer<String, String> kafkaProducer
     protected static String bootstrapServers
 
     protected Consumer<String, String> kafkaConsumer
@@ -24,7 +26,7 @@ abstract class IntegrationSpec extends Specification {
         KafkaContainerStarter.start()
         bootstrapServers = KafkaContainerStarter.bootstrapServers
         JsonPathConfiguration.configure()
-        kafkaTemplate = kafkaTemplate()
+        kafkaProducer = kafkaProducer()
     }
 
     def setup() {
@@ -44,10 +46,26 @@ abstract class IntegrationSpec extends Specification {
         )
     }
 
-    protected static KafkaTemplate<String, String> kafkaTemplate() {
-        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(Map.of(
+    protected static KafkaProducer<String, String> kafkaProducer() {
+        return new KafkaProducer<String, String>(Map.of(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
-                ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class)));
+                ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class));
+    }
+
+    protected static void sendToKafka(String topic, String key, GString value) {
+        sendToKafka(topic, key, value.toString())
+    }
+
+    protected static void sendToKafka(String topic, String key, String value) {
+        kafkaProducer.send(new ProducerRecord(topic, key, value.toString())).get(2, TimeUnit.SECONDS)
+    }
+
+    protected static void sendToKafka(String topic, GString value) {
+        sendToKafka(topic, value.toString())
+    }
+
+    protected static void sendToKafka(String topic, String value) {
+        kafkaProducer.send(new ProducerRecord(topic, value.toString())).get(2, TimeUnit.SECONDS)
     }
 }

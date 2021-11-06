@@ -36,27 +36,27 @@ class LoanApplicationProcessorAppSpec extends IntegrationSpec {
             def requester = "kazik"
             kafkaConsumer.subscribe([LOAN_APPLICATION_DECISIONS])
         when: "send some loan applications"
-            kafkaTemplate.send(LOAN_APPLICATION_REQUESTS,
+            sendToKafka(LOAN_APPLICATION_REQUESTS,
                     """
                         {
                             "amount": 2000,                           
                             "requester": "$requester"
                         }
-                        """.toString()).get()
-            kafkaTemplate.send(LOAN_APPLICATION_REQUESTS,
+                        """.toString())
+            sendToKafka(LOAN_APPLICATION_REQUESTS,
                     """
                         {
                             "amount": 2000,                           
                             "requester": "$requester"
                         }
-                        """.toString()).get()
-            kafkaTemplate.send(LOAN_APPLICATION_REQUESTS,
+                        """.toString())
+            sendToKafka(LOAN_APPLICATION_REQUESTS,
                     """
                         {
                             "amount": 2000,                           
                             "requester": "$requester"
                         }
-                        """.toString()).get()
+                        """.toString())
         and: "collect all events"
             List<String> loanDecisions = []
             15.times {

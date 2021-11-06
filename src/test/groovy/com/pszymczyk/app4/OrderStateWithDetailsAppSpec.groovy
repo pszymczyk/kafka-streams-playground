@@ -45,7 +45,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
             def orderThree = UUID.randomUUID().toString()
             kafkaConsumer.subscribe([ORDERS_WITH_DETAILS_STATE])
         when: "we send some item details"
-            kafkaTemplate.send(ITEMS_DETAILS, iphone,
+            sendToKafka(ITEMS_DETAILS, iphone,
                     """
                         {
                             "name": "$iphone",                           
@@ -54,7 +54,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                             "category": "smartphones"
                         }
                         """.toString())
-            kafkaTemplate.send(ITEMS_DETAILS, pampers,
+            sendToKafka(ITEMS_DETAILS, pampers,
                     """
                         {
                             "name": "$pampers",                           
@@ -63,7 +63,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                             "category": "kids"
                         }
                         """.toString())
-            kafkaTemplate.send(ITEMS_DETAILS, kindle,
+            sendToKafka(ITEMS_DETAILS, kindle,
                     """
                         {
                             "name": "$kindle",                           
@@ -72,7 +72,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                             "category": "eBook_readers"
                         }
                         """.toString())
-            kafkaTemplate.send(ITEMS_DETAILS, fairy,
+            sendToKafka(ITEMS_DETAILS, fairy,
                     """
                         {
                             "name": "$fairy",                           
@@ -82,7 +82,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                         }
                         """.toString())
         and: "send some order events"
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
@@ -90,7 +90,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                             "item": "$iphone"
                         }
                         """.toString())
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
@@ -98,7 +98,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                             "item": "$pampers"
                         }
                         """.toString())
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
@@ -106,7 +106,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                             "item": "$pampers"
                         }
                         """.toString())
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
@@ -114,7 +114,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                             "item": "$pampers"
                         }
                         """.toString())
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderTwo",                           
@@ -122,7 +122,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                             "item": "$kindle"
                         }
                         """.toString())
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderThree",                           
@@ -130,16 +130,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                             "item": "$fairy"
                         }
                         """.toString())
-            kafkaTemplate.send(ORDERS,
-                    """
-                        {
-                            "orderId": "$orderThree",                           
-                            "type": "${ItemAdded.TYPE}",
-                            "item": "$fairy"
-                        }
-                        """.toString())
-
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderThree",                           
@@ -148,7 +139,16 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                         }
                         """.toString())
 
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
+                    """
+                        {
+                            "orderId": "$orderThree",                           
+                            "type": "${ItemAdded.TYPE}",
+                            "item": "$fairy"
+                        }
+                        """.toString())
+
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderThree",                           
@@ -190,7 +190,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                 assert it.read('$.itemsDetails.fairy.price', String) == "10PLN"
             }
         when: "item category changed"
-            kafkaTemplate.send(ITEMS_DETAILS, fairy,
+            sendToKafka(ITEMS_DETAILS, fairy,
                     """
                         {
                             "name": "$fairy",                           

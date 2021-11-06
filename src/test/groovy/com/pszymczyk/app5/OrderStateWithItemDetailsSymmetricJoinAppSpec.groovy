@@ -39,7 +39,7 @@ class OrderStateWithItemDetailsSymmetricJoinAppSpec extends IntegrationSpec {
             def orderOne = "order-one-key"
             kafkaConsumer.subscribe([ORDERS_WITH_DETAILS_STATE])
         when: "we send some item details"
-            kafkaTemplate.send(ITEMS_DETAILS, iphone,
+            sendToKafka(ITEMS_DETAILS, iphone,
                     """
                         {
                             "name": "$iphone",                           
@@ -49,7 +49,7 @@ class OrderStateWithItemDetailsSymmetricJoinAppSpec extends IntegrationSpec {
                         }
                         """.toString())
         and: "send some order events"
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
@@ -57,7 +57,7 @@ class OrderStateWithItemDetailsSymmetricJoinAppSpec extends IntegrationSpec {
                             "item": "$iphone"
                         }
                         """.toString())
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
@@ -65,7 +65,7 @@ class OrderStateWithItemDetailsSymmetricJoinAppSpec extends IntegrationSpec {
                             "item": "$iphone"
                         }
                         """.toString())
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
@@ -73,7 +73,7 @@ class OrderStateWithItemDetailsSymmetricJoinAppSpec extends IntegrationSpec {
                             "item": "$iphone"
                         }
                         """.toString())
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
@@ -99,7 +99,7 @@ class OrderStateWithItemDetailsSymmetricJoinAppSpec extends IntegrationSpec {
                 assert it.read('$.itemsDetails.iphone.price', String) == "1000PLN"
             }
         when: "item price changed"
-            kafkaTemplate.send(ITEMS_DETAILS, iphone,
+            sendToKafka(ITEMS_DETAILS, iphone,
                     """
                         {
                             "name": "$iphone",                           

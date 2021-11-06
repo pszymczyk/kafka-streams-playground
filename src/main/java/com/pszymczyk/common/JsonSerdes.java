@@ -9,8 +9,6 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.streams.kstream.Windowed;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
@@ -31,9 +29,7 @@ public class JsonSerdes {
 
     public static <T> Serde<T> forA(Class<T> aClass) {
         JsonSerializer<T> serializer = new JsonSerializer<>(objectMapper);
-        serializer.setAddTypeInfo(false);
         JsonDeserializer<T> deserializer = new JsonDeserializer<>(aClass, objectMapper);
-        deserializer.ignoreTypeHeaders();
         return serdeFrom(serializer, deserializer);
     }
 }

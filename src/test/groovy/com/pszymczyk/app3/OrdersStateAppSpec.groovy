@@ -43,80 +43,80 @@ class OrdersStateAppSpec extends IntegrationSpec {
             def orderThree = UUID.randomUUID().toString()
             kafkaConsumer.subscribe([ORDERS_STATE])
         when: "we send some order events"
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
                             "type": "${ItemAdded.TYPE}",
                             "item": "$iphone"
                         }
-                        """.toString())
-            kafkaTemplate.send(ORDERS,
+                        """)
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
                             "type": "${ItemAdded.TYPE}",
                             "item": "$pampers"
                         }
-                        """.toString())
-            kafkaTemplate.send(ORDERS,
+                        """)
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
                             "type": "${ItemAdded.TYPE}",
                             "item": "$pampers"
                         }
-                        """.toString())
-            kafkaTemplate.send(ORDERS,
+                        """)
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderOne",                           
                             "type": "${ItemAdded.TYPE}",
                             "item": "$pampers"
                         }
-                        """.toString())
-            kafkaTemplate.send(ORDERS,
+                        """)
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderTwo",                           
                             "type": "${ItemAdded.TYPE}",
                             "item": "$kindle"
                         }
-                        """.toString())
-            kafkaTemplate.send(ORDERS,
+                        """)
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderThree",                           
                             "type": "${ItemAdded.TYPE}",
                             "item": "$fairy"
                         }
-                        """.toString())
-            kafkaTemplate.send(ORDERS,
+                        """)
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderThree",                           
                             "type": "${ItemAdded.TYPE}",
                             "item": "$fairy"
                         }
-                        """.toString())
+                        """)
 
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderThree",                           
                             "type": "${ItemAdded.TYPE}",
                             "item": "$fairy"
                         }
-                        """.toString())
+                        """)
 
-            kafkaTemplate.send(ORDERS,
+            sendToKafka(ORDERS,
                     """
                         {
                             "orderId": "$orderThree",                           
                             "type": "${ItemAdded.TYPE}",
                             "item": "$fairy"
                         }
-                        """.toString())
+                        """)
         and: "collect all events"
             Map<String, String> orders = [:]
             10.times {

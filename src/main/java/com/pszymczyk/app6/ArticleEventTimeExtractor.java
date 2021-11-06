@@ -9,7 +9,6 @@ public class ArticleEventTimeExtractor implements TimestampExtractor {
 
     private static final Logger log = LoggerFactory.getLogger(ArticleEventTimeExtractor.class);
 
-
     @Override
     public long extract(ConsumerRecord<Object, Object> record, long previousTimestamp) {
         Object value = record.value();

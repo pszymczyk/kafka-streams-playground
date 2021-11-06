@@ -48,141 +48,141 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
             kafkaConsumer.subscribe([ARTICLES_VISITS_TOP_FIVE])
         when: "simulate day before yesterday clicks"
             2.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$monzoArticle",                           
                             "time": $dayBeforeYesterday
                         }
-                        """.toString()).get()
+                        """.toString())
             }
             10.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$spacexArticle",                           
                             "time": $dayBeforeYesterday
                         }
-                        """.toString()).get()
+                        """.toString())
             }
             3.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$cloudKitchensArticle",                           
                             "time": $dayBeforeYesterday
                         }
-                        """.toString()).get()
+                        """.toString())
             }
             7.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$academyAwardsArticle",                           
                             "time": $dayBeforeYesterday
                         }
-                        """.toString()).get()
+                        """.toString())
             }
             1.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$superscriptArticle",                           
                             "time": $dayBeforeYesterday
                         }
-                        """.toString()).get()
+                        """.toString())
             }
         and: "simulate yesterday clicks"
             4.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$monzoArticle",                           
                             "time": $yesterday
                         }
-                        """.toString()).get()
+                        """.toString())
             }
             3.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$spacexArticle",                           
                             "time": $yesterday
                         }
-                        """.toString()).get()
+                        """.toString())
             }
             3.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$cloudKitchensArticle",                           
                             "time": $yesterday
                         }
-                        """.toString()).get()
+                        """.toString())
             }
             3.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$academyAwardsArticle",                           
                             "time": $yesterday
                         }
-                        """.toString()).get()
+                        """.toString())
             }
             2.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$superscriptArticle",                           
                             "time": $yesterday
                         }
-                        """.toString()).get()
+                        """.toString())
             }
         and: "simulate today clicks"
             15.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$monzoArticle",                           
                             "time": $today
                         }
-                        """.toString()).get()
+                        """.toString())
             }
             7.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$spacexArticle",                           
                             "time": $today
                         }
-                        """.toString()).get()
+                        """.toString())
             }
             2.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$cloudKitchensArticle",                           
                             "time": $today
                         }
-                        """.toString()).get()
+                        """.toString())
             }
             5.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$academyAwardsArticle",                           
                             "time": $today
                         }
-                        """.toString()).get()
+                        """.toString())
             }
             1.times {
-                kafkaTemplate.send(ARTICLES_VISITS,
+                sendToKafka(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$superscriptArticle",                           
                             "time": $today
                         }
-                        """.toString()).get()
+                        """.toString())
             }
         and: "collect all events"
             Map<String, String> visitsRankingTable = [:]

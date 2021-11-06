@@ -41,90 +41,90 @@ class CustomersDefaultPaymentMethodsCountAppSpec extends IntegrationSpec {
             def danuta = "danuta"
             kafkaConsumer.subscribe([PAYMENT_METHODS_COUNT_TOPIC])
         when: "we send some not important it this case events"
-            kafkaTemplate.send(CUSTOMER_PREFERENCES_TOPIC,
+            sendToKafka(CUSTOMER_PREFERENCES_TOPIC,
                     """
                         {
                             "userId": "$kazik",                           
                             "type": "${PreferredLocationChanged.TYPE}",
                             "newLocation": "Polna 3, 12-932 Lublin"
                         }
-                        """.toString())
+                        """)
         and: "send some PaymentMethodChanged events"
-            kafkaTemplate.send(CUSTOMER_PREFERENCES_TOPIC,
+            sendToKafka(CUSTOMER_PREFERENCES_TOPIC,
                     """
                         {
                             "userId": "$kazik",                           
                             "type": "${PaymentMethodChanged.TYPE}",
                             "newPaymentMethod": "blik"
                         }
-                        """.toString())
-            kafkaTemplate.send(CUSTOMER_PREFERENCES_TOPIC,
+                        """)
+            sendToKafka(CUSTOMER_PREFERENCES_TOPIC,
                     """
                         {
                             "userId": "$zbyszek}",                           
                             "type": "${PaymentMethodChanged.TYPE}",
                             "newPaymentMethod": "blik"
                         }
-                        """.toString())
-            kafkaTemplate.send(CUSTOMER_PREFERENCES_TOPIC,
+                        """)
+            sendToKafka(CUSTOMER_PREFERENCES_TOPIC,
                     """
                         {
                             "userId": "$jadwiga",                           
                             "type": "${PaymentMethodChanged.TYPE}",
                             "newPaymentMethod": "blik"
                         }
-                        """.toString())
+                        """)
         and: "we send some not important it this case events"
-            kafkaTemplate.send(CUSTOMER_PREFERENCES_TOPIC,
+            sendToKafka(CUSTOMER_PREFERENCES_TOPIC,
                     """
                         {
                             "userId": "$kazik",                           
                             "type": "${CommunicationAgreementRevoked.TYPE}",
                             "revokedAgreement": "phone"
                         }
-                        """.toString())
+                        """)
         and: "send some PaymentMethodChanged events"
-            kafkaTemplate.send(CUSTOMER_PREFERENCES_TOPIC,
+            sendToKafka(CUSTOMER_PREFERENCES_TOPIC,
                     """
                         {
                             "userId": "$zenon",                           
                             "type": "${PaymentMethodChanged.TYPE}",
                             "newPaymentMethod": "blik"
                         }
-                        """.toString())
-            kafkaTemplate.send(CUSTOMER_PREFERENCES_TOPIC,
+                        """)
+            sendToKafka(CUSTOMER_PREFERENCES_TOPIC,
                     """
                         {
                             "userId": "$danuta",                           
                             "type": "${PaymentMethodChanged.TYPE}",
                             "newPaymentMethod": "blik"
                         }
-                        """.toString())
+                        """)
         and: "some users change blik to other payment method"
-            kafkaTemplate.send(CUSTOMER_PREFERENCES_TOPIC,
+            sendToKafka(CUSTOMER_PREFERENCES_TOPIC,
                     """
                         {
                             "userId": "$zenon",                           
                             "type": "${PaymentMethodChanged.TYPE}",
                             "newPaymentMethod": "cash"
                         }
-                        """.toString())
-            kafkaTemplate.send(CUSTOMER_PREFERENCES_TOPIC,
+                        """)
+            sendToKafka(CUSTOMER_PREFERENCES_TOPIC,
                     """
                         {
                             "userId": "$danuta",                           
                             "type": "${PaymentMethodChanged.TYPE}",
                             "newPaymentMethod": "bank_transfer"
                         }
-                        """.toString())
-            kafkaTemplate.send(CUSTOMER_PREFERENCES_TOPIC,
+                        """)
+            sendToKafka(CUSTOMER_PREFERENCES_TOPIC,
                     """
                         {
                             "userId": "$jadwiga",                           
                             "type": "${PaymentMethodChanged.TYPE}",
                             "newPaymentMethod": "bank_transfer"
                         }
-                        """.toString())
+                        """)
         and: "collect all events"
             Map<String, String> paymentMethodCounts = [:]
             10.times {
