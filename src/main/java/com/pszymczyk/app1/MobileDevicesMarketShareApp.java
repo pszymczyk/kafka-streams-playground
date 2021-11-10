@@ -1,13 +1,21 @@
 package com.pszymczyk.app1;
 
+import com.pszymczyk.app3.OrderState;
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.common.utils.Bytes;
+import org.apache.kafka.streams.StoreQueryParameters;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.GlobalKTable;
 import org.apache.kafka.streams.kstream.KGroupedStream;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Materialized;
+import org.apache.kafka.streams.state.KeyValueStore;
+import org.apache.kafka.streams.state.QueryableStoreTypes;
+import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
 
 import java.util.Map;
 
@@ -62,6 +70,20 @@ class MobileDevicesMarketShareApp {
          */
         KTable<String, Long> clicksCount = clicksGroupedByBrowserName
             .count();
+        /*
+        Sposób na rejestrowanie GlobalKTable
+
+        GlobalKTable<String, Long> clicksCountGlobal = builder
+            .globalTable(CLICKS_COUNT, Materialized.<String, Long, KeyValueStore< Bytes, byte[]>>as("nazwa_globala")
+                .withKeySerde(Serdes.String())
+                .withValueSerde(Serdes.Long()));
+
+        ten
+        ReadOnlyKeyValueStore<String, Long> store = kafkaStreams.store(
+            StoreQueryParameters.fromNameAndType("nazwa_globala", QueryableStoreTypes.keyValueStore()))
+            Long liczbaKlikniecWFirefox = store.get("firefox");
+
+         */
 
         /*
          * Convert Table -> Stream
