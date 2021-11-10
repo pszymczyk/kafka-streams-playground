@@ -47,12 +47,7 @@ class MobileDevicesMarketShareAppSpec extends IntegrationSpec {
             sendToKafka(CLICKS_TOPIC, "${System.currentTimeMillis()}#link982721#edge")
             sendToKafka(CLICKS_TOPIC, "${System.currentTimeMillis()}#link982721#edge")
             sendToKafka(CLICKS_TOPIC, "${System.currentTimeMillis()}#link982721#edge")
-        and: "send some missing data"
-            sendToKafka(CLICKS_TOPIC, "link982721#edge")
-            sendToKafka(CLICKS_TOPIC, "link982721#edge")
-            sendToKafka(CLICKS_TOPIC, "${System.currentTimeMillis()}")
             sendToKafka(CLICKS_TOPIC, "${System.currentTimeMillis()}#tree12#firefox")
-        and: "again send some nice clicks"
             sendToKafka(CLICKS_TOPIC, "${System.currentTimeMillis()}#tree12#chrome")
             sendToKafka(CLICKS_TOPIC, "${System.currentTimeMillis()}#tree12#chrome")
             sendToKafka(CLICKS_TOPIC, "${System.currentTimeMillis()}#tree12#chrome")
@@ -66,6 +61,7 @@ class MobileDevicesMarketShareAppSpec extends IntegrationSpec {
                 def consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500))
                 logger.info("Received {} events", consumerRecords.size())
                 consumerRecords.each {
+                    logger.info("{}:{}", it.key(), it.value())
                     clicksCount.put(it.key(), it.value())
                 }
             }
