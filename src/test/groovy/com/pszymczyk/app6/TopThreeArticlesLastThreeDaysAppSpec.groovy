@@ -190,6 +190,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                 def consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500))
                 logger.info("Received {} events", consumerRecords.size())
                 consumerRecords.each {
+                logger.info("Received {}:{}", it.key(), it.value())
                     visitsRankingTable.put(it.key(), it.value())
                 }
             }

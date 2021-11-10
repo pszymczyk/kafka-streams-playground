@@ -78,9 +78,8 @@ class MobileDevicesMarketShareApp {
                 .withKeySerde(Serdes.String())
                 .withValueSerde(Serdes.Long()));
 
-        ten
         ReadOnlyKeyValueStore<String, Long> store = kafkaStreams.store(
-            StoreQueryParameters.fromNameAndType("nazwa_globala", QueryableStoreTypes.keyValueStore()))
+            StoreQueryParameters.fromNameAndType(CLICKS_COUNT, QueryableStoreTypes.keyValueStore()))
             Long liczbaKlikniecWFirefox = store.get("firefox");
 
          */
