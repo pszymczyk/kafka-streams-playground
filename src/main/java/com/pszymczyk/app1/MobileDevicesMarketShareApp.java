@@ -71,20 +71,6 @@ class MobileDevicesMarketShareApp {
         KTable<String, Long> clicksCount = clicksGroupedByBrowserName
             .count();
         /*
-        Sposób na rejestrowanie GlobalKTable
-
-        GlobalKTable<String, Long> clicksCountGlobal = builder
-            .globalTable(CLICKS_COUNT, Materialized.<String, Long, KeyValueStore< Bytes, byte[]>>as("nazwa_globala")
-                .withKeySerde(Serdes.String())
-                .withValueSerde(Serdes.Long()));
-
-        ReadOnlyKeyValueStore<String, Long> store = kafkaStreams.store(
-            StoreQueryParameters.fromNameAndType(CLICKS_COUNT, QueryableStoreTypes.keyValueStore()))
-            Long liczbaKlikniecWFirefox = store.get("firefox");
-
-         */
-
-        /*
          * Convert Table -> Stream
          * [
          *  key: firefox, value: 2
