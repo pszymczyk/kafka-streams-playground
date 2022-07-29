@@ -9,8 +9,8 @@ public class ArticleWithVisits {
 
     @JsonCreator
     public ArticleWithVisits(
-        @JsonProperty("title") String title,
-        @JsonProperty("views") Long views) {
+            @JsonProperty("title") String title,
+            @JsonProperty("views") Long views) {
         this.title = title;
         this.views = views;
     }

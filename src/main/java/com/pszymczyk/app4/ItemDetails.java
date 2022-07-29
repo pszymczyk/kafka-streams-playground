@@ -11,10 +11,10 @@ class ItemDetails {
 
     @JsonCreator
     ItemDetails(
-        @JsonProperty("name") String name,
-        @JsonProperty("description") String description,
-        @JsonProperty("price") String price,
-        @JsonProperty("category") String category) {
+            @JsonProperty("name") String name,
+            @JsonProperty("description") String description,
+            @JsonProperty("price") String price,
+            @JsonProperty("category") String category) {
         this.name = name;
         this.description = description;
         this.price = price;

@@ -12,8 +12,8 @@ class ItemRemoved implements OrderEvent {
 
     @JsonCreator
     ItemRemoved(
-        @JsonProperty("orderId") String orderId,
-        @JsonProperty("item") String item) {
+            @JsonProperty("orderId") String orderId,
+            @JsonProperty("item") String item) {
         this.orderId = orderId;
         this.item = item;
     }

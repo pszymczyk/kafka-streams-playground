@@ -12,8 +12,8 @@ class ItemAdded implements OrderEvent {
 
     @JsonCreator
     ItemAdded(
-        @JsonProperty("orderId") String orderId,
-        @JsonProperty("item") String item) {
+            @JsonProperty("orderId") String orderId,
+            @JsonProperty("item") String item) {
         this.orderId = orderId;
         this.item = item;
     }

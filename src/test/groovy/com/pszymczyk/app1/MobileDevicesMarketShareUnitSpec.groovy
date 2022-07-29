@@ -10,7 +10,6 @@ import spock.lang.Specification
 
 class MobileDevicesMarketShareUnitSpec extends Specification {
 
-
     TestEnvironment testEnvironment
 
     def setup() {

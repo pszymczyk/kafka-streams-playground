@@ -19,8 +19,8 @@ public class OrderState {
 
     @JsonCreator
     public OrderState(
-        @JsonProperty("orderId") String orderId,
-        @JsonProperty("items") Map<String, Long> items) {
+            @JsonProperty("orderId") String orderId,
+            @JsonProperty("items") Map<String, Long> items) {
         this.orderId = orderId;
         this.items = items;
     }

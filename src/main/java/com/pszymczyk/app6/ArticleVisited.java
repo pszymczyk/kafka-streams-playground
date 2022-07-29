@@ -10,8 +10,8 @@ class ArticleVisited {
 
     @JsonCreator
     ArticleVisited(
-        @JsonProperty("articleTitle") String articleTitle,
-        @JsonProperty("time") Long time) {
+            @JsonProperty("articleTitle") String articleTitle,
+            @JsonProperty("time") Long time) {
         this.articleTitle = articleTitle;
         this.time = time;
     }

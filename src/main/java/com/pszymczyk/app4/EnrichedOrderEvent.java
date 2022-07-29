@@ -10,8 +10,8 @@ class EnrichedOrderEvent {
 
     @JsonCreator
     EnrichedOrderEvent(
-        @JsonProperty("itemDetails") ItemDetails itemDetails,
-        @JsonProperty("orderEvent") OrderEvent orderEvent) {
+            @JsonProperty("itemDetails") ItemDetails itemDetails,
+            @JsonProperty("orderEvent") OrderEvent orderEvent) {
         this.itemDetails = itemDetails;
         this.orderEvent = orderEvent;
     }

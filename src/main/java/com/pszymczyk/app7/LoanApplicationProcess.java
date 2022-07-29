@@ -37,7 +37,7 @@ public class LoanApplicationProcess implements Transformer<String, LoanApplicati
             loanApplicationDecision.setAmount(loanApplicationRequest.getAmount());
             loanApplicationDecision.setRequester(loanApplicationRequest.getRequester());
             return new KeyValue<>(loanApplicationDecision.getRequester(), loanApplicationDecision);
-        } else if (userLoansCount == 1){
+        } else if (userLoansCount == 1) {
             usersLoansCount.put(loanApplicationRequest.getRequester(), 2);
             LoanApplicationDecision loanApplicationDecision = new LoanApplicationDecision();
             loanApplicationDecision.setAmount(loanApplicationRequest.getAmount().multiply(new BigDecimal("0.8")));
