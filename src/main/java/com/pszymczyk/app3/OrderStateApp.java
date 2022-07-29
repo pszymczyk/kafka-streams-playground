@@ -47,7 +47,7 @@ class OrderStateApp {
                                 },
                         Materialized.with(Serdes.String(), JsonSerdes.forA(OrderState.class)));
 
-        ordersStateTable.toStream().to(ORDERS_STATE, Produced.with(Serdes.String(), JsonSerdes.forA(OrderState.class)));
+        ordersStateTable.toStream().to(ORDERS_STATE);
 
         return builder;
     }
