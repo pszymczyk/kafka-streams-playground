@@ -15,6 +15,8 @@ import java.util.Map;
 
 class MobileDevicesMarketShareAppFileStorage {
 
+    public static final String MOBILE_DEVICES_MARKET_SHARE_STORE = "mobile-devices-market-share-store";
+
     static final String CLICKS_TOPIC = "clicks";
     static final String CLICKS_COUNT = "clicks-count";
 
@@ -32,7 +34,7 @@ class MobileDevicesMarketShareAppFileStorage {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        KeyValueBytesStoreSupplier storeSupplier = Stores.persistentKeyValueStore("queryable-store-name");
+        KeyValueBytesStoreSupplier storeSupplier = Stores.persistentKeyValueStore(MOBILE_DEVICES_MARKET_SHARE_STORE);
         Materialized<String, Long, KeyValueStore<Bytes, byte[]>> materialized = Materialized.<String, Long>as(storeSupplier)
                 .withKeySerde(Serdes.String())
                 .withValueSerde(Serdes.Long());

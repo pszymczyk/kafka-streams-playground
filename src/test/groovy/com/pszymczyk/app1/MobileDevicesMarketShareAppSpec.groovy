@@ -19,7 +19,7 @@ class MobileDevicesMarketShareAppSpec extends IntegrationSpec {
     def setupSpec() {
         kafkaStreams = new StreamsRunner().run(
                 bootstrapServers,
-                "mobile-devices-market-share-main-v1",
+                "mobile-devices-market-share-spec",
                 MobileDevicesMarketShareApp.buildKafkaStreamsTopology(),
                 [:],
                 new NewTopic(CLICKS_TOPIC, 1, (short) 1),

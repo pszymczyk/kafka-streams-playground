@@ -200,7 +200,7 @@ class OrderStateWithDetailsAppSpec extends IntegrationSpec {
                         }
                         """.toString())
         and: "we collect all order events again"
-            def yetAnotherConsumer = createKafkaConsumer("${this.class.simpleName}- ${UUID.randomUUID().toString().substring(0,5)}")
+            def yetAnotherConsumer = kafkaConsumer("${this.class.simpleName}- ${UUID.randomUUID().toString().substring(0,5)}")
             yetAnotherConsumer.subscribe([ORDERS_WITH_DETAILS_STATE])
             def ordersAfterItemDetailsChange= [:]
             10.times {

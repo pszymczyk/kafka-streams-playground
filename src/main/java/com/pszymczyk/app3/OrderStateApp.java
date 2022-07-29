@@ -42,8 +42,7 @@ class OrderStateApp {
                                 switch (value.getType()) {
                                     case ItemAdded.TYPE -> aggregate.apply((ItemAdded) value);
                                     case ItemRemoved.TYPE -> aggregate.apply((ItemRemoved) value);
-                                    default ->
-                                            throw new IllegalStateException("Unknown event types should be filtered before!");
+                                    default -> throw new IllegalStateException("Unknown event types should be filtered before!");
                                 },
                         Materialized.with(Serdes.String(), JsonSerdes.forA(OrderState.class)));
 
