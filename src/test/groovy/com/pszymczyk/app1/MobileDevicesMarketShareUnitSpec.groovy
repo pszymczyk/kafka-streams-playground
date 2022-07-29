@@ -1,8 +1,5 @@
 package com.pszymczyk.app1
 
-import com.pszymczyk.app3.ItemAdded
-import com.pszymczyk.app3.ItemRemoved
-import com.pszymczyk.app3.OrderState
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
