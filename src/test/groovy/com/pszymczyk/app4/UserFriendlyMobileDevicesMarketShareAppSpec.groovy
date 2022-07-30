@@ -3,6 +3,7 @@ package com.pszymczyk.app4
 import com.pszymczyk.IntegrationSpec
 import com.pszymczyk.common.StreamsRunner
 import org.apache.kafka.clients.admin.NewTopic
+import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.streams.KafkaStreams
 import spock.lang.Shared
 
@@ -63,11 +64,10 @@ class UserFriendlyMobileDevicesMarketShareAppSpec extends IntegrationSpec {
         sendToKafka(USERS, "789", "Anna Kowalska")
 
         and: "we collect all order events again"
-        def yetAnotherConsumer = kafkaConsumer("${this.class.simpleName}-2")
-        yetAnotherConsumer.subscribe([USER_FRIENDLY_MESSAGES])
+        kafkaConsumer.seekToBeginning([new TopicPartition(USER_FRIENDLY_MESSAGES, 0)])
         def messagesAfterUserDetailsChanged = [:]
         5.times {
-            def consumerRecords = yetAnotherConsumer.poll(Duration.ofMillis(500))
+            def consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500))
             logger.info("Received {} events", consumerRecords.size())
             consumerRecords.each {
                 messagesAfterUserDetailsChanged.put(it.key(), it.value())

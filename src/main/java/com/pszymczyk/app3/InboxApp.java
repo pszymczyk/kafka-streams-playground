@@ -1,0 +1,42 @@
+package com.pszymczyk.app3;
+
+import com.pszymczyk.common.StreamsRunner;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.Materialized;
+
+import java.util.ArrayList;
+import java.util.Map;
+
+class InboxApp {
+
+    static final String MESSAGES = "messages";
+    static final String INBOX = "inbox";
+
+    public static void main(String[] args) {
+        StreamsBuilder builder = buildKafkaStreamsTopology();
+        new StreamsRunner().run(
+                "localhost:9092",
+                "messages-app-main",
+                builder,
+                Map.of(),
+                new NewTopic(MESSAGES, 1, (short) 1),
+                new NewTopic(INBOX, 1, (short) 1));
+    }
+
+    static StreamsBuilder buildKafkaStreamsTopology() {
+        StreamsBuilder builder = new StreamsBuilder();
+
+        builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()))
+                .groupBy((nullKey, value) -> value.user())
+                .aggregate(() -> new Inbox(new ArrayList<>()),
+                        (key, message, inbox1) -> inbox1.add(message),
+                        Materialized.with(Serdes.String(), InboxSerde.newSerde()))
+                .toStream()
+                .to(INBOX);
+
+        return builder;
+    }
+}
