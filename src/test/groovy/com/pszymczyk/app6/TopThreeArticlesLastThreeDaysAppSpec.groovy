@@ -48,7 +48,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
             kafkaConsumer.subscribe([ARTICLES_VISITS_TOP_FIVE])
         when: "simulate day before yesterday clicks"
             2.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$monzoArticle",                           
@@ -57,7 +57,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             10.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$spacexArticle",                           
@@ -66,7 +66,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             3.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$cloudKitchensArticle",                           
@@ -75,7 +75,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             7.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$academyAwardsArticle",                           
@@ -84,7 +84,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             1.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$superscriptArticle",                           
@@ -94,7 +94,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
             }
         and: "simulate yesterday clicks"
             4.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$monzoArticle",                           
@@ -103,7 +103,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             3.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$spacexArticle",                           
@@ -112,7 +112,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             3.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$cloudKitchensArticle",                           
@@ -121,7 +121,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             3.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$academyAwardsArticle",                           
@@ -130,7 +130,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             2.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$superscriptArticle",                           
@@ -140,7 +140,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
             }
         and: "simulate today clicks"
             15.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$monzoArticle",                           
@@ -149,7 +149,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             7.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$spacexArticle",                           
@@ -158,7 +158,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             2.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$cloudKitchensArticle",                           
@@ -167,7 +167,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             5.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$academyAwardsArticle",                           
@@ -176,7 +176,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             1.times {
-                sendToKafka(ARTICLES_VISITS,
+                produceMessage(ARTICLES_VISITS,
                         """
                         {
                             "articleTitle": "$superscriptArticle",                           

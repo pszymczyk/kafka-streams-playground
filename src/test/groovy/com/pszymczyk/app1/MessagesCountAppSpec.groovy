@@ -35,10 +35,10 @@ class MessagesCountAppSpec extends IntegrationSpec {
         kafkaConsumer.subscribe([MESSAGES_COUNT])
 
         when: "send a lot of messages"
-        sendToKafka(MESSAGES, "pszymczyk#Hello! how are you?")
-        sendToKafka(MESSAGES, "pszymczyk#Hi! what is going on?")
-        sendToKafka(MESSAGES, "andrzej123#We have a special discount for you!")
-        sendToKafka(MESSAGES, "pszymczyk#Best wishes in Valentine's day!")
+        produceMessage(MESSAGES, "andrzej123#pszymczyk#Hello! how are you?")
+        produceMessage(MESSAGES, "andrzej123#pszymczyk#Hi! what is going on?")
+        produceMessage(MESSAGES, "telemarketing#andrzej123#We have a special discount for you!")
+        produceMessage(MESSAGES, "telemarketing#pszymczyk#Best wishes in Valentine's day!")
 
         and: "collect all events"
         Map<String, String> messagesCount = [:]

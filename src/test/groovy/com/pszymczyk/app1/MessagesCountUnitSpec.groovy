@@ -1,19 +1,15 @@
 package com.pszymczyk.app1
 
 import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.streams.StreamsBuilder
-import org.apache.kafka.streams.StreamsConfig
-import org.apache.kafka.streams.TestInputTopic
-import org.apache.kafka.streams.TestOutputTopic
-import org.apache.kafka.streams.TopologyTestDriver
+import org.apache.kafka.streams.*
 import spock.lang.Specification
 
-class MobileDevicesMarketShareUnitSpec extends Specification {
+class MessagesCountUnitSpec extends Specification {
 
     TestEnvironment testEnvironment
 
     def setup() {
-            testEnvironment = TestEnvironmentFactory.create()
+        testEnvironment = TestEnvironmentFactory.create()
     }
 
     def cleanup() {
@@ -21,31 +17,34 @@ class MobileDevicesMarketShareUnitSpec extends Specification {
     }
 
     def "Should build orders state"() {
+        given:
+        testEnvironment.messages.pipeInput("andrzej123#pszymczyk#Hello! how are you?")
+        testEnvironment.messages.pipeInput("andrzej123#pszymczyk#Hello! how are you?")
+        testEnvironment.messages.pipeInput("andrzej123#pszymczyk#Hello! how are you?")
+        testEnvironment.messages.pipeInput("pszymczyk#andrzej123##Hello! how are you?")
+
         when:
-            testEnvironment.clicks.pipeInput("123#xxx#trololo")
-            testEnvironment.clicks.pipeInput("123#xxx#trololo")
-            testEnvironment.clicks.pipeInput("123#xxx#trololo")
-            testEnvironment.clicks.pipeInput("123#xxx#trololo")
-            testEnvironment.clicks.pipeInput("123#xxx#trololo")
+        Map<String, String> messagesCount = testEnvironment.messagesCount
+                .readRecordsToList()
+                .collectEntries { [it.key(), it.value()] }
+
         then:
-            Map<String, String> map = testEnvironment.clicksCount
-                    .readRecordsToList()
-                    .collectEntries { [it.key(), it.value()] }
-            map["trololo"] == "5"
+        messagesCount["pszymczyk"] == "3"
+        messagesCount["andrzej123"] == "1"
     }
 
     private static class TestEnvironment {
         final TopologyTestDriver testDriver
 
-        final TestInputTopic<String, String> clicks
-        final TestOutputTopic<String, String> clicksCount
+        final TestInputTopic<String, String> messages
+        final TestOutputTopic<String, String> messagesCount
 
         TestEnvironment(TopologyTestDriver testDriver,
-                        TestInputTopic<String, String> clicks,
-                        TestOutputTopic<String, String> clicksCount) {
+                        TestInputTopic<String, String> messages,
+                        TestOutputTopic<String, String> messagesCount) {
             this.testDriver = testDriver
-            this.clicks = clicks
-            this.clicksCount = clicksCount
+            this.messages = messages
+            this.messagesCount = messagesCount
         }
 
         void close() {
@@ -63,14 +62,14 @@ class MobileDevicesMarketShareUnitSpec extends Specification {
                     testStreamProperties()
             )
 
-            TestInputTopic<String, String> clicks = topologyTestDriver
+            TestInputTopic<String, String> messages = topologyTestDriver
                     .createInputTopic(
                             MessagesCountApp.MESSAGES,
                             Serdes.String().serializer(),
                             Serdes.String().serializer())
 
 
-            TestOutputTopic<String, String> clicksCount = topologyTestDriver
+            TestOutputTopic<String, String> messagesCount = topologyTestDriver
                     .createOutputTopic(
                             MessagesCountApp.MESSAGES_COUNT,
                             Serdes.String().deserializer(),
@@ -78,8 +77,8 @@ class MobileDevicesMarketShareUnitSpec extends Specification {
 
             return new TestEnvironment(
                     topologyTestDriver,
-                    clicks,
-                    clicksCount
+                    messages,
+                    messagesCount
             )
         }
 

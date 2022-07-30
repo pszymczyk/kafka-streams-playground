@@ -32,44 +32,44 @@ class MessagesCountApp {
         /*
          * Simple stream of messages
          * [
-         *  key: null, value: pszymczyk#Hi Paweł, how are you?
-         *  key: null, value: andrzej123#Hello, how are you?
-         *  key: null, value: pszymczyk#Special discount for you!
+         *  key: null, value: "pszymczyk#andrzej123#Hi Paweł, how are you?"
+         *  key: null, value: "andrzej123#pszymczyk#Hello, how are you?"
+         *  key: null, value: "telemarketing#pszymczyk#Special discount for you!"
          *  ]
          */
         KStream<String, String> messages = builder.stream(MESSAGES);
 
         /*
-         * Group messages by user name
+         * Map and group messages by receiver name
          * [
-         *  key: pszymczyk, value: pszymczyk#Hi Paweł, how are you?
-         *  key: null, value: pszymczyk#Special discount for you!
+         *  key: "pszymczyk", value: ""
+         *  key: "pszymczyk", value: ""
          * ],
          * [
-         *  key: null, value: andrzej123#Hello, how are you?
+         *  key: "andrzej123", value: ""
          * ]
          */
         KGroupedStream<String, String> messagesGroupedByUser = messages
-                .map((nullKey, message) -> new KeyValue<>(message.split("#")[0], ""))
+                .map((nullKey, message) -> new KeyValue<>(message.split("#")[1], ""))
                 .groupByKey();
 
         /*
          * Count all messages in groups
          * [
-         *  key: pszymczyk, value: 2
-         *  key: andrzej123, value: 1
+         *  key: "pszymczyk", value: 2
+         *  key: "andrzej123", value: 1
          * ]
          */
         KTable<String, Long> messagesCount = messagesGroupedByUser.count();
         /*
          * Convert Table -> Stream
          * [
-         *  key: pszymczyk, value: 2
-         *  key: andrzej123, value: 1
+         *  key: "pszymczyk", value: "2"
+         *  key: "andrzej12"3, value: "1"
          * ]
          */
         messagesCount.toStream()
-                .mapValues(aLong -> "" + aLong) // we change count value from Long -> String
+                .mapValues(Object::toString)
                 .to(MESSAGES_COUNT);
 
         return builder;

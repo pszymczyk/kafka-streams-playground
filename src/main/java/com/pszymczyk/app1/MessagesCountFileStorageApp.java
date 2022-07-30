@@ -1,21 +1,26 @@
-package com.pszymczyk.app2;
+package com.pszymczyk.app1;
 
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KGroupedStream;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Materialized;
+import org.apache.kafka.streams.state.KeyValueBytesStoreSupplier;
+import org.apache.kafka.streams.state.KeyValueStore;
+import org.apache.kafka.streams.state.Stores;
 
 import java.util.Map;
 
-class MessagesCountApp {
+class MessagesCountFileStorageApp {
 
     static final String MESSAGES = "messages";
     static final String MESSAGES_COUNT = "messages-count";
+    static final String STATE_STORE_NAME = "messages-count-state-store";
 
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
@@ -34,15 +39,15 @@ class MessagesCountApp {
         /*
          * Simple stream of messages
          * [
-         *  key: null, value: "pszymczyk#Hi Paweł, how are you?"
-         *  key: null, value: "andrzej123#Hello, how are you?"
-         *  key: null, value: "pszymczyk#Special discount for you!"
+         *  key: null, value: "pszymczyk#andrzej123#Hi Paweł, how are you?"
+         *  key: null, value: "andrzej123#pszymczyk#Hello, how are you?"
+         *  key: null, value: "telemarketing#pszymczyk#Special discount for you!"
          *  ]
          */
-        KStream<String, Message> messages = builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()));
+        KStream<String, String> messages = builder.stream(MESSAGES);
 
         /*
-         * Map and group messages by sender name
+         * Map and group messages by receiver name
          * [
          *  key: "pszymczyk", value: ""
          *  key: "pszymczyk", value: ""
@@ -52,8 +57,16 @@ class MessagesCountApp {
          * ]
          */
         KGroupedStream<String, String> messagesGroupedByUser = messages
-                .map((nullKey, message) -> new KeyValue<>(message.sender(), ""))
+                .map((nullKey, message) -> new KeyValue<>(message.split("#")[1], ""))
                 .groupByKey();
+
+        /*
+         * Prepare file based Materialized
+         */
+        KeyValueBytesStoreSupplier storeSupplier = Stores.persistentKeyValueStore(STATE_STORE_NAME);
+        Materialized<String, Long, KeyValueStore<Bytes, byte[]>> materialized = Materialized.<String, Long>as(storeSupplier)
+                .withKeySerde(Serdes.String())
+                .withValueSerde(Serdes.Long());
 
         /*
          * Count all messages in groups
@@ -62,12 +75,12 @@ class MessagesCountApp {
          *  key: "andrzej123", value: 1
          * ]
          */
-        KTable<String, Long> messagesCount = messagesGroupedByUser.count();
+        KTable<String, Long> messagesCount = messagesGroupedByUser.count(materialized);
         /*
          * Convert Table -> Stream
          * [
          *  key: "pszymczyk", value: "2"
-         *  key: "andrzej123", value: "1"
+         *  key: "andrzej12"3, value: "1"
          * ]
          */
         messagesCount.toStream()

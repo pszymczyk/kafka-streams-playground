@@ -9,6 +9,9 @@ import spock.lang.Shared
 
 import java.time.Duration
 
+import static com.pszymczyk.app3.InboxApp.INBOX
+import static com.pszymczyk.app3.InboxApp.MESSAGES
+
 class InboxAppSpec extends IntegrationSpec {
 
     @Shared
@@ -20,8 +23,8 @@ class InboxAppSpec extends IntegrationSpec {
                 "inbox-app",
                 InboxApp.buildKafkaStreamsTopology(),
                 [:],
-                new NewTopic(InboxApp.MESSAGES, 1, (short) 1),
-                new NewTopic(InboxApp.INBOX, 1, (short) 1))
+                new NewTopic(MESSAGES, 1, (short) 1),
+                new NewTopic(INBOX, 1, (short) 1))
     }
 
     def cleanupSpec() {
@@ -30,12 +33,12 @@ class InboxAppSpec extends IntegrationSpec {
 
     def "Should build inbox"() {
         given:
-        sendToKafka(InboxApp.MESSAGES, "pszymczyk#Hello! how are you?")
-        sendToKafka(InboxApp.MESSAGES, "pszymczyk#Hi! what is going on?")
-        sendToKafka(InboxApp.MESSAGES, "andrzej123#We have a special discount for you!")
-        sendToKafka(InboxApp.MESSAGES, "pszymczyk#Best wishes in Valentine's day!")
+        produceMessage(MESSAGES, "andrzej123#pszymczyk#Hello! how are you?")
+        produceMessage(MESSAGES, "andrzej123#pszymczyk#Hi! what is going on?")
+        produceMessage(MESSAGES, "telemarketing#andrzej123#We have a special discount for you!")
+        produceMessage(MESSAGES, "telemarketing#pszymczyk#Best wishes in Valentine's day!")
 
-        kafkaConsumer.subscribe([InboxApp.INBOX])
+        kafkaConsumer.subscribe([INBOX])
         when: "collect all events"
             Map<String, String> inbox = [:]
             10.times {

@@ -30,10 +30,10 @@ abstract class IntegrationSpec extends Specification {
     }
 
     def setup() {
-        kafkaConsumer = kafkaConsumer()
+        kafkaConsumer = createKafkaConsumer()
     }
 
-    protected Consumer<String, String> kafkaConsumer(String groupId = this.class.simpleName) {
+    protected Consumer<String, String> createKafkaConsumer(String groupId = this.class.simpleName) {
         new KafkaConsumer<>(
                 Map.of(
                         ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
@@ -53,19 +53,19 @@ abstract class IntegrationSpec extends Specification {
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class));
     }
 
-    protected static void sendToKafka(String topic, String key, GString value) {
-        sendToKafka(topic, key, value.toString())
+    protected static void produceMessage(String topic, String key, GString value) {
+        produceMessage(topic, key, value.toString())
     }
 
-    protected static void sendToKafka(String topic, String key, String value) {
+    protected static void produceMessage(String topic, String key, String value) {
         kafkaProducer.send(new ProducerRecord(topic, key, value.toString())).get(2, TimeUnit.SECONDS)
     }
 
-    protected static void sendToKafka(String topic, GString value) {
-        sendToKafka(topic, value.toString())
+    protected static void produceMessage(String topic, GString value) {
+        produceMessage(topic, value.toString())
     }
 
-    protected static void sendToKafka(String topic, String value) {
+    protected static void produceMessage(String topic, String value) {
         kafkaProducer.send(new ProducerRecord(topic, value.toString())).get(2, TimeUnit.SECONDS)
     }
 }

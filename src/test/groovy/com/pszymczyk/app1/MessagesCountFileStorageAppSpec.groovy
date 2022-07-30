@@ -1,18 +1,20 @@
-package com.pszymczyk.app2
+package com.pszymczyk.app1
 
 import com.pszymczyk.IntegrationSpec
 import com.pszymczyk.common.StreamsRunner
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.streams.KafkaStreams
+import org.apache.kafka.streams.errors.InvalidStateStoreException
+import org.apache.kafka.streams.state.ReadOnlyKeyValueStore
 import spock.lang.Shared
 
-import java.time.Duration
+import static MessagesCountApp.MESSAGES
+import static MessagesCountApp.MESSAGES_COUNT
+import static com.pszymczyk.app1.MessagesCountFileStorageApp.STATE_STORE_NAME
+import static org.apache.kafka.streams.StoreQueryParameters.fromNameAndType
+import static org.apache.kafka.streams.state.QueryableStoreTypes.keyValueStore
 
-import static com.pszymczyk.app2.MessagesCountApp.MESSAGES
-import static com.pszymczyk.app2.MessagesCountApp.MESSAGES_COUNT
-
-
-class MessagesCountAppSpec extends IntegrationSpec {
+class MessagesCountFileStorageAppSpec extends IntegrationSpec {
 
     @Shared
     KafkaStreams kafkaStreams
@@ -35,22 +37,29 @@ class MessagesCountAppSpec extends IntegrationSpec {
         given:
         kafkaConsumer.subscribe([MESSAGES_COUNT])
 
-        when: "send a lot of messages"
+        and: "send a lot of messages"
         produceMessage(MESSAGES, "andrzej123#pszymczyk#Hello! how are you?")
         produceMessage(MESSAGES, "andrzej123#pszymczyk#Hi! what is going on?")
         produceMessage(MESSAGES, "telemarketing#andrzej123#We have a special discount for you!")
         produceMessage(MESSAGES, "telemarketing#pszymczyk#Best wishes in Valentine's day!")
 
-        and: "collect all events"
+        when: "collect all events"
         Map<String, String> messagesCount = [:]
-        10.times {
-            def consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500))
-            logger.info("Received {} messages", consumerRecords.size())
-            consumerRecords.each {
-                logger.info("{}:{}", it.key(), it.value())
-                messagesCount.put(it.key(), it.value())
+        5.times {
+            try {
+                ReadOnlyKeyValueStore<String, String> store = kafkaStreams.store(fromNameAndType(STATE_STORE_NAME, keyValueStore()))
+                logger.info("Received {} events", store.approximateNumEntries())
+                store.all().each {
+                    logger.info("{}:{}", it.key, it.value)
+                    messagesCount.put(it.key, it.value)
+                }
+            } catch (InvalidStateStoreException ignored) {
+            } finally {
+                println("Waiting...")
+                sleep(500)
             }
         }
+
 
         then:
         messagesCount == ["pszymczyk" : "3",

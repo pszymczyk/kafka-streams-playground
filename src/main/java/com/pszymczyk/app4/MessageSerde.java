@@ -19,7 +19,11 @@ class MessageSerde {
 
         @Override
         public byte[] serialize(String topic, Message message) {
-            return (message.user() + "#" + message.value()).getBytes(Charset.forName(StandardCharsets.UTF_8.name()));
+            return toStringFormat(message).getBytes(Charset.forName(StandardCharsets.UTF_8.name()));
+        }
+
+        private String toStringFormat(Message message) {
+            return message.sender() + "#" + message.receiver() + "#" + message.value();
         }
     }
 
@@ -29,7 +33,7 @@ class MessageSerde {
         public Message deserialize(String topic, byte[] data) {
             final String s = new String(data);
             final String[] split = s.split("#");
-            return new Message(split[0], split[1]);
+            return new Message(split[0], split[1], split[2]);
         }
     }
 }
