@@ -56,7 +56,7 @@ class MobileDevicesMarketShareUnitSpec extends Specification {
     private static class TestEnvironmentFactory {
 
         static TestEnvironment create() {
-            StreamsBuilder streamsBuilder = MobileDevicesMarketShareApp.buildKafkaStreamsTopology()
+            StreamsBuilder streamsBuilder = MessagesCountApp.buildKafkaStreamsTopology()
             def topology = streamsBuilder.build()
             def topologyTestDriver = new TopologyTestDriver(
                     topology,
@@ -65,14 +65,14 @@ class MobileDevicesMarketShareUnitSpec extends Specification {
 
             TestInputTopic<String, String> clicks = topologyTestDriver
                     .createInputTopic(
-                            MobileDevicesMarketShareApp.CLICKS_TOPIC,
+                            MessagesCountApp.MESSAGES,
                             Serdes.String().serializer(),
                             Serdes.String().serializer())
 
 
             TestOutputTopic<String, String> clicksCount = topologyTestDriver
                     .createOutputTopic(
-                            MobileDevicesMarketShareApp.CLICKS_COUNT,
+                            MessagesCountApp.MESSAGES_COUNT,
                             Serdes.String().deserializer(),
                             Serdes.String().deserializer())
 

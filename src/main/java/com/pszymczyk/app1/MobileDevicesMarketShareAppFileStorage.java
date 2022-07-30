@@ -17,7 +17,7 @@ class MobileDevicesMarketShareAppFileStorage {
 
     public static final String MOBILE_DEVICES_MARKET_SHARE_STORE = "mobile-devices-market-share-store";
 
-    static final String CLICKS_TOPIC = "clicks";
+    static final String CLICKS = "clicks";
     static final String CLICKS_COUNT = "clicks-count";
 
     public static void main(String[] args) {
@@ -27,7 +27,7 @@ class MobileDevicesMarketShareAppFileStorage {
                 "abc",
                 builder,
                 Map.of(),
-                new NewTopic(CLICKS_TOPIC, 1, (short) 1),
+                new NewTopic(CLICKS, 1, (short) 1),
                 new NewTopic(CLICKS_COUNT, 1, (short) 1));
     }
 
@@ -39,7 +39,7 @@ class MobileDevicesMarketShareAppFileStorage {
                 .withKeySerde(Serdes.String())
                 .withValueSerde(Serdes.Long());
 
-        KTable<String, Long> clicksCount = builder.<String, String>stream(CLICKS_TOPIC)
+        KTable<String, Long> clicksCount = builder.<String, String>stream(CLICKS)
                 .groupBy((key, value) -> value.split("#")[2])
                 .count(materialized);
 

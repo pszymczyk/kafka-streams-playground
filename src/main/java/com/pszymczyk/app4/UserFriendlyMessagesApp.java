@@ -31,7 +31,7 @@ class UserFriendlyMessagesApp {
         KTable<String, String> itemDetailsTable = builder.table(USERS);
 
         builder.<String,String>stream(MESSAGES)
-                .join(itemDetailsTable, (message, user) -> message.replaceAll("#user", user))
+                .join(itemDetailsTable, (message, user) -> message.replaceAll("<user>", user))
                 .to(USER_FRIENDLY_MESSAGES);
 
         return builder;
