@@ -36,14 +36,14 @@ class UserFriendlyMobileDevicesMarketShareAppSpec extends IntegrationSpec {
         kafkaConsumer.subscribe([USER_FRIENDLY_MESSAGES])
 
         when: "send some user details"
-        sendToKafka(USERS, "123", "Pawel Szymczyk")
-        sendToKafka(USERS, "456", "Jan Kowalski")
-        sendToKafka(USERS, "789", "Anna Hiacynta")
+        sendToKafka(USERS, "123", "Pawel#Szymczyk")
+        sendToKafka(USERS, "456", "Jan#Kowalski")
+        sendToKafka(USERS, "789", "Anna#Hiacynta")
 
         and: "send some messages"
-        sendToKafka(MESSAGES, "123", "Hello <user>, Here is some extra deal for you!")
-        sendToKafka(MESSAGES, "456", "Hi <user>, Your order is completed.")
-        sendToKafka(MESSAGES, "789", "Alo <user>, All the best in valentine's day.")
+        sendToKafka(MESSAGES, "123", "123#Hello <user>, Here is some extra deal for you!")
+        sendToKafka(MESSAGES, "456", "456#Hi <user>, Your order is completed.")
+        sendToKafka(MESSAGES, "789", "789#Alo <user>, All the best in valentine's day.")
 
         and: "collect all events"
         Map<String, String> messages = [:]

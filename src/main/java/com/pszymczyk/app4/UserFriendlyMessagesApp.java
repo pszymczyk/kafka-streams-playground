@@ -2,7 +2,10 @@ package com.pszymczyk.app4;
 
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 
 import java.util.Map;
@@ -28,12 +31,17 @@ class UserFriendlyMessagesApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        KTable<String, String> itemDetailsTable = builder.table(USERS);
+        KTable<String, User> itemDetailsTable = builder.table(USERS, Consumed.with(Serdes.String(), UserSerde.newSerde()));
 
-        builder.<String,String>stream(MESSAGES)
-                .join(itemDetailsTable, (message, user) -> message.replaceAll("<user>", user))
-                .to(USER_FRIENDLY_MESSAGES);
+        KStream<String, String> userFriendlyMessagesStream = builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()))
+                .join(itemDetailsTable, (message, user) -> message.value().replace("<user>", getPrettyUsername(user)));
+
+        userFriendlyMessagesStream.to(USER_FRIENDLY_MESSAGES);
 
         return builder;
+    }
+
+    private static String getPrettyUsername(User user) {
+        return user.firstName() + " " + user.lastName();
     }
 }
