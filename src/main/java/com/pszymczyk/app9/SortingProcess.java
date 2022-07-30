@@ -1,4 +1,4 @@
-package com.pszymczyk.app8;
+package com.pszymczyk.app9;
 
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.Transformer;

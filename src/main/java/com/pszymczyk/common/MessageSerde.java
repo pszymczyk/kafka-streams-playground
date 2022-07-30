@@ -1,4 +1,4 @@
-package com.pszymczyk.app2;
+package com.pszymczyk.common;
 
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.apache.kafka.common.serialization.Serdes.serdeFrom;
 
-class MessageSerde {
+public class MessageSerde {
 
     public static Serde<Message> newSerde() {
         return serdeFrom(new MessageSerializer(), new MessageDeserializer());
@@ -23,7 +23,7 @@ class MessageSerde {
         }
 
         private String toStringFormat(Message message) {
-            return message.sender() + "#" + message.receiver() + "#" + message.value();
+            return String.format("%d#%s#%s#%s", message.timestamp(), message.sender(), message.receiver(), message.value());
         }
     }
 
@@ -33,7 +33,7 @@ class MessageSerde {
         public Message deserialize(String topic, byte[] data) {
             final String s = new String(data);
             final String[] split = s.split("#");
-            return new Message(split[0], split[1], split[2]);
+            return new Message(Long.parseLong(split[0]), split[1], split[2], split[3]);
         }
     }
 }

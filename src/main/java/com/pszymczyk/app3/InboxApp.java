@@ -1,10 +1,14 @@
 package com.pszymczyk.app3;
 
+import com.pszymczyk.common.Inbox;
+import com.pszymczyk.common.JsonSerdes;
+import com.pszymczyk.common.MessageSerde;
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.kstream.*;
+import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.Materialized;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -28,51 +32,10 @@ class InboxApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        /*
-         * Simple stream of messages
-         * [
-         *  key: "pszymczyk", value: "pszymczyk#Hi Paweł, how are you?"
-         *  key: "andrzej123", value: "andrzej123#Hello, how are you?"
-         *  key: "pszymczyk", value: "pszymczyk#Special discount for you!"
-         *  ]
-         */
-        KStream<String, Message> stream = builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()));
-
-        /*
-         * Group messages by user name
-         * [
-         *  key: "pszymczyk", value: "pszymczyk#Hi Paweł, how are you?"
-         *  key: "pszymczyk", value: "pszymczyk#Hi Paweł, how are you?"
-         * ],
-         * [
-         *  key: "andrzej123", value: "Hello, how are you?"
-         * ]
-         */
-        KGroupedStream<String, Message> groupedStream = stream.groupBy((nullKey, value) -> value.user());
-
-        /*
-         * Aggregate groups to single inbox
-         * [
-         *  key: "pszymczyk",
-         *  value: {
-         *      "messages": [
-         *          {"timestamp": 1659201474894, "message": "Hi Paweł, how are you?"},
-         *          {"timestamp": 1659201474952, "message": "Hi! what is going on?"}
-         *      ]
-         * },
-         * key: "andrzej123",
-         * value: {
-         *      "messages": [
-         *          {"timestamp": 1659201474894, "message": "Hi Paweł, how are you?"},
-         *          {"timestamp": 1659201474952, "message": "Hi! what is going on?"}
-         *      ]
-         * }
-         */
-        KTable<String, Inbox> aggregate = groupedStream
+        builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde())).<String>groupBy((nullKey, value) -> value.receiver())
                 .aggregate(() -> new Inbox(new ArrayList<>()),
                         (key, message, inbox1) -> inbox1.add(message),
-                        Materialized.with(Serdes.String(), InboxSerde.newSerde()));
-        aggregate
+                        Materialized.with(Serdes.String(), JsonSerdes.forA(Inbox.class)))
                 .toStream()
                 .to(INBOX);
 

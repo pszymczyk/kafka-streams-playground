@@ -11,8 +11,8 @@ import spock.lang.Shared
 import java.time.Duration
 import java.time.Instant
 
-import static TopThreeArticlesLastThreeDaysApp.ARTICLES_VISITS
-import static TopThreeArticlesLastThreeDaysApp.ARTICLES_VISITS_TOP_FIVE
+import static ThreeDaysInboxApp.MESSAGES
+import static ThreeDaysInboxApp.THREE_DAYS_INBOX
 
 class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
 
@@ -23,10 +23,10 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
         kafkaStreams = new StreamsRunner().run(
                 bootstrapServers,
                 "top-five-articles-last-five-days-app-v1",
-                TopThreeArticlesLastThreeDaysApp.buildKafkaStreamsTopology(),
-                Map.of(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, ArticleEventTimeExtractor.class),
-                new NewTopic(ARTICLES_VISITS, 1, (short) 1),
-                new NewTopic(ARTICLES_VISITS_TOP_FIVE, 1, (short) 1))
+                ThreeDaysInboxApp.buildKafkaStreamsTopology(),
+                Map.of(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, MessageTimeExtractor.class),
+                new NewTopic(MESSAGES, 1, (short) 1),
+                new NewTopic(THREE_DAYS_INBOX, 1, (short) 1))
     }
 
     def cleanupSpec() {
@@ -45,10 +45,10 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
             def superscriptArticle = "Insurance startup Superscript used this pitch deck to raise 10 million in a funding round backed by Seedcamp"
             def academyAwardsArticle = "The 93rd Academy Awards will honor the best films of the year here's how to watch live this Sunday to see all the winners"
 
-            kafkaConsumer.subscribe([ARTICLES_VISITS_TOP_FIVE])
+            kafkaConsumer.subscribe([THREE_DAYS_INBOX])
         when: "simulate day before yesterday clicks"
             2.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$monzoArticle",                           
@@ -57,7 +57,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             10.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$spacexArticle",                           
@@ -66,7 +66,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             3.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$cloudKitchensArticle",                           
@@ -75,7 +75,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             7.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$academyAwardsArticle",                           
@@ -84,7 +84,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             1.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$superscriptArticle",                           
@@ -94,7 +94,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
             }
         and: "simulate yesterday clicks"
             4.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$monzoArticle",                           
@@ -103,7 +103,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             3.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$spacexArticle",                           
@@ -112,7 +112,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             3.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$cloudKitchensArticle",                           
@@ -121,7 +121,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             3.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$academyAwardsArticle",                           
@@ -130,7 +130,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             2.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$superscriptArticle",                           
@@ -140,7 +140,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
             }
         and: "simulate today clicks"
             15.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$monzoArticle",                           
@@ -149,7 +149,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             7.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$spacexArticle",                           
@@ -158,7 +158,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             2.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$cloudKitchensArticle",                           
@@ -167,7 +167,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             5.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$academyAwardsArticle",                           
@@ -176,7 +176,7 @@ class TopThreeArticlesLastThreeDaysAppSpec extends IntegrationSpec {
                         """.toString())
             }
             1.times {
-                produceMessage(ARTICLES_VISITS,
+                produceMessage(MESSAGES,
                         """
                         {
                             "articleTitle": "$superscriptArticle",                           

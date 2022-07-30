@@ -1,4 +1,4 @@
-package com.pszymczyk.app7
+package com.pszymczyk.app8
 
 import com.jayway.jsonpath.JsonPath
 import com.pszymczyk.IntegrationSpec
@@ -9,8 +9,8 @@ import spock.lang.Shared
 
 import java.time.Duration
 
-import static com.pszymczyk.app7.LoanApplicationProcessorApp.LOAN_APPLICATION_DECISIONS
-import static com.pszymczyk.app7.LoanApplicationProcessorApp.LOAN_APPLICATION_REQUESTS
+import static com.pszymczyk.app8.LoanApplicationProcessorApp.RECEIVED_MESSAGES
+import static com.pszymczyk.app8.LoanApplicationProcessorApp.MESSAGES
 
 class LoanApplicationProcessorAppSpec extends IntegrationSpec {
 
@@ -23,8 +23,8 @@ class LoanApplicationProcessorAppSpec extends IntegrationSpec {
                 "LoanApplicationProcess-app-v1",
                 LoanApplicationProcessorApp.buildKafkaStreamsTopology(),
                 Map.of(),
-                new NewTopic(LOAN_APPLICATION_REQUESTS, 1, (short) 1),
-                new NewTopic(LOAN_APPLICATION_DECISIONS, 1, (short) 1))
+                new NewTopic(MESSAGES, 1, (short) 1),
+                new NewTopic(RECEIVED_MESSAGES, 1, (short) 1))
     }
 
     def cleanupSpec() {
@@ -34,23 +34,23 @@ class LoanApplicationProcessorAppSpec extends IntegrationSpec {
     def "Should count loans and limit given loan amount"() {
         given:
             def requester = "kazik"
-            kafkaConsumer.subscribe([LOAN_APPLICATION_DECISIONS])
+            kafkaConsumer.subscribe([RECEIVED_MESSAGES])
         when: "send some loan applications"
-            produceMessage(LOAN_APPLICATION_REQUESTS,
+            produceMessage(MESSAGES,
                     """
                         {
                             "amount": 2000,                           
                             "requester": "$requester"
                         }
                         """.toString())
-            produceMessage(LOAN_APPLICATION_REQUESTS,
+            produceMessage(MESSAGES,
                     """
                         {
                             "amount": 2000,                           
                             "requester": "$requester"
                         }
                         """.toString())
-            produceMessage(LOAN_APPLICATION_REQUESTS,
+            produceMessage(MESSAGES,
                     """
                         {
                             "amount": 2000,                           

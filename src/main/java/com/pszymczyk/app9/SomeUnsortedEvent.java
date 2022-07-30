@@ -1,4 +1,4 @@
-package com.pszymczyk.app8;
+package com.pszymczyk.app9;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
