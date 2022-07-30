@@ -51,7 +51,9 @@ class MessagesCountApp {
          *  key: andrzej123, value: ""
          * ]
          */
-        KGroupedStream<String, String> messagesGroupedByUser = messages.map((nullKey, message) -> new KeyValue<>(message.user(), "")).groupByKey();
+        KGroupedStream<String, String> messagesGroupedByUser = messages
+                .map((nullKey, message) -> new KeyValue<>(message.user(), ""))
+                .groupByKey();
 
         /*
          * Count all messages in groups

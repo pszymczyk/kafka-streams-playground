@@ -2,6 +2,7 @@ package com.pszymczyk.app1;
 
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KGroupedStream;
 import org.apache.kafka.streams.kstream.KStream;
@@ -48,7 +49,9 @@ class MessagesCountApp {
          *  key: null, value: andrzej123#Hello, how are you?
          * ]
          */
-        KGroupedStream<String, String> messagesGroupedByUser = messages.groupBy((nullKey, message) -> message.split("#")[0]);
+        KGroupedStream<String, String> messagesGroupedByUser = messages
+                .map((nullKey, message) -> new KeyValue<>(message.split("#")[0], ""))
+                .groupByKey();
 
         /*
          * Count all messages in groups
