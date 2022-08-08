@@ -13,6 +13,7 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 
 import java.util.Map;
+import java.util.Objects;
 
 class MessagesCountWithSerdeApp {
 
@@ -43,16 +44,6 @@ class MessagesCountWithSerdeApp {
          */
         KStream<String, Message> messages = builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()));
 
-        /*
-         * Map and group messages by receiver name
-         * [
-         *  key: "pszymczyk", value: ""
-         *  key: "pszymczyk", value: ""
-         * ],
-         * [
-         *  key: "andrzej123", value: ""
-         * ]
-         */
         KGroupedStream<String, String> messagesGroupedByUser = messages
                 .map((nullKey, message) -> new KeyValue<>(message.receiver(), ""))
                 .groupByKey();
@@ -64,7 +55,9 @@ class MessagesCountWithSerdeApp {
          *  key: "andrzej123", value: 1
          * ]
          */
-        KTable<String, Long> messagesCount = messagesGroupedByUser.count();
+        KTable<String, String> messagesCount = messagesGroupedByUser
+                .count()
+                .mapValues(v -> Objects.toString(v));
         /*
          * Convert Table -> Stream
          * [
@@ -73,7 +66,6 @@ class MessagesCountWithSerdeApp {
          * ]
          */
         messagesCount.toStream()
-                .mapValues(Object::toString)
                 .to(MESSAGES_COUNT);
 
         return builder;
