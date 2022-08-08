@@ -10,6 +10,7 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 
 import java.util.Map;
+import java.util.Objects;
 
 class MobileDevicesMarketShareApp {
 
@@ -56,23 +57,21 @@ class MobileDevicesMarketShareApp {
         /*
          * Count all events in groups
          * [
-         *  key: firefox, value: 2
-         *  key: edge, value: 1
+         *  key: "firefox", value: "2"
+         *  key: "edge", value: "1"
          * ]
          */
-        KTable<String, Long> clicksCount = clicksGroupedByBrowserName
-                .count();
+        KTable<String, String> clicksCount = clicksGroupedByBrowserName
+                .count()
+                .mapValues(v -> Objects.toString(v));
         /*
          * Convert Table -> Stream
          * [
-         *  key: firefox, value: 2
-         *  key: edge, value: 1
+         *  key: "firefox", value: "2"
+         *  key: "edge", value: "1"
          * ]
          */
-        clicksCount
-                .toStream()
-                .mapValues(aLong -> Long.toString(aLong)) // we change clicks count value type from Long -> String to read the data using console consumer with ease
-                .to(CLICKS_COUNT);
+        clicksCount.toStream().to(CLICKS_COUNT);
 
         return builder;
     }
