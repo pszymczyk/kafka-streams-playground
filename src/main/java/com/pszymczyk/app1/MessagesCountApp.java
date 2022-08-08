@@ -2,13 +2,16 @@ package com.pszymczyk.app1;
 
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KGroupedStream;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Produced;
 
 import java.util.Map;
+import java.util.Objects;
 
 class MessagesCountApp {
 
@@ -56,11 +59,13 @@ class MessagesCountApp {
         /*
          * Count all messages in groups
          * [
-         *  key: "pszymczyk", value: 2
-         *  key: "andrzej123", value: 1
+         *  key: "pszymczyk", value: "2"
+         *  key: "andrzej123", value: "1"
          * ]
          */
-        KTable<String, Long> messagesCount = messagesGroupedByUser.count();
+        KTable<String, String> messagesCount = messagesGroupedByUser
+                .count()
+                .mapValues(v -> Objects.toString(v));
         /*
          * Convert Table -> Stream
          * [
@@ -68,9 +73,7 @@ class MessagesCountApp {
          *  key: "andrzej12"3, value: "1"
          * ]
          */
-        messagesCount.toStream()
-                .mapValues(Object::toString)
-                .to(MESSAGES_COUNT);
+        messagesCount.toStream().to(MESSAGES_COUNT);
 
         return builder;
     }
