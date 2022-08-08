@@ -32,13 +32,6 @@ class InboxApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde())).groupBy((nullKey, value) -> value.receiver())
-                .aggregate(() -> new Inbox(new ArrayList<>()),
-                        (key, message, inbox1) -> inbox1.add(message),
-                        Materialized.with(Serdes.String(), JsonSerdes.forA(Inbox.class)))
-                .toStream()
-                .to(INBOX);
-
         return builder;
     }
 }
