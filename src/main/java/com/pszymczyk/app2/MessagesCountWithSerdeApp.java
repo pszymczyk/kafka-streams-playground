@@ -1,5 +1,7 @@
 package com.pszymczyk.app2;
 
+import com.pszymczyk.common.Message;
+import com.pszymczyk.common.MessageSerde;
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
@@ -12,7 +14,7 @@ import org.apache.kafka.streams.kstream.KTable;
 
 import java.util.Map;
 
-class MessagesCountApp {
+class MessagesCountWithSerdeApp {
 
     static final String MESSAGES = "messages";
     static final String MESSAGES_COUNT = "messages-count";
@@ -34,15 +36,15 @@ class MessagesCountApp {
         /*
          * Simple stream of messages
          * [
-         *  key: null, value: "pszymczyk#Hi Paweł, how are you?"
-         *  key: null, value: "andrzej123#Hello, how are you?"
-         *  key: null, value: "pszymczyk#Special discount for you!"
+         *  key: null, value: "1232#pszymczyk#Hi Paweł, how are you?"
+         *  key: null, value: "42324#andrzej123#Hello, how are you?"
+         *  key: null, value: "31234#pszymczyk#Special discount for you!"
          *  ]
          */
         KStream<String, Message> messages = builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()));
 
         /*
-         * Map and group messages by sender name
+         * Map and group messages by receiver name
          * [
          *  key: "pszymczyk", value: ""
          *  key: "pszymczyk", value: ""
@@ -52,7 +54,7 @@ class MessagesCountApp {
          * ]
          */
         KGroupedStream<String, String> messagesGroupedByUser = messages
-                .map((nullKey, message) -> new KeyValue<>(message.sender(), ""))
+                .map((nullKey, message) -> new KeyValue<>(message.receiver(), ""))
                 .groupByKey();
 
         /*

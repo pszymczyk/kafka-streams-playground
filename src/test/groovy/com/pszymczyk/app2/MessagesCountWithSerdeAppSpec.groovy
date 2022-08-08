@@ -8,11 +8,11 @@ import spock.lang.Shared
 
 import java.time.Duration
 
-import static com.pszymczyk.app2.MessagesCountApp.MESSAGES
-import static com.pszymczyk.app2.MessagesCountApp.MESSAGES_COUNT
+import static MessagesCountWithSerdeApp.MESSAGES
+import static MessagesCountWithSerdeApp.MESSAGES_COUNT
 
 
-class MessagesCountAppSpec extends IntegrationSpec {
+class MessagesCountWithSerdeAppSpec extends IntegrationSpec {
 
     @Shared
     KafkaStreams kafkaStreams
@@ -21,7 +21,7 @@ class MessagesCountAppSpec extends IntegrationSpec {
         kafkaStreams = new StreamsRunner().run(
                 bootstrapServers,
                 "messages-count-spec",
-                MessagesCountApp.buildKafkaStreamsTopology(),
+                MessagesCountWithSerdeApp.buildKafkaStreamsTopology(),
                 [:],
                 new NewTopic(MESSAGES, 1, (short) 1),
                 new NewTopic(MESSAGES_COUNT, 1, (short) 1))
@@ -36,10 +36,10 @@ class MessagesCountAppSpec extends IntegrationSpec {
         kafkaConsumer.subscribe([MESSAGES_COUNT])
 
         when: "send a lot of messages"
-        produceMessage(MESSAGES, "andrzej123#pszymczyk#Hello! how are you?")
-        produceMessage(MESSAGES, "andrzej123#pszymczyk#Hi! what is going on?")
-        produceMessage(MESSAGES, "telemarketing#andrzej123#We have a special discount for you!")
-        produceMessage(MESSAGES, "telemarketing#pszymczyk#Best wishes in Valentine's day!")
+        produceMessage(MESSAGES, "123#andrzej123#pszymczyk#Hello! how are you?")
+        produceMessage(MESSAGES, "124#andrzej123#pszymczyk#Hi! what is going on?")
+        produceMessage(MESSAGES, "125#telemarketing#andrzej123#We have a special discount for you!")
+        produceMessage(MESSAGES, "126#telemarketing#pszymczyk#Best wishes in Valentine's day!")
 
         and: "collect all events"
         Map<String, String> messagesCount = [:]

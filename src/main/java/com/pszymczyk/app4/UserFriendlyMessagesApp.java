@@ -1,5 +1,6 @@
 package com.pszymczyk.app4;
 
+import com.pszymczyk.common.MessageSerde;
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
