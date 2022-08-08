@@ -18,10 +18,10 @@ class MessagesCountUnitSpec extends Specification {
 
     def "Should build orders state"() {
         given:
-        testEnvironment.messages.pipeInput("andrzej123#pszymczyk#Hello! how are you?")
-        testEnvironment.messages.pipeInput("andrzej123#pszymczyk#Hello! how are you?")
-        testEnvironment.messages.pipeInput("andrzej123#pszymczyk#Hello! how are you?")
-        testEnvironment.messages.pipeInput("pszymczyk#andrzej123##Hello! how are you?")
+        testEnvironment.messages.pipeInput("1234#andrzej123#pszymczyk#Hello! how are you?")
+        testEnvironment.messages.pipeInput("1235#andrzej123#pszymczyk#Hello! how are you?")
+        testEnvironment.messages.pipeInput("1236#andrzej123#pszymczyk#Hello! how are you?")
+        testEnvironment.messages.pipeInput("1237#pszymczyk#andrzej123##Hello! how are you?")
 
         when:
         Map<String, String> messagesCount = testEnvironment.messagesCount

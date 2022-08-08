@@ -39,9 +39,9 @@ class MessagesCountFileStorageApp {
         /*
          * Simple stream of messages
          * [
-         *  key: null, value: "pszymczyk#andrzej123#Hi Paweł, how are you?"
-         *  key: null, value: "andrzej123#pszymczyk#Hello, how are you?"
-         *  key: null, value: "telemarketing#pszymczyk#Special discount for you!"
+         *  key: null, value: "1234#pszymczyk#andrzej123#Hi Paweł, how are you?"
+         *  key: null, value: "1235#andrzej123#pszymczyk#Hello, how are you?"
+         *  key: null, value: "1236#telemarketing#pszymczyk#Special discount for you!"
          *  ]
          */
         KStream<String, String> messages = builder.stream(MESSAGES);
@@ -57,7 +57,7 @@ class MessagesCountFileStorageApp {
          * ]
          */
         KGroupedStream<String, String> messagesGroupedByUser = messages
-                .map((nullKey, message) -> new KeyValue<>(message.split("#")[1], ""))
+                .map((nullKey, message) -> new KeyValue<>(message.split("#")[2], ""))
                 .groupByKey();
 
         /*

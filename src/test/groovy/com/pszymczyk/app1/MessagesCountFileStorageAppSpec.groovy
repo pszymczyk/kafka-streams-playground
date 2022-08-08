@@ -36,10 +36,10 @@ class MessagesCountFileStorageAppSpec extends IntegrationSpec {
         kafkaConsumer.subscribe([MESSAGES_COUNT])
 
         and: "send a lot of messages"
-        produceMessage(MESSAGES, "andrzej123#pszymczyk#Hello! how are you?")
-        produceMessage(MESSAGES, "andrzej123#pszymczyk#Hi! what is going on?")
-        produceMessage(MESSAGES, "telemarketing#andrzej123#We have a special discount for you!")
-        produceMessage(MESSAGES, "telemarketing#pszymczyk#Best wishes in Valentine's day!")
+        produceMessage(MESSAGES, "1234#andrzej123#pszymczyk#Hello! how are you?")
+        produceMessage(MESSAGES, "1235#andrzej123#pszymczyk#Hi! what is going on?")
+        produceMessage(MESSAGES, "1236#telemarketing#andrzej123#We have a special discount for you!")
+        produceMessage(MESSAGES, "1237#telemarketing#pszymczyk#Best wishes in Valentine's day!")
 
         when: "collect all events"
         def messagesCount = [:]
