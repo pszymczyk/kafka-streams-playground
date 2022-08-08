@@ -34,37 +34,16 @@ class MessagesCountWithSerdeApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        /*
-         * Simple stream of messages
-         * [
-         *  key: null, value: "1232#pszymczyk#Hi Paweł, how are you?"
-         *  key: null, value: "42324#andrzej123#Hello, how are you?"
-         *  key: null, value: "31234#pszymczyk#Special discount for you!"
-         *  ]
-         */
-        KStream<String, Message> messages = builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()));
+        KStream<String, Message> messages = null;
 
         KGroupedStream<String, String> messagesGroupedByUser = messages
                 .map((nullKey, message) -> new KeyValue<>(message.receiver(), ""))
                 .groupByKey();
 
-        /*
-         * Count all messages in groups
-         * [
-         *  key: "pszymczyk", value: 2
-         *  key: "andrzej123", value: 1
-         * ]
-         */
         KTable<String, String> messagesCount = messagesGroupedByUser
                 .count()
                 .mapValues(v -> Objects.toString(v));
-        /*
-         * Convert Table -> Stream
-         * [
-         *  key: "pszymczyk", value: "2"
-         *  key: "andrzej123", value: "1"
-         * ]
-         */
+
         messagesCount.toStream()
                 .to(MESSAGES_COUNT);
 
