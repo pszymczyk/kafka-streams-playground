@@ -12,8 +12,8 @@ import java.util.Map;
 
 class ThreeDaysInboxApp {
 
-    static final String MESSAGES = "messages";
-    static final String THREE_DAYS_INBOX = "three-days-inbox";
+    static final String MESSAGES = "app6-messages";
+    static final String THREE_DAYS_INBOX = "app6-three-days-inbox";
 
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();

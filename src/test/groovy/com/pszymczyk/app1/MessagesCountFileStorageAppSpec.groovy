@@ -8,9 +8,7 @@ import org.apache.kafka.streams.errors.InvalidStateStoreException
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore
 import spock.lang.Shared
 
-import static MessagesCountApp.MESSAGES
-import static MessagesCountApp.MESSAGES_COUNT
-import static com.pszymczyk.app1.MessagesCountFileStorageApp.STATE_STORE_NAME
+import static MessagesCountFileStorageApp.*
 import static org.apache.kafka.streams.StoreQueryParameters.fromNameAndType
 import static org.apache.kafka.streams.state.QueryableStoreTypes.keyValueStore
 
@@ -22,8 +20,8 @@ class MessagesCountFileStorageAppSpec extends IntegrationSpec {
     def setupSpec() {
         kafkaStreams = new StreamsRunner().run(
                 bootstrapServers,
-                "messages-count-spec",
-                MessagesCountApp.buildKafkaStreamsTopology(),
+                "app1-fs-messages-count-spec",
+                buildKafkaStreamsTopology(),
                 [:],
                 new NewTopic(MESSAGES, 1, (short) 1),
                 new NewTopic(MESSAGES_COUNT, 1, (short) 1))
@@ -44,7 +42,7 @@ class MessagesCountFileStorageAppSpec extends IntegrationSpec {
         produceMessage(MESSAGES, "telemarketing#pszymczyk#Best wishes in Valentine's day!")
 
         when: "collect all events"
-        Map<String, String> messagesCount = [:]
+        def messagesCount = [:]
         5.times {
             try {
                 ReadOnlyKeyValueStore<String, String> store = kafkaStreams.store(fromNameAndType(STATE_STORE_NAME, keyValueStore()))
@@ -62,7 +60,7 @@ class MessagesCountFileStorageAppSpec extends IntegrationSpec {
 
 
         then:
-        messagesCount == ["pszymczyk" : "3",
-                          "andrzej123": "1"]
+        messagesCount == ["pszymczyk" : 3,
+                          "andrzej123": 1]
     }
 }

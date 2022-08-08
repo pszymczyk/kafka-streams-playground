@@ -13,9 +13,9 @@ import java.util.Map;
 
 class UserFriendlyMessagesApp {
 
-    static final String MESSAGES = "messages";
-    static final String USERS = "users";
-    static final String USER_FRIENDLY_MESSAGES = "user-friendly-messages";
+    static final String MESSAGES = "app4-messages";
+    static final String USERS = "app4-users";
+    static final String USER_FRIENDLY_MESSAGES = "app4-user-friendly-messages";
 
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();

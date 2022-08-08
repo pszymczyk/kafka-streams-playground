@@ -20,7 +20,7 @@ class InboxAppSpec extends IntegrationSpec {
     def setupSpec() {
         kafkaStreams = new StreamsRunner().run(
                 bootstrapServers,
-                "inbox-app",
+                "app3-inbox-app",
                 InboxApp.buildKafkaStreamsTopology(),
                 [:],
                 new NewTopic(MESSAGES, 1, (short) 1),
@@ -33,10 +33,10 @@ class InboxAppSpec extends IntegrationSpec {
 
     def "Should build inbox"() {
         given:
-        produceMessage(MESSAGES, "andrzej123#pszymczyk#Hello! how are you?")
-        produceMessage(MESSAGES, "andrzej123#pszymczyk#Hi! what is going on?")
-        produceMessage(MESSAGES, "telemarketing#andrzej123#We have a special discount for you!")
-        produceMessage(MESSAGES, "telemarketing#pszymczyk#Best wishes in Valentine's day!")
+        produceMessage(MESSAGES, "1234#andrzej123#pszymczyk#Hello! how are you?")
+        produceMessage(MESSAGES, "1235#andrzej123#pszymczyk#Hi! what is going on?")
+        produceMessage(MESSAGES, "1236#telemarketing#andrzej123#We have a special discount for you!")
+        produceMessage(MESSAGES, "1237#telemarketing#pszymczyk#Best wishes in Valentine's day!")
 
         kafkaConsumer.subscribe([INBOX])
         when: "collect all events"
@@ -50,12 +50,16 @@ class InboxAppSpec extends IntegrationSpec {
             }
         then:
             JsonPath.parse(inbox.get("pszymczyk")).read('$.messages[0].message', String) == "Hello! how are you?"
-            JsonPath.parse(inbox.get("pszymczyk")).read('$.messages[0].timestamp', Long) != null
+            JsonPath.parse(inbox.get("pszymczyk")).read('$.messages[0].senderTime', Long) != null
+            JsonPath.parse(inbox.get("pszymczyk")).read('$.messages[0].inboxTime', Long) != null
             JsonPath.parse(inbox.get("pszymczyk")).read('$.messages[1].message', String) == "Hi! what is going on?"
-            JsonPath.parse(inbox.get("pszymczyk")).read('$.messages[1].timestamp', Long) != null
+            JsonPath.parse(inbox.get("pszymczyk")).read('$.messages[1].senderTime', Long) != null
+            JsonPath.parse(inbox.get("pszymczyk")).read('$.messages[1].inboxTime', Long) != null
             JsonPath.parse(inbox.get("pszymczyk")).read('$.messages[2].message', String) == "Best wishes in Valentine's day!"
-            JsonPath.parse(inbox.get("pszymczyk")).read('$.messages[2].timestamp', Long) != null
+            JsonPath.parse(inbox.get("pszymczyk")).read('$.messages[2].senderTime', Long) != null
+            JsonPath.parse(inbox.get("pszymczyk")).read('$.messages[2].inboxTime', Long) != null
             JsonPath.parse(inbox.get("andrzej123")).read('$.messages[0].message', String) == "We have a special discount for you!"
-            JsonPath.parse(inbox.get("andrzej123")).read('$.messages[0].timestamp', Long) != null
+            JsonPath.parse(inbox.get("andrzej123")).read('$.messages[0].senderTime', Long) != null
+            JsonPath.parse(inbox.get("andrzej123")).read('$.messages[0].inboxTime', Long) != null
     }
 }

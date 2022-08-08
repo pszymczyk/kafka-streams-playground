@@ -12,9 +12,9 @@ import org.apache.kafka.streams.state.Stores;
 
 import java.util.Map;
 
-class LoanApplicationProcessorApp {
+class InboxProcessorApp {
 
-    private static final String INBOX_STATE_STORE = "inbox-state-store";
+    static final String INBOX_STATE_STORE = "inbox-state-store";
 
     static final String MESSAGES = "messages";
     static final String RECEIVED_MESSAGES = "received-messages";
@@ -23,7 +23,7 @@ class LoanApplicationProcessorApp {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
-            "LoanApplicationProcess-app-main",
+            "inbox-process-app-main",
             builder,
             Map.of(),
             new NewTopic(MESSAGES, 1, (short) 1),
@@ -37,7 +37,7 @@ class LoanApplicationProcessorApp {
                 Stores.inMemoryKeyValueStore(INBOX_STATE_STORE), Serdes.String(), JsonSerdes.forA(Inbox.class)));
 
         builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()))
-            .transform(LoanApplicationProcess::new, INBOX_STATE_STORE)
+            .transform(InboxProcess::new, INBOX_STATE_STORE)
             .to(RECEIVED_MESSAGES, Produced.with(Serdes.String(), ReceivedMessageSerde.newSerde()));
 
         return builder;

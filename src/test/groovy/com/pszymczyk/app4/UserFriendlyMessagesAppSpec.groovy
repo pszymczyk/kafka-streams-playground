@@ -19,7 +19,7 @@ class UserFriendlyMessagesAppSpec extends IntegrationSpec {
     def setupSpec() {
         kafkaStreams = new StreamsRunner().run(
                 bootstrapServers,
-                "user-friendly-messages-spec",
+                "app4-user-friendly-messages-spec",
                 buildKafkaStreamsTopology(),
                 [:],
                 new NewTopic(USERS, 1, (short) 1),

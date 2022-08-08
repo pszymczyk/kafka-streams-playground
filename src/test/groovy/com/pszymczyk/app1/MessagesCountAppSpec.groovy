@@ -19,7 +19,7 @@ class MessagesCountAppSpec extends IntegrationSpec {
     def setupSpec() {
         kafkaStreams = new StreamsRunner().run(
                 bootstrapServers,
-                "messages-count-spec",
+                "app1-messages-count-spec",
                 MessagesCountApp.buildKafkaStreamsTopology(),
                 [:],
                 new NewTopic(MESSAGES, 1, (short) 1),

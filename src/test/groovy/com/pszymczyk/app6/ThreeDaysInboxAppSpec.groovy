@@ -22,7 +22,7 @@ class ThreeDaysInboxAppSpec extends IntegrationSpec {
     def setupSpec() {
         kafkaStreams = new StreamsRunner().run(
                 bootstrapServers,
-                "top-five-articles-last-five-days-app-v1",
+                "app6-top-five-articles-last-five-days-app-v1",
                 ThreeDaysInboxApp.buildKafkaStreamsTopology(),
                 Map.of(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, MessageTimeExtractor.class),
                 new NewTopic(MESSAGES, 1, (short) 1),

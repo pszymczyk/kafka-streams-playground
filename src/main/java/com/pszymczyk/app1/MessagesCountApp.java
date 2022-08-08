@@ -12,8 +12,8 @@ import java.util.Map;
 
 class MessagesCountApp {
 
-    static final String MESSAGES = "messages";
-    static final String MESSAGES_COUNT = "messages-count";
+    static final String MESSAGES = "app1-messages";
+    static final String MESSAGES_COUNT = "app1-messages-count";
 
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();

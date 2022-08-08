@@ -18,9 +18,9 @@ import java.util.Map;
 
 class MessagesCountFileStorageApp {
 
-    static final String MESSAGES = "messages";
-    static final String MESSAGES_COUNT = "messages-count";
-    static final String STATE_STORE_NAME = "messages-count-state-store";
+    static final String MESSAGES = "app1-fs-messages";
+    static final String MESSAGES_COUNT = "app1-fs-messages-count";
+    static final String STATE_STORE_NAME = "app1-fs-messages-count-state-store";
 
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();

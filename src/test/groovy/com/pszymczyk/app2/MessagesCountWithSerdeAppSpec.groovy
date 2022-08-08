@@ -20,7 +20,7 @@ class MessagesCountWithSerdeAppSpec extends IntegrationSpec {
     def setupSpec() {
         kafkaStreams = new StreamsRunner().run(
                 bootstrapServers,
-                "messages-count-spec",
+                "app2-messages-count-spec",
                 MessagesCountWithSerdeApp.buildKafkaStreamsTopology(),
                 [:],
                 new NewTopic(MESSAGES, 1, (short) 1),

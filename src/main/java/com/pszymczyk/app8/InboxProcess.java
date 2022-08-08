@@ -7,14 +7,14 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.state.KeyValueStore;
 
 
-public class LoanApplicationProcess implements Transformer<String, Message, KeyValue<String, ReceivedMessage>> {
+public class InboxProcess implements Transformer<String, Message, KeyValue<String, ReceivedMessage>> {
 
     private KeyValueStore<String, Inbox> inbox;
     private ProcessorContext context;
 
     @Override
     public void init(ProcessorContext context) {
-        inbox = context.getStateStore("users-loans-count");
+        inbox = context.getStateStore(InboxProcessorApp.INBOX_STATE_STORE);
         this.context = context;
     }
 

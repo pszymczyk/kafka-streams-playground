@@ -15,8 +15,8 @@ import java.util.Map;
 
 class InboxApp {
 
-    static final String MESSAGES = "messages";
-    static final String INBOX = "inbox";
+    static final String MESSAGES = "app3-messages";
+    static final String INBOX = "app3-inbox";
 
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
