@@ -36,14 +36,14 @@ class UserFriendlyMessagesAppSpec extends IntegrationSpec {
         kafkaConsumer.subscribe([USER_FRIENDLY_MESSAGES])
 
         when: "send some user details"
-        produceMessage(USERS, "123", "Pawel#Szymczyk")
-        produceMessage(USERS, "456", "Jan#Kowalski")
-        produceMessage(USERS, "789", "Anna#Hiacynta")
+        produceMessage(USERS, "user-id-123", "Pawel#Szymczyk")
+        produceMessage(USERS, "user-id-456", "Jan#Kowalski")
+        produceMessage(USERS, "user-id-789", "Anna#Hiacynta")
 
         and: "send some messages"
-        produceMessage(MESSAGES, "123", "123#Hello <user>, Here is some extra deal for you!")
-        produceMessage(MESSAGES, "456", "456#Hi <user>, Your order is completed.")
-        produceMessage(MESSAGES, "789", "789#Alo <user>, All the best in valentine's day.")
+        produceMessage(MESSAGES, "user-id-123", "1234#telemarketing#user-id-123#Hello <user>, Here is some extra deal for you!")
+        produceMessage(MESSAGES, "user-id-456", "1235#telemarketing#user-id-456#Hi <user>, Your order is completed.")
+        produceMessage(MESSAGES, "user-id-789", "1236#telemarketing#user-id-789#Alo <user>, All the best in valentine's day.")
 
         and: "collect all events"
         Map<String, String> messages = [:]
@@ -56,12 +56,12 @@ class UserFriendlyMessagesAppSpec extends IntegrationSpec {
         }
 
         then: "messages have user friendly format"
-        messages == ["123": "Hello Pawel Szymczyk, Here is some extra deal for you!",
-                     "456": "Hi Jan Kowalski, Your order is completed.",
-                     "789": "Alo Anna Hiacynta, All the best in valentine's day."]
+        messages == ["user-id-123": "Hello Pawel Szymczyk, Here is some extra deal for you!",
+                     "user-id-456": "Hi Jan Kowalski, Your order is completed.",
+                     "user-id-789": "Alo Anna Hiacynta, All the best in valentine's day."]
 
         when: "user details changed"
-        produceMessage(USERS, "789", "Anna Kowalska")
+        produceMessage(USERS, "user-id-789", "Anna Kowalska")
 
         and: "we collect all order events again"
         kafkaConsumer.seekToBeginning([new TopicPartition(USER_FRIENDLY_MESSAGES, 0)])
