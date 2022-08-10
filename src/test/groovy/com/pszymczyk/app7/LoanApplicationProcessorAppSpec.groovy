@@ -37,6 +37,7 @@ class LoanApplicationProcessorAppSpec extends IntegrationSpec {
             kafkaConsumer.subscribe([LOAN_APPLICATION_DECISIONS])
         when: "send some loan applications"
             produceMessage(LOAN_APPLICATION_REQUESTS,
+                    requester,
                     """
                         {
                             "amount": 2000,                           
@@ -44,6 +45,7 @@ class LoanApplicationProcessorAppSpec extends IntegrationSpec {
                         }
                         """.toString())
             produceMessage(LOAN_APPLICATION_REQUESTS,
+                    requester,
                     """
                         {
                             "amount": 2000,                           
@@ -51,6 +53,7 @@ class LoanApplicationProcessorAppSpec extends IntegrationSpec {
                         }
                         """.toString())
             produceMessage(LOAN_APPLICATION_REQUESTS,
+                    requester,
                     """
                         {
                             "amount": 2000,                           

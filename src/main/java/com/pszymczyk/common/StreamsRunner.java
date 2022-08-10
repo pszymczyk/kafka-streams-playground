@@ -11,15 +11,15 @@ import org.apache.kafka.streams.Topology;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import static org.apache.kafka.streams.StreamsConfig.EXACTLY_ONCE_V2;
 
 public class StreamsRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(StreamsRunner.class);
-
-    private KafkaStreams kafkaStreams;
 
     public KafkaStreams run(String bootstrapServers,
                             String applicationId,
@@ -31,7 +31,7 @@ public class StreamsRunner {
                 "bootstrap.servers", bootstrapServers,
                 "group.id", "create-topics-admin"));
 
-        adminClient.createTopics(Arrays.asList(newTopics));
+        adminClient.createTopics(List.of(newTopics));
         adminClient.close();
 
         Properties config = new Properties();
@@ -39,10 +39,11 @@ public class StreamsRunner {
         config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         config.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-        config.put(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, applicationId + "-0");
-
+        config.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, EXACTLY_ONCE_V2);
         // disable caching to see all operations results immediately
         config.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, "0");
+
+        config.put(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, applicationId + "-0");
 
         customProperties.entrySet().forEach(entry ->
                 config.put(entry.getKey(), entry.getValue())
@@ -50,7 +51,7 @@ public class StreamsRunner {
 
         Topology topology = streamsBuilder.build();
         logger.info(topology.describe().toString());
-        kafkaStreams = new KafkaStreams(topology, config);
+        KafkaStreams kafkaStreams = new KafkaStreams(topology, config);
         kafkaStreams.cleanUp();
         kafkaStreams.start();
 
