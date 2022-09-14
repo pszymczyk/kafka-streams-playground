@@ -1,4 +1,4 @@
-package com.pszymczyk.app4;
+package com.pszymczyk.app5;
 
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;

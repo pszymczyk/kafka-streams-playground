@@ -1,4 +1,4 @@
-package com.pszymczyk.app4;
+package com.pszymczyk.app5;
 
 record User(String firstName, String lastName) {
 }

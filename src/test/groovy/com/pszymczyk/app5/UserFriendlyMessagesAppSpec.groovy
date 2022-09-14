@@ -1,4 +1,4 @@
-package com.pszymczyk.app4
+package com.pszymczyk.app5
 
 import com.pszymczyk.IntegrationSpec
 import com.pszymczyk.common.StreamsRunner
@@ -9,7 +9,7 @@ import spock.lang.Shared
 
 import java.time.Duration
 
-import static com.pszymczyk.app4.UserFriendlyMessagesApp.*
+import static com.pszymczyk.app5.UserFriendlyMessagesApp.*
 
 class UserFriendlyMessagesAppSpec extends IntegrationSpec {
 
@@ -19,7 +19,7 @@ class UserFriendlyMessagesAppSpec extends IntegrationSpec {
     def setupSpec() {
         kafkaStreams = new StreamsRunner().run(
                 bootstrapServers,
-                "app4-user-friendly-messages-spec",
+                "app5-user-friendly-messages-spec",
                 buildKafkaStreamsTopology(),
                 [:],
                 new NewTopic(USERS, 1, (short) 1),
