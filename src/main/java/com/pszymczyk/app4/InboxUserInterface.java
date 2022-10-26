@@ -6,8 +6,6 @@ import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.query.KeyQuery;
-import org.apache.kafka.streams.query.StateQueryRequest;
 import org.apache.kafka.streams.query.StateQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +13,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.Scanner;
 
-import static com.pszymczyk.app3.InboxApp.*;
+import static com.pszymczyk.app3.InboxApp.INBOX;
+import static com.pszymczyk.app3.InboxApp.MESSAGES;
 
 class InboxUserInterface {
 
@@ -46,17 +45,8 @@ class InboxUserInterface {
                 break;
             }
 
-            StateQueryRequest<Inbox> request = StateQueryRequest.inStore(STATE_STORE_NAME).withQuery(KeyQuery.withKey(line));
-            StateQueryResult<Inbox> result = kafkaStreams.query(request);
-
-            if (result.getPartitionResults()
-                    .values()
-                    .stream()
-                    .anyMatch(r -> r.getResult() != null)) {
-                logger.info("Value {}.", result.getOnlyPartitionResult().getResult());
-            } else {
-                logger.warn("Query into state store {} failed.", STATE_STORE_NAME);
-            }
+            StateQueryResult<Inbox> result = null;
+            logger.info("Value {}.", result.getOnlyPartitionResult().getResult());
         }
 
         kafkaStreams.close();
