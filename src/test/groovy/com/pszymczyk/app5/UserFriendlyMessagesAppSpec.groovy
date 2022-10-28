@@ -47,7 +47,7 @@ class UserFriendlyMessagesAppSpec extends IntegrationSpec {
 
         and: "collect all events"
         Map<String, String> messages = [:]
-        5.times {
+        10.times {
             def consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500))
             logger.info("Received {} events", consumerRecords.size())
             consumerRecords.each {
@@ -66,7 +66,7 @@ class UserFriendlyMessagesAppSpec extends IntegrationSpec {
         and: "we collect all order events again"
         kafkaConsumer.seekToBeginning([new TopicPartition(USER_FRIENDLY_MESSAGES, 0)])
         def messagesAfterUserDetailsChanged = [:]
-        5.times {
+        10.times {
             def consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500))
             logger.info("Received {} events", consumerRecords.size())
             consumerRecords.each {
