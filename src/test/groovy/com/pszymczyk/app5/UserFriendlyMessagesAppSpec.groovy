@@ -61,7 +61,7 @@ class UserFriendlyMessagesAppSpec extends IntegrationSpec {
                      "user-id-789": "Alo Anna Hiacynta, All the best in valentine's day."]
 
         when: "user details changed"
-        produceMessage(USERS, "user-id-789", "Anna Kowalska")
+        produceMessage(USERS, "user-id-789", "Anna#Kowalska")
 
         and: "we collect all order events again"
         kafkaConsumer.seekToBeginning([new TopicPartition(USER_FRIENDLY_MESSAGES, 0)])
