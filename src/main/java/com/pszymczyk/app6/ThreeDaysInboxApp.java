@@ -31,7 +31,7 @@ class ThreeDaysInboxApp {
 
         KStream<String, Message> messagesStream = builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()));
 
-        KTable<Windowed<String>, Inbox> articlesRankingTable = messagesStream
+        KTable<Windowed<String>, Inbox> threeDaysInbox = messagesStream
                 .groupBy((nullKey, message) -> message.receiver())
                 .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofDays(3)).advanceBy(Duration.ofDays(1)))
                 .aggregate(() -> new Inbox(new ArrayList<>()),
@@ -39,7 +39,7 @@ class ThreeDaysInboxApp {
                         Materialized.with(Serdes.String(), JsonSerdes.forA(Inbox.class))
                 );
 
-        articlesRankingTable
+        threeDaysInbox
                 .toStream((key, value) -> String.format("%s-%s-%s", key.window().startTime(), key.window().endTime(), key.key()))
                 .to(THREE_DAYS_INBOX);
 
