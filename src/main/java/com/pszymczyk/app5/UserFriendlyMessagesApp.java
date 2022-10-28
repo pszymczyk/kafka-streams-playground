@@ -32,12 +32,7 @@ class UserFriendlyMessagesApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        KTable<String, User> itemDetailsTable = builder.table(USERS, Consumed.with(Serdes.String(), UserSerde.newSerde()));
-
-        KStream<String, String> userFriendlyMessagesStream = builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()))
-                .join(itemDetailsTable, (message, user) -> message.value().replace("<user>", getPrettyUsername(user)));
-
-        userFriendlyMessagesStream.to(USER_FRIENDLY_MESSAGES);
+        //TODO
 
         return builder;
     }
