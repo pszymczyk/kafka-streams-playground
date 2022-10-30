@@ -21,18 +21,24 @@ class SortingEventsApp {
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
-            "localhost:9092",
-            "SortingEventsApp-app-main",
-            builder,
-            Map.of(),
-            new NewTopic(UNSORTED_EVENTS, 1, (short) 1),
-            new NewTopic(SORTED_EVENTS, 1, (short) 1));
+                "localhost:9092",
+                "SortingEventsApp-app-main",
+                builder,
+                Map.of(),
+                new NewTopic(UNSORTED_EVENTS, 1, (short) 1),
+                new NewTopic(SORTED_EVENTS, 1, (short) 1));
     }
 
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        //TODO
+        StoreBuilder<KeyValueStore<String, SomeUnsortedEvents>> transferProcessKeyValueStore = Stores
+                .keyValueStoreBuilder(Stores.persistentKeyValueStore("unsorted-events"), Serdes.String(), JsonSerdes.forA(SomeUnsortedEvents.class));
+        builder.addStateStore(transferProcessKeyValueStore);
+
+        builder.stream(UNSORTED_EVENTS, Consumed.with(Serdes.String(), JsonSerdes.forA(SomeUnsortedEvent.class)))
+                .transform(SortingProcess::new, "unsorted-events")
+                .to(SORTED_EVENTS, Produced.with(Serdes.String(), JsonSerdes.forA(SomeUnsortedEvent.class)));
 
         return builder;
     }
