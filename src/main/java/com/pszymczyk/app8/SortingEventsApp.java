@@ -33,7 +33,7 @@ class SortingEventsApp {
         StreamsBuilder builder = new StreamsBuilder();
 
         StoreBuilder<KeyValueStore<String, SomeUnsortedEvents>> transferProcessKeyValueStore = Stores
-                .keyValueStoreBuilder(Stores.persistentKeyValueStore("unsorted-events"), Serdes.String(), JsonSerdes.forA(SomeUnsortedEvents.class));
+                .keyValueStoreBuilder(Stores.inMemoryKeyValueStore("unsorted-events"), Serdes.String(), JsonSerdes.forA(SomeUnsortedEvents.class));
         builder.addStateStore(transferProcessKeyValueStore);
 
         builder.stream(UNSORTED_EVENTS, Consumed.with(Serdes.String(), JsonSerdes.forA(SomeUnsortedEvent.class)))

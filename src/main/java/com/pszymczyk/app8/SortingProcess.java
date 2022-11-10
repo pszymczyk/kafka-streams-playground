@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SortingProcess implements Transformer<String, SomeUnsortedEvent, KeyValue<String, SomeUnsortedEvent>> {
 
-    private final long maintainDurationMs = TimeUnit.MINUTES.toMillis(5);
+    private final long maintainDurationMs = TimeUnit.SECONDS.toMillis(30);
 
     private KeyValueStore<String, SomeUnsortedEvents> unsortedEventsStore;
     private ProcessorContext context;
@@ -58,3 +58,4 @@ public class SortingProcess implements Transformer<String, SomeUnsortedEvent, Ke
 
     }
 }
+
