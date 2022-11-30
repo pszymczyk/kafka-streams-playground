@@ -4,6 +4,7 @@ import com.pszymczyk.common.*;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.*;
 
 import java.time.Duration;
@@ -21,7 +22,7 @@ class ThreeDaysInboxApp {
                 "localhost:9092",
                 "ThreeDaysInboxApp-main",
                 builder,
-                Map.of(),
+                Map.of(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, MessageTimeExtractor.class),
                 new NewTopic(MESSAGES, 1, (short) 1),
                 new NewTopic(THREE_DAYS_INBOX, 1, (short) 1));
     }
