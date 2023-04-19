@@ -7,6 +7,8 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.processor.api.Processor;
+import org.apache.kafka.streams.processor.api.ProcessorSupplier;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.StoreBuilder;
 import org.apache.kafka.streams.state.Stores;
@@ -22,7 +24,7 @@ class LoanApplicationProcessorApp {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
-            "LoanApplicationProcess-app-main",
+            "LoanApplicationProcess-app-main12",
             builder,
             Map.of(),
             new NewTopic(LOAN_APPLICATION_REQUESTS, 1, (short) 1),
@@ -37,7 +39,12 @@ class LoanApplicationProcessorApp {
         builder.addStateStore(transferProcessKeyValueStore);
 
         builder.stream(LOAN_APPLICATION_REQUESTS, Consumed.with(Serdes.String(), JsonSerdes.forA(LoanApplicationRequest.class)))
-            .transform(LoanApplicationProcess::new, "users-loans-count")
+            .process(new ProcessorSupplier<String, LoanApplicationRequest, String, LoanApplicationDecision>() {
+                @Override
+                public Processor<String, LoanApplicationRequest, String, LoanApplicationDecision> get() {
+                    return new LoanApplicationProcess();
+                }
+            }, "users-loans-count")
             .to(LOAN_APPLICATION_DECISIONS, Produced.with(Serdes.String(), JsonSerdes.forA(LoanApplicationDecision.class)));
 
         return builder;
