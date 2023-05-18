@@ -39,12 +39,7 @@ class LoanApplicationProcessorApp {
         builder.addStateStore(transferProcessKeyValueStore);
 
         builder.stream(LOAN_APPLICATION_REQUESTS, Consumed.with(Serdes.String(), JsonSerdes.forA(LoanApplicationRequest.class)))
-            .process(new ProcessorSupplier<String, LoanApplicationRequest, String, LoanApplicationDecision>() {
-                @Override
-                public Processor<String, LoanApplicationRequest, String, LoanApplicationDecision> get() {
-                    return new LoanApplicationProcess();
-                }
-            }, "users-loans-count")
+            .process(LoanApplicationProcess::new, "users-loans-count")
             .to(LOAN_APPLICATION_DECISIONS, Produced.with(Serdes.String(), JsonSerdes.forA(LoanApplicationDecision.class)));
 
         return builder;

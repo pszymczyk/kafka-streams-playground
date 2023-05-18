@@ -37,7 +37,7 @@ class SortingEventsApp {
         builder.addStateStore(transferProcessKeyValueStore);
 
         builder.stream(UNSORTED_EVENTS, Consumed.with(Serdes.String(), JsonSerdes.forA(SomeUnsortedEvent.class)))
-                .transform(SortingProcess::new, "unsorted-events")
+                .process(SortingProcess::new, "unsorted-events")
                 .to(SORTED_EVENTS, Produced.with(Serdes.String(), JsonSerdes.forA(SomeUnsortedEvent.class)));
 
         return builder;
