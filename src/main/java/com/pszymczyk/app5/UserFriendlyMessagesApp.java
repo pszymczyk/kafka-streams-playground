@@ -6,8 +6,8 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.GlobalKTable;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KTable;
 
 import java.util.Map;
 
@@ -32,10 +32,12 @@ class UserFriendlyMessagesApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        KTable<String, User> itemDetailsTable = builder.table(USERS, Consumed.with(Serdes.String(), UserSerde.newSerde()));
+        GlobalKTable<String, User> itemDetailsTable = builder.globalTable(USERS, Consumed.with(Serdes.String(), UserSerde.newSerde()));
 
         KStream<String, String> userFriendlyMessagesStream = builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()))
-                .join(itemDetailsTable, (message, user) -> message.value().replace("<user>", getPrettyUsername(user)));
+                .join(itemDetailsTable,
+                        (nullKey, value) -> value.receiver(),
+                        (message, user) -> message.value().replace("<user>", getPrettyUsername(user)));
 
         userFriendlyMessagesStream.to(USER_FRIENDLY_MESSAGES);
 
