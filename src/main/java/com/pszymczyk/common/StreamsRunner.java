@@ -51,7 +51,7 @@ public class StreamsRunner {
         logger.info(topology.describe().toString());
         KafkaStreams kafkaStreams = new KafkaStreams(topology, config);
         kafkaStreams.setUncaughtExceptionHandler(exception -> {
-            logger.error("Handling unexpected exception");
+            logger.error("Handling unexpected exception", exception);
             return StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.SHUTDOWN_APPLICATION;
         });
         kafkaStreams.cleanUp();
