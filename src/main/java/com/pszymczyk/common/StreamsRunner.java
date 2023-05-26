@@ -43,9 +43,6 @@ public class StreamsRunner {
         config.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, EXACTLY_ONCE_V2);
         config.put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_DOC, LogAndContinueExceptionHandler.class);
         // disable caching to see all operations results immediately
-        config.put(StreamsConfig.STATESTORE_CACHE_MAX_BYTES_CONFIG, "0");
-
-        config.put(ConsumerConfig.GROUP_INSTANCE_ID_CONFIG, applicationId + "-0");
 
         config.putAll(customProperties);
 
