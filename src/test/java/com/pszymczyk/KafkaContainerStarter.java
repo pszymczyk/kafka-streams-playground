@@ -9,9 +9,8 @@ class KafkaContainerStarter {
 
     static void start() {
         if (kafkaContainer == null) {
-            kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka"));
+            kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.0")).withKraft();
             kafkaContainer.start();
-            System.setProperty("spring.kafka.bootstrap-servers", kafkaContainer.getBootstrapServers());
             Runtime.getRuntime().addShutdownHook(new Thread(() -> kafkaContainer.close()));
         }
     }
