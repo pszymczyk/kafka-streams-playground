@@ -1,8 +1,12 @@
 package com.pszymczyk.app4;
 
-import com.pszymczyk.app3.InboxApp;
-import com.pszymczyk.common.Inbox;
-import com.pszymczyk.common.StreamsRunner;
+import static com.pszymczyk.app3.InboxApp.INBOX;
+import static com.pszymczyk.app3.InboxApp.MESSAGES;
+import static com.pszymczyk.app3.InboxApp.STATE_STORE_NAME;
+
+import java.util.Map;
+import java.util.Scanner;
+
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -12,10 +16,9 @@ import org.apache.kafka.streams.query.StateQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.Scanner;
-
-import static com.pszymczyk.app3.InboxApp.*;
+import com.pszymczyk.app3.InboxApp;
+import com.pszymczyk.common.Inbox;
+import com.pszymczyk.common.StreamsRunner;
 
 class InboxUserInterface {
 
@@ -37,8 +40,8 @@ class InboxUserInterface {
             Thread.sleep(200);
         }
 
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (true) {
             logger.info("Enter key:");
             String line = scanner.nextLine();
 
@@ -58,7 +61,7 @@ class InboxUserInterface {
                 logger.warn("Query into state store {} failed.", STATE_STORE_NAME);
             }
         }
-
+        }
         kafkaStreams.close();
     }
 }

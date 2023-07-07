@@ -1,20 +1,18 @@
 package com.pszymczyk.app7;
 
-import com.pszymczyk.common.JsonSerdes;
-import com.pszymczyk.common.StreamsRunner;
+import java.util.Map;
+
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.apache.kafka.streams.kstream.Produced;
-import org.apache.kafka.streams.processor.api.Processor;
-import org.apache.kafka.streams.processor.api.ProcessorSupplier;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.apache.kafka.streams.state.StoreBuilder;
 import org.apache.kafka.streams.state.Stores;
 
-import java.util.Map;
+import com.pszymczyk.common.JsonSerdes;
+import com.pszymczyk.common.StreamsRunner;
 
 class LoanApplicationProcessorApp {
 

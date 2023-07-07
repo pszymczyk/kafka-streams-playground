@@ -1,17 +1,16 @@
 package com.pszymczyk.app1;
 
-import com.pszymczyk.common.StreamsRunner;
+import java.util.Map;
+import java.util.Objects;
+
 import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KGroupedStream;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
-import org.apache.kafka.streams.kstream.Produced;
 
-import java.util.Map;
-import java.util.Objects;
+import com.pszymczyk.common.StreamsRunner;
 
 class MessagesCountApp {
 
