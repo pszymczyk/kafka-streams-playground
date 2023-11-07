@@ -1,4 +1,4 @@
-package com.pszymczyk.app9;
+package com.pszymczyk.tx2;
 
 import com.pszymczyk.common.Utils;
 import org.apache.kafka.clients.producer.KafkaProducer;
