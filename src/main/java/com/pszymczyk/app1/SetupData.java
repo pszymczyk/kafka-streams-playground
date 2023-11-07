@@ -24,7 +24,7 @@ public class SetupData {
 
         Runtime.getRuntime().addShutdownHook(new Thread(kafkaProducer::close, "shutdown-hook-thread"));
 
-        for (var line : Utils.readLines("app1-data.csv")) {
+        for (var line : Utils.readLines("app1-data.txt")) {
             kafkaProducer.send(new ProducerRecord<>("app1-messages", 0, null, line), (metadata, exception) -> {
                 if (metadata != null) {
                     logger.info("Message sent metadata: {}", metadata);
