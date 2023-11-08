@@ -9,6 +9,8 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
+import static com.pszymczyk.app8.SortingEventsApp.UNSORTED_EVENTS_STORE;
+
 
 public class SortingProcess implements Processor<String, SomeUnsortedEvent, String, SomeUnsortedEvent> {
 
@@ -20,7 +22,7 @@ public class SortingProcess implements Processor<String, SomeUnsortedEvent, Stri
     @Override
     public void init(ProcessorContext<String, SomeUnsortedEvent> context) {
         this.context = context;
-        this.unsortedEventsStore = context.getStateStore("unsorted-events");
+        this.unsortedEventsStore = context.getStateStore(UNSORTED_EVENTS_STORE);
         context.schedule(Duration.ofMillis(5), PunctuationType.WALL_CLOCK_TIME,
                 timestamp -> unsortedEventsStore.all()
                         .forEachRemaining(kV -> {

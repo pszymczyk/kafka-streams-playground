@@ -17,6 +17,7 @@ import com.pszymczyk.common.StreamsRunner;
 class SortingEventsApp {
 
     static final String UNSORTED_EVENTS = "unsorted-events";
+    static final String UNSORTED_EVENTS_STORE = "unsorted-events-store";
     static final String SORTED_EVENTS = "sorted-events";
 
     public static void main(String[] args) {
@@ -34,12 +35,12 @@ class SortingEventsApp {
         StreamsBuilder builder = new StreamsBuilder();
 
         StoreBuilder<KeyValueStore<String, SomeUnsortedEvents>> transferProcessKeyValueStore = Stores
-                .keyValueStoreBuilder(Stores.inMemoryKeyValueStore("unsorted-events"), Serdes.String(), JsonSerdes.forA(SomeUnsortedEvents.class));
+                .keyValueStoreBuilder(Stores.inMemoryKeyValueStore(UNSORTED_EVENTS_STORE), Serdes.String(), JsonSerdes.forA(SomeUnsortedEvents.class));
         builder.addStateStore(transferProcessKeyValueStore);
 
         builder.stream(UNSORTED_EVENTS, Consumed.with(Serdes.String(), JsonSerdes.forA(SomeUnsortedEvent.class)))
                 .selectKey((key, value) -> value.getProcessId())
-                .process(SortingProcess::new, "unsorted-events")
+                .process(SortingProcess::new, UNSORTED_EVENTS_STORE)
                 .to(SORTED_EVENTS, Produced.with(Serdes.String(), JsonSerdes.forA(SomeUnsortedEvent.class)));
 
         return builder;
