@@ -28,7 +28,7 @@ class InboxUserInterface {
         StreamsBuilder builder = InboxApp.buildKafkaStreamsTopology();
         KafkaStreams kafkaStreams = new StreamsRunner().run(
                 "localhost:9092",
-                "messages-app-main-2",
+                "inbox-user-interface-app-main",
                 builder,
                 Map.of(),
                 new NewTopic(MESSAGES, 1, (short) 1),

@@ -24,7 +24,7 @@ class SortingEventsApp {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
                 "localhost:9092",
-                "SortingEventsApp-app-main",
+                "sorting-events-app-main",
                 builder,
                 Map.of(),
                 new NewTopic(UNSORTED_EVENTS, 1, (short) 1),

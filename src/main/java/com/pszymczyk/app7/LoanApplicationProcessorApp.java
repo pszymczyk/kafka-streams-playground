@@ -23,7 +23,7 @@ class LoanApplicationProcessorApp {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
                 "localhost:9092",
-                "LoanApplicationProcess-app-main12",
+                "loan-application-process-app-main",
                 builder,
                 Map.of(),
                 new NewTopic(LOAN_APPLICATION_REQUESTS, 1, (short) 1),

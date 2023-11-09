@@ -20,7 +20,7 @@ class ThreeDaysInboxApp {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
                 "localhost:9092",
-                "ThreeDaysInboxApp-main",
+                "three-days-inbox-app-main",
                 builder,
                 Map.of(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, MessageTimeExtractor.class),
                 new NewTopic(MESSAGES, 1, (short) 1),

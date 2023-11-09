@@ -36,14 +36,6 @@ class MessagesCountFileStorageApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        /*
-         * Simple stream of messages
-         * [
-         *  key: null, value: "1234#pszymczyk#andrzej123#Hi Paweł, how are you?"
-         *  key: null, value: "1235#andrzej123#pszymczyk#Hello, how are you?"
-         *  key: null, value: "1236#telemarketing#pszymczyk#Special discount for you!"
-         *  ]
-         */
         KStream<String, String> messages = builder.stream(MESSAGES);
 
         /*

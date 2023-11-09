@@ -21,7 +21,7 @@ public class Tx2Runner {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
-            "Tx2Runner",
+            "tx2-runner-main",
             builder,
             Map.of(),
             new NewTopic(INPUT, 1, (short) 1),
