@@ -46,7 +46,7 @@ class ThreeDaysInboxApp {
             .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofDays(3)).advanceBy(Duration.ofDays(1)))
             .aggregate(() -> new Inbox(new ArrayList<>()),
                 (key, message, inbox) -> inbox.add(message),
-                Materialized.with(Serdes.String(), JsonSerdes.forA(Inbox.class))
+                Materialized.with(Serdes.String(), JsonSerdes.newSerdes(Inbox.class))
             );
 
         threeDaysInbox

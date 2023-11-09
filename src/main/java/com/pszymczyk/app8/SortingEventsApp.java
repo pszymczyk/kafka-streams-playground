@@ -33,14 +33,14 @@ class SortingEventsApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        StoreBuilder<KeyValueStore<String, SomeUnsortedEvents>> transferProcessKeyValueStore = Stores
-            .keyValueStoreBuilder(Stores.inMemoryKeyValueStore(UNSORTED_EVENTS_STORE), Serdes.String(), JsonSerdes.forA(SomeUnsortedEvents.class));
+        StoreBuilder<KeyValueStore<String, UnsortedEvents>> transferProcessKeyValueStore = Stores
+            .keyValueStoreBuilder(Stores.inMemoryKeyValueStore(UNSORTED_EVENTS_STORE), Serdes.String(), JsonSerdes.newSerdes(UnsortedEvents.class));
         builder.addStateStore(transferProcessKeyValueStore);
 
-        builder.stream(UNSORTED_EVENTS, Consumed.with(Serdes.String(), JsonSerdes.forA(SomeUnsortedEvent.class)))
-            .selectKey((key, value) -> value.getProcessId())
+        builder.stream(UNSORTED_EVENTS, Consumed.with(Serdes.String(), JsonSerdes.newSerdes(UnsortedEvent.class)))
+            .selectKey((key, value) -> value.processId())
             .process(SortingProcess::new, UNSORTED_EVENTS_STORE)
-            .to(SORTED_EVENTS, Produced.with(Serdes.String(), JsonSerdes.forA(SomeUnsortedEvent.class)));
+            .to(SORTED_EVENTS, Produced.with(Serdes.String(), JsonSerdes.newSerdes(UnsortedEvent.class)));
 
         return builder;
     }

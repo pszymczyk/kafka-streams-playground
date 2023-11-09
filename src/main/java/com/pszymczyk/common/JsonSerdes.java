@@ -23,7 +23,7 @@ public class JsonSerdes {
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
 
-    public static <T> Serde<T> forA(Class<T> aClass) {
+    public static <T> Serde<T> newSerdes(Class<T> aClass) {
         JsonSerializer<T> serializer = new JsonSerializer<>(objectMapper);
         JsonDeserializer<T> deserializer = new JsonDeserializer<>(aClass, objectMapper);
         return serdeFrom(serializer, deserializer);
