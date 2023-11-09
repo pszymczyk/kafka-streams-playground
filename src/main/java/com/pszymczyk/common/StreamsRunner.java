@@ -29,8 +29,8 @@ public class StreamsRunner {
                             NewTopic... newTopics) {
 
         AdminClient adminClient = AdminClient.create(Map.of(
-                "bootstrap.servers", bootstrapServers,
-                "group.id", "create-topics-admin"));
+            "bootstrap.servers", bootstrapServers,
+            "group.id", "create-topics-admin"));
 
         adminClient.createTopics(List.of(newTopics));
         adminClient.close();

@@ -17,22 +17,22 @@ class MessagesCountApp {
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
-                "localhost:9092",
-                "messages-app-main",
-                builder,
-                Map.of(),
-                new NewTopic(MESSAGES, 1, (short) 1),
-                new NewTopic(MESSAGES_COUNT, 1, (short) 1));
+            "localhost:9092",
+            "messages-app-main",
+            builder,
+            Map.of(),
+            new NewTopic(MESSAGES, 1, (short) 1),
+            new NewTopic(MESSAGES_COUNT, 1, (short) 1));
     }
 
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
         builder.stream(MESSAGES, Consumed.with(Serdes.String(), Serdes.String()))
-                .map((nullKey, message) -> new KeyValue<>(message.split("#")[2], ""))
-                .groupByKey()
-                .count()
-                .toStream().to(MESSAGES_COUNT);
+            .map((nullKey, message) -> new KeyValue<>(message.split("#")[2], ""))
+            .groupByKey()
+            .count()
+            .toStream().to(MESSAGES_COUNT);
 
         return builder;
     }

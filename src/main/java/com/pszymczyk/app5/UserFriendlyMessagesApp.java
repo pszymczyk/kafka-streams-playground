@@ -20,13 +20,13 @@ class UserFriendlyMessagesApp {
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
-                "localhost:9092",
-                "user-friendly-messages-main",
-                builder,
-                Map.of(),
-                new NewTopic(MESSAGES, 1, (short) 1),
-                new NewTopic(USER_FRIENDLY_MESSAGES, 1, (short) 1),
-                new NewTopic(USERS, 1, (short) 1));
+            "localhost:9092",
+            "user-friendly-messages-main",
+            builder,
+            Map.of(),
+            new NewTopic(MESSAGES, 1, (short) 1),
+            new NewTopic(USER_FRIENDLY_MESSAGES, 1, (short) 1),
+            new NewTopic(USERS, 1, (short) 1));
     }
 
     static StreamsBuilder buildKafkaStreamsTopology() {
@@ -35,9 +35,9 @@ class UserFriendlyMessagesApp {
         GlobalKTable<String, User> itemDetailsTable = builder.globalTable(USERS, Consumed.with(Serdes.String(), UserSerde.newSerde()));
 
         KStream<String, String> userFriendlyMessagesStream = builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()))
-                .join(itemDetailsTable,
-                        (nullKey, value) -> value.receiver(),
-                        (message, user) -> message.value().replace("<user>", getPrettyUsername(user)));
+            .join(itemDetailsTable,
+                (nullKey, value) -> value.receiver(),
+                (message, user) -> message.value().replace("<user>", getPrettyUsername(user)));
 
         userFriendlyMessagesStream.to(USER_FRIENDLY_MESSAGES);
 

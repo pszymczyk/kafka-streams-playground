@@ -25,12 +25,12 @@ class MessagesCountFileStorageApp {
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
-                "localhost:9092",
-                "messages-app-main",
-                builder,
-                Map.of(),
-                new NewTopic(MESSAGES, 1, (short) 1),
-                new NewTopic(MESSAGES_COUNT, 1, (short) 1));
+            "localhost:9092",
+            "messages-app-main",
+            builder,
+            Map.of(),
+            new NewTopic(MESSAGES, 1, (short) 1),
+            new NewTopic(MESSAGES_COUNT, 1, (short) 1));
     }
 
     static StreamsBuilder buildKafkaStreamsTopology() {
@@ -49,16 +49,16 @@ class MessagesCountFileStorageApp {
          * ]
          */
         KGroupedStream<String, String> messagesGroupedByUser = messages
-                .map((nullKey, message) -> new KeyValue<>(message.split("#")[2], ""))
-                .groupByKey();
+            .map((nullKey, message) -> new KeyValue<>(message.split("#")[2], ""))
+            .groupByKey();
 
         /*
          * Prepare file based Materialized
          */
         KeyValueBytesStoreSupplier storeSupplier = Stores.persistentKeyValueStore(STATE_STORE_NAME);
         Materialized<String, Long, KeyValueStore<Bytes, byte[]>> materialized = Materialized.<String, Long>as(storeSupplier)
-                .withKeySerde(Serdes.String())
-                .withValueSerde(Serdes.Long());
+            .withKeySerde(Serdes.String())
+            .withValueSerde(Serdes.Long());
 
         /*
          * Count all messages in groups
@@ -76,8 +76,8 @@ class MessagesCountFileStorageApp {
          * ]
          */
         messagesCount.toStream()
-                .mapValues(Object::toString)
-                .to(MESSAGES_COUNT);
+            .mapValues(Object::toString)
+            .to(MESSAGES_COUNT);
 
         return builder;
     }

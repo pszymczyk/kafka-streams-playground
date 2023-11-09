@@ -24,12 +24,12 @@ public class SortingProcess implements Processor<String, SomeUnsortedEvent, Stri
         this.context = context;
         this.unsortedEventsStore = context.getStateStore(UNSORTED_EVENTS_STORE);
         context.schedule(Duration.ofMillis(5), PunctuationType.WALL_CLOCK_TIME,
-                timestamp -> unsortedEventsStore.all()
-                        .forEachRemaining(kV -> {
-                            if (hasExpired(kV.value.getLastModification().toEpochMilli(), timestamp)) {
-                                unsortedEventsStore.delete(kV.key);
-                            }
-                        }));
+            timestamp -> unsortedEventsStore.all()
+                .forEachRemaining(kV -> {
+                    if (hasExpired(kV.value.getLastModification().toEpochMilli(), timestamp)) {
+                        unsortedEventsStore.delete(kV.key);
+                    }
+                }));
     }
 
     private boolean hasExpired(final long eventTimestamp, final long currentStreamTimeMs) {
@@ -47,7 +47,8 @@ public class SortingProcess implements Processor<String, SomeUnsortedEvent, Stri
         unsortedEvents.add(record.value());
         if (unsortedEvents.size() >= 3) {
             unsortedEvents.sort();
-            unsortedEvents.forEach(someUnsortedEvent -> context.forward(new Record<>(record.value().getProcessId(), record.value(), context.currentStreamTimeMs())));
+            unsortedEvents.forEach(someUnsortedEvent -> context.forward(new Record<>(record.value().getProcessId(), record.value(),
+                context.currentStreamTimeMs())));
             unsortedEventsStore.delete(record.value().getProcessId());
         } else {
             unsortedEventsStore.put(record.value().getProcessId(), unsortedEvents);
