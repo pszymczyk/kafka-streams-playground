@@ -6,6 +6,7 @@ import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.streams.KafkaStreams
 import spock.lang.Shared
 
+import java.nio.ByteBuffer
 import java.time.Duration
 
 import static MessagesCountApp.MESSAGES
@@ -41,18 +42,18 @@ class MessagesCountAppSpec extends IntegrationSpec {
         produceMessage(MESSAGES, "1237#telemarketing#pszymczyk#Best wishes in Valentine's day!")
 
         and: "collect all events"
-        Map<String, String> messagesCount = [:]
+        Map<String, Long> messagesCount = [:]
         10.times {
             def consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500))
             logger.info("Received {} messages", consumerRecords.size())
             consumerRecords.each {
                 logger.info("{}:{}", it.key(), it.value())
-                messagesCount.put(it.key(), it.value())
+                messagesCount.put(it.key(), ByteBuffer.wrap(it.value()).getLong())
             }
         }
 
         then:
-        messagesCount == ["pszymczyk" : "3",
-                          "andrzej123": "1"]
+        messagesCount == ["pszymczyk" : 3L,
+                          "andrzej123": 1L]
     }
 }

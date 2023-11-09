@@ -24,24 +24,24 @@ class MessagesCountUnitSpec extends Specification {
         testEnvironment.messages.pipeInput("1237#pszymczyk#andrzej123##Hello! how are you?")
 
         when:
-        Map<String, String> messagesCount = testEnvironment.messagesCount
+        Map<String, Long> messagesCount = testEnvironment.messagesCount
                 .readRecordsToList()
                 .collectEntries { [it.key(), it.value()] }
 
         then:
-        messagesCount["pszymczyk"] == "3"
-        messagesCount["andrzej123"] == "1"
+        messagesCount["pszymczyk"] == 3L
+        messagesCount["andrzej123"] == 1L
     }
 
     private static class TestEnvironment {
         final TopologyTestDriver testDriver
 
         final TestInputTopic<String, String> messages
-        final TestOutputTopic<String, String> messagesCount
+        final TestOutputTopic<String, Long> messagesCount
 
         TestEnvironment(TopologyTestDriver testDriver,
                         TestInputTopic<String, String> messages,
-                        TestOutputTopic<String, String> messagesCount) {
+                        TestOutputTopic<String, Long> messagesCount) {
             this.testDriver = testDriver
             this.messages = messages
             this.messagesCount = messagesCount
@@ -69,11 +69,11 @@ class MessagesCountUnitSpec extends Specification {
                             Serdes.String().serializer())
 
 
-            TestOutputTopic<String, String> messagesCount = topologyTestDriver
+            TestOutputTopic<String, Long> messagesCount = topologyTestDriver
                     .createOutputTopic(
                             MessagesCountApp.MESSAGES_COUNT,
                             Serdes.String().deserializer(),
-                            Serdes.String().deserializer())
+                            Serdes.Long().deserializer())
 
             return new TestEnvironment(
                     topologyTestDriver,
