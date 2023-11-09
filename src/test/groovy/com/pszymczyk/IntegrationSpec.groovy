@@ -6,6 +6,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.slf4j.Logger
@@ -20,7 +21,7 @@ abstract class IntegrationSpec extends Specification {
     protected static KafkaProducer<String, String> kafkaProducer
     protected static String bootstrapServers
 
-    protected Consumer<String, String> kafkaConsumer
+    protected Consumer<String, byte[]> kafkaConsumer
 
     def setupSpec() {
         KafkaContainerStarter.start()
@@ -33,14 +34,14 @@ abstract class IntegrationSpec extends Specification {
         kafkaConsumer = createKafkaConsumer()
     }
 
-    protected Consumer<String, String> createKafkaConsumer(String groupId = this.class.simpleName) {
+    protected Consumer<String, byte[]> createKafkaConsumer(String groupId = this.class.simpleName) {
         new KafkaConsumer<>(
                 Map.of(
                         ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
                         ConsumerConfig.GROUP_ID_CONFIG, groupId,
                         ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest",
                         ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
-                        ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
+                        ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class,
                         ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 3,
                         ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false)
         )
