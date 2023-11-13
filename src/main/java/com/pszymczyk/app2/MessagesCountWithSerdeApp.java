@@ -3,6 +3,7 @@ package com.pszymczyk.app2;
 import com.pszymczyk.common.MessageSerde;
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.config.TopicConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -18,13 +19,19 @@ class MessagesCountWithSerdeApp {
 
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
+        NewTopic newTopic = new NewTopic(MESSAGES_COUNT, 1, (short) 1);
+        newTopic.configs(Map.of(
+            TopicConfig.SEGMENT_MS_CONFIG, "1000",
+            TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT
+        ));
+
         new StreamsRunner().run(
             "localhost:9092",
-            "messages-app-main",
+            "messages-count-with-serde-app-main",
             builder,
             Map.of(),
             new NewTopic(MESSAGES, 1, (short) 1),
-            new NewTopic(MESSAGES_COUNT, 1, (short) 1));
+            newTopic);
     }
 
     static StreamsBuilder buildKafkaStreamsTopology() {
