@@ -23,7 +23,7 @@ public class SortingProcess implements Processor<String, UnsortedEvent, String, 
     public void init(ProcessorContext<String, UnsortedEvent> context) {
         this.context = context;
         this.unsortedEventsStore = context.getStateStore(UNSORTED_EVENTS_STORE);
-        context.schedule(Duration.ofMillis(5), PunctuationType.WALL_CLOCK_TIME,
+        context.schedule(Duration.ofMillis(500), PunctuationType.WALL_CLOCK_TIME,
             timestamp -> {
                 try (var iterator = unsortedEventsStore.all()) {
                     while (iterator.hasNext()) {
@@ -51,7 +51,7 @@ public class SortingProcess implements Processor<String, UnsortedEvent, String, 
         unsortedEvents.add(record.value());
         if (unsortedEvents.size() >= 3) {
             unsortedEvents.sort();
-            unsortedEvents.forEach(unsortedEvent -> context.forward(new Record<>(record.value().processId(), record.value(),
+            unsortedEvents.forEach(unsortedEvent -> context.forward(new Record<>(unsortedEvent.processId(), unsortedEvent,
                 context.currentStreamTimeMs())));
             unsortedEventsStore.delete(record.value().processId());
         } else {
