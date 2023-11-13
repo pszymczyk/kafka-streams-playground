@@ -24,7 +24,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
         try {
             return objectMapper.readValue(data, aClass);
         } catch (IOException e) {
-            log.error("Cannot deserialize Kafka record!, Topic: {}, data: {}." , topic, new String(data), e);
+            log.error("Cannot deserialize Kafka record!, Topic: {}, data: {}.", topic, new String(data), e);
             throw new RuntimeException(e);
         }
     }

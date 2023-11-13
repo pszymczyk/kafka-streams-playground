@@ -22,7 +22,7 @@ class LoanApplicationProcessorApp {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
-            "LoanApplicationProcess-app-main",
+            "loan-application-process-app-main",
             builder,
             Map.of(),
             new NewTopic(LOAN_APPLICATION_REQUESTS, 1, (short) 1),
@@ -36,9 +36,10 @@ class LoanApplicationProcessorApp {
             .keyValueStoreBuilder(Stores.persistentKeyValueStore("users-loans-count"), Serdes.String(), Serdes.Integer());
         builder.addStateStore(transferProcessKeyValueStore);
 
-        builder.stream(LOAN_APPLICATION_REQUESTS, Consumed.with(Serdes.String(), JsonSerdes.forA(LoanApplicationRequest.class)))
-            .transform(LoanApplicationProcess::new, "users-loans-count")
-            .to(LOAN_APPLICATION_DECISIONS, Produced.with(Serdes.String(), JsonSerdes.forA(LoanApplicationDecision.class)));
+        builder.stream(LOAN_APPLICATION_REQUESTS, Consumed.with(Serdes.Void(), JsonSerdes.newSerdes(LoanApplicationRequest.class)))
+            .selectKey((key, value) -> value.getRequester())
+            .process(LoanApplicationProcess::new, "users-loans-count")
+            .to(LOAN_APPLICATION_DECISIONS, Produced.with(Serdes.String(), JsonSerdes.newSerdes(LoanApplicationDecision.class)));
 
         return builder;
     }

@@ -1,4 +1,4 @@
-package com.pszymczyk.app9;
+package com.pszymczyk.app8;
 
 import com.pszymczyk.common.JsonSerdes;
 import com.pszymczyk.common.StreamsRunner;
@@ -16,13 +16,14 @@ import java.util.Map;
 class SortingEventsApp {
 
     static final String UNSORTED_EVENTS = "unsorted-events";
+    static final String UNSORTED_EVENTS_STORE = "unsorted-events-store";
     static final String SORTED_EVENTS = "sorted-events";
 
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
-            "SortingEventsApp-app-main",
+            "sorting-events-app-main",
             builder,
             Map.of(),
             new NewTopic(UNSORTED_EVENTS, 1, (short) 1),
@@ -32,13 +33,14 @@ class SortingEventsApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        StoreBuilder<KeyValueStore<String, SomeUnsortedEvents>> transferProcessKeyValueStore = Stores
-            .keyValueStoreBuilder(Stores.persistentKeyValueStore("unsorted-events"), Serdes.String(), JsonSerdes.forA(SomeUnsortedEvents.class));
+        StoreBuilder<KeyValueStore<String, UnsortedEvents>> transferProcessKeyValueStore = Stores
+            .keyValueStoreBuilder(Stores.inMemoryKeyValueStore(UNSORTED_EVENTS_STORE), Serdes.String(), JsonSerdes.newSerdes(UnsortedEvents.class));
         builder.addStateStore(transferProcessKeyValueStore);
 
-        builder.stream(UNSORTED_EVENTS, Consumed.with(Serdes.String(), JsonSerdes.forA(SomeUnsortedEvent.class)))
-            .transform(SortingProcess::new, "unsorted-events")
-            .to(SORTED_EVENTS, Produced.with(Serdes.String(), JsonSerdes.forA(SomeUnsortedEvent.class)));
+        builder.stream(UNSORTED_EVENTS, Consumed.with(Serdes.Void(), JsonSerdes.newSerdes(UnsortedEvent.class)))
+            .selectKey((key, value) -> value.processId())
+            .process(SortingProcess::new, UNSORTED_EVENTS_STORE)
+            .to(SORTED_EVENTS, Produced.with(Serdes.String(), JsonSerdes.newSerdes(UnsortedEvent.class)));
 
         return builder;
     }
