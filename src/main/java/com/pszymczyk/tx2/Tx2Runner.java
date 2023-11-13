@@ -21,7 +21,7 @@ public class Tx2Runner {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
             "localhost:9092",
-            "Tx2Runner",
+            "tx2-runner-main",
             builder,
             Map.of(),
             new NewTopic(INPUT, 1, (short) 1),
@@ -42,7 +42,7 @@ public class Tx2Runner {
                 return List.of(
                     new KeyValue<>(buyer, BusinessTransaction.buy(buyer, stock, number)),
                     new KeyValue<>(seller, BusinessTransaction.sell(seller, stock, number)));
-            }).to(OUTPUT, Produced.with(Serdes.String(), JsonSerdes.forA(BusinessTransaction.class)));
+            }).to(OUTPUT, Produced.with(Serdes.String(), JsonSerdes.newSerdes(BusinessTransaction.class)));
 
         return builder;
     }

@@ -1,16 +1,16 @@
 package com.pszymczyk.app1;
 
-import java.util.Map;
-import java.util.Objects;
-
+import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.kstream.KGroupedStream;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.Materialized;
 
-import com.pszymczyk.common.StreamsRunner;
+import java.util.Map;
+
+import static com.pszymczyk.common.Utils.createCompactedTopic;
 
 class MessagesCountApp {
 
@@ -20,59 +20,23 @@ class MessagesCountApp {
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
-                "localhost:9092",
-                "messages-app-main",
-                builder,
-                Map.of(),
-                new NewTopic(MESSAGES, 1, (short) 1),
-                new NewTopic(MESSAGES_COUNT, 1, (short) 1));
+            "localhost:9092",
+            "messages-count-app-main",
+            builder,
+            Map.of(),
+            new NewTopic(MESSAGES, 1, (short) 1),
+            createCompactedTopic(MESSAGES_COUNT));
     }
 
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        /*
-         * Simple stream of messages
-         * [
-         *  key: null, value: "1234#pszymczyk#andrzej123#Hi Paweł, how are you?"
-         *  key: null, value: "1235#andrzej123#pszymczyk#Hello, how are you?"
-         *  key: null, value: "1236#telemarketing#pszymczyk#Special discount for you!"
-         *  ]
-         */
-        KStream<String, String> messages = builder.stream(MESSAGES);
-
-        /*
-         * Map and group messages by receiver name
-         * [
-         *  key: "pszymczyk", value: ""
-         *  key: "pszymczyk", value: ""
-         * ],
-         * [
-         *  key: "andrzej123", value: ""
-         * ]
-         */
-        KGroupedStream<String, String> messagesGroupedByUser = messages
-                .map((nullKey, message) -> new KeyValue<>(message.split("#")[2], ""))
-                .groupByKey();
-
-        /*
-         * Count all messages in groups
-         * [
-         *  key: "pszymczyk", value: "2"
-         *  key: "andrzej123", value: "1"
-         * ]
-         */
-        KTable<String, String> messagesCount = messagesGroupedByUser
-                .count()
-                .mapValues(v -> Objects.toString(v));
-        /*
-         * Convert Table -> Stream
-         * [
-         *  key: "pszymczyk", value: "2"
-         *  key: "andrzej12"3, value: "1"
-         * ]
-         */
-        messagesCount.toStream().to(MESSAGES_COUNT);
+        builder.stream(MESSAGES, Consumed.with(Serdes.Void(), Serdes.String()))
+            .map((nullKey, message) -> new KeyValue<>(message.split("#")[2], ""))
+            .groupByKey()
+            .count(Materialized.as("messages-count-store"))
+            .toStream()
+            .to(MESSAGES_COUNT);
 
         return builder;
     }
