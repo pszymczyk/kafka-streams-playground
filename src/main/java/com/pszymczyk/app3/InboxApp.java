@@ -5,7 +5,6 @@ import com.pszymczyk.common.JsonSerdes;
 import com.pszymczyk.common.MessageSerde;
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.common.config.TopicConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
@@ -14,6 +13,8 @@ import org.apache.kafka.streams.state.Stores;
 
 import java.util.ArrayList;
 import java.util.Map;
+
+import static com.pszymczyk.common.Utils.createCompactedTopic;
 
 public class InboxApp {
 
@@ -24,19 +25,13 @@ public class InboxApp {
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
 
-        var compactedTopic = new NewTopic(INBOX, 1, (short) 1);
-        compactedTopic.configs(Map.of(
-            TopicConfig.SEGMENT_MS_CONFIG, "1000",
-            TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT
-        ));
-
         new StreamsRunner().run(
             "localhost:9092",
             "inbox-app-main",
             builder,
             Map.of(),
             new NewTopic(MESSAGES, 1, (short) 1),
-            compactedTopic);
+            createCompactedTopic(INBOX));
     }
 
     public static StreamsBuilder buildKafkaStreamsTopology() {
