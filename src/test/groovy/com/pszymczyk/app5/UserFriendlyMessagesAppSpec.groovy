@@ -51,7 +51,7 @@ class UserFriendlyMessagesAppSpec extends IntegrationSpec {
             def consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500))
             logger.info("Received {} events", consumerRecords.size())
             consumerRecords.each {
-                messages.add(it.value())
+                messages.add(new String(it.value()))
             }
         }
 

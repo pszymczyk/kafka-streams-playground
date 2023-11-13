@@ -55,7 +55,7 @@ class ThreeDaysInboxAppSpec extends IntegrationSpec {
             logger.info("Received {} events", consumerRecords.size())
             consumerRecords.each {
                 logger.info("Received {}:{}", it.key(), it.value())
-                inboxTable.put(it.key(), it.value())
+                inboxTable.put(it.key(), new String(it.value()))
             }
         }
         then: "pszymczyk inbox"

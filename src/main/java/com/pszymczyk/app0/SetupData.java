@@ -1,4 +1,4 @@
-package com.pszymczyk.app1;
+package com.pszymczyk.app0;
 
 import com.pszymczyk.common.Utils;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -24,8 +24,8 @@ class SetupData {
 
         Runtime.getRuntime().addShutdownHook(new Thread(kafkaProducer::close, "shutdown-hook-thread"));
 
-        for (var line : Utils.readLines("app1-data.txt")) {
-            kafkaProducer.send(new ProducerRecord<>("app1-messages", line), (metadata, exception) -> {
+        for (var line : Utils.readLines("app0-data.txt")) {
+            kafkaProducer.send(new ProducerRecord<>("clicks", line), (metadata, exception) -> {
                 if (metadata != null) {
                     logger.info("Message sent metadata: {}", metadata);
                 } else {
