@@ -1,19 +1,14 @@
 package com.pszymczyk.app2;
 
 import com.pszymczyk.common.Message;
-import com.pszymczyk.common.MessageSerde;
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.KGroupedStream;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Materialized;
 
 import java.util.Map;
-import java.util.Objects;
 
 class MessagesCountWithSerdeApp {
 
@@ -23,29 +18,25 @@ class MessagesCountWithSerdeApp {
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
         new StreamsRunner().run(
-                "localhost:9092",
-                "messages-app-main",
-                builder,
-                Map.of(),
-                new NewTopic(MESSAGES, 1, (short) 1),
-                new NewTopic(MESSAGES_COUNT, 1, (short) 1));
+            "localhost:9092",
+            "messages-app-main",
+            builder,
+            Map.of(),
+            new NewTopic(MESSAGES, 1, (short) 1),
+            new NewTopic(MESSAGES_COUNT, 1, (short) 1));
     }
 
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        KStream<String, Message> messages = null;
+        KStream<Void, Message> stream = null;
 
-        KGroupedStream<String, String> messagesGroupedByUser = messages
-                .map((nullKey, message) -> new KeyValue<>(message.receiver(), ""))
-                .groupByKey();
-
-        KTable<String, String> messagesCount = messagesGroupedByUser
-                .count()
-                .mapValues(v -> Objects.toString(v));
-
-        messagesCount.toStream()
-                .to(MESSAGES_COUNT);
+        stream
+            .map((nullKey, message) -> new KeyValue<>(message.receiver(), ""))
+            .groupByKey()
+            .count(Materialized.as("messages-count-store"))
+            .toStream()
+            .to(MESSAGES_COUNT);
 
         return builder;
     }

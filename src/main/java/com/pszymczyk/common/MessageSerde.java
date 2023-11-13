@@ -4,8 +4,6 @@ import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serializer;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 import static org.apache.kafka.common.serialization.Serdes.serdeFrom;
 

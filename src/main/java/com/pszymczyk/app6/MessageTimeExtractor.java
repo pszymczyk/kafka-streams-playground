@@ -14,13 +14,13 @@ public class MessageTimeExtractor implements TimestampExtractor {
     public long extract(ConsumerRecord<Object, Object> record, long previousTimestamp) {
         Object value = record.value();
         if (value instanceof Message) {
-            return timestampFromChargingEvent(record, (Message) value);
+            return timestampFromMessage(record, (Message) value);
         } else {
             throw new IllegalArgumentException("ArticleEventTimeExtractor can only handle ArticleVisited events");
         }
     }
 
-    private long timestampFromChargingEvent(ConsumerRecord<Object, Object> record, Message message) {
+    private long timestampFromMessage(ConsumerRecord<Object, Object> record, Message message) {
         Long timestamp = message.timestamp();
 
         if (timestamp == null) {
