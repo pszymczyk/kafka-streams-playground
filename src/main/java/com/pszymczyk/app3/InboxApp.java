@@ -5,7 +5,9 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.streams.StreamsBuilder;
 import java.util.Map;
 
-class InboxApp {
+import static com.pszymczyk.common.Utils.createCompactedTopic;
+
+public class InboxApp {
 
     public static final String MESSAGES = "app3-messages";
     public static final String INBOX = "app3-inbox";
@@ -13,13 +15,14 @@ class InboxApp {
 
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
+
         new StreamsRunner().run(
             "localhost:9092",
             "inbox-app-main",
             builder,
             Map.of(),
             new NewTopic(MESSAGES, 1, (short) 1),
-            new NewTopic(INBOX, 1, (short) 1));
+            createCompactedTopic(INBOX));
     }
 
     static StreamsBuilder buildKafkaStreamsTopology() {
