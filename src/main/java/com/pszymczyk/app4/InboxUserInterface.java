@@ -23,12 +23,12 @@ class InboxUserInterface {
     public static void main(String[] args) throws InterruptedException {
         StreamsBuilder builder = InboxApp.buildKafkaStreamsTopology();
         KafkaStreams kafkaStreams = new StreamsRunner().run(
-                "localhost:9092",
-                "messages-app-main",
-                builder,
-                Map.of(),
-                new NewTopic(MESSAGES, 1, (short) 1),
-                new NewTopic(INBOX, 1, (short) 1));
+            "localhost:9092",
+            "inbox-user-interface-app-main",
+            builder,
+            Map.of(),
+            new NewTopic(MESSAGES, 1, (short) 1),
+            new NewTopic(INBOX, 1, (short) 1));
 
         while (!kafkaStreams.state().equals(KafkaStreams.State.RUNNING)) {
             logger.info("KafkaStreams state is {}", kafkaStreams.state());
@@ -36,19 +36,19 @@ class InboxUserInterface {
             Thread.sleep(200);
         }
 
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            logger.info("Enter key:");
-            String line = scanner.nextLine();
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (true) {
+                logger.info("Enter key:");
+                String line = scanner.nextLine();
 
-            if (line.equals("wq")) {
-                break;
+                if (line.equals("wq")) {
+                    break;
+                }
+
+                StateQueryResult<Inbox> result = null;
+                logger.info("Value {}.", result.getOnlyPartitionResult().getResult());
             }
-
-            StateQueryResult<Inbox> result = null;
-            logger.info("Value {}.", result.getOnlyPartitionResult().getResult());
         }
-
         kafkaStreams.close();
     }
 }
