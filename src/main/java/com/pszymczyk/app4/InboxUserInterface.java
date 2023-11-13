@@ -18,6 +18,7 @@ import java.util.Scanner;
 import static com.pszymczyk.app3.InboxApp.INBOX;
 import static com.pszymczyk.app3.InboxApp.MESSAGES;
 import static com.pszymczyk.app3.InboxApp.STATE_STORE_NAME;
+import static com.pszymczyk.common.Utils.createCompactedTopic;
 
 class InboxUserInterface {
 
@@ -31,7 +32,7 @@ class InboxUserInterface {
             builder,
             Map.of(),
             new NewTopic(MESSAGES, 1, (short) 1),
-            new NewTopic(INBOX, 1, (short) 1));
+            createCompactedTopic(INBOX));
 
         while (!kafkaStreams.state().equals(KafkaStreams.State.RUNNING)) {
             logger.info("KafkaStreams state is {}", kafkaStreams.state());

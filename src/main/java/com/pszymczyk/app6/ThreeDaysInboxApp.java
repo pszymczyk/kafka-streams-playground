@@ -5,6 +5,7 @@ import com.pszymczyk.common.JsonSerdes;
 import com.pszymczyk.common.Message;
 import com.pszymczyk.common.MessageSerde;
 import com.pszymczyk.common.StreamsRunner;
+import com.pszymczyk.common.Utils;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -33,7 +34,7 @@ class ThreeDaysInboxApp {
             builder,
             Map.of(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG, MessageTimeExtractor.class),
             new NewTopic(MESSAGES, 1, (short) 1),
-            new NewTopic(THREE_DAYS_INBOX, 1, (short) 1));
+            Utils.createCompactedTopic(THREE_DAYS_INBOX));
     }
 
     static StreamsBuilder buildKafkaStreamsTopology() {

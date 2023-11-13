@@ -1,6 +1,7 @@
 package com.pszymczyk.app0;
 
 import com.pszymczyk.common.StreamsRunner;
+import com.pszymczyk.common.Utils;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -21,7 +22,7 @@ class MobileDevicesMarketShareApp {
             builder,
             Map.of(),
             new NewTopic(CLICKS_TOPIC, 1, (short) 1),
-            new NewTopic(CLICKS_COUNT, 1, (short) 1));
+            Utils.createCompactedTopic(CLICKS_COUNT));
     }
 
     static StreamsBuilder buildKafkaStreamsTopology() {
