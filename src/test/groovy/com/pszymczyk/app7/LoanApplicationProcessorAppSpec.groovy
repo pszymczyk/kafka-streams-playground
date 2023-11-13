@@ -37,7 +37,6 @@ class LoanApplicationProcessorAppSpec extends IntegrationSpec {
             kafkaConsumer.subscribe([LOAN_APPLICATION_DECISIONS])
         when: "send some loan applications"
             produceMessage(LOAN_APPLICATION_REQUESTS,
-                    requester,
                     """
                         {
                             "amount": 2000,                           
@@ -45,7 +44,6 @@ class LoanApplicationProcessorAppSpec extends IntegrationSpec {
                         }
                         """.toString())
             produceMessage(LOAN_APPLICATION_REQUESTS,
-                    requester,
                     """
                         {
                             "amount": 2000,                           
@@ -53,7 +51,6 @@ class LoanApplicationProcessorAppSpec extends IntegrationSpec {
                         }
                         """.toString())
             produceMessage(LOAN_APPLICATION_REQUESTS,
-                    requester,
                     """
                         {
                             "amount": 2000,                           
@@ -62,11 +59,11 @@ class LoanApplicationProcessorAppSpec extends IntegrationSpec {
                         """.toString())
         and: "collect all events"
             List<String> loanDecisions = []
-            15.times {
+            7.times {
                 def consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500))
                 logger.info("Received {} events", consumerRecords.size())
                 consumerRecords.each {
-                    loanDecisions.add(it.value())
+                    loanDecisions.add(new String(it.value()))
                 }
             }
         then: "first full requested value"
