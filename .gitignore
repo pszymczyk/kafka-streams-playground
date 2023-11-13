@@ -50,3 +50,4 @@ Thumbs.db
 *.mov
 *.wmv
 
+kafka-streams-playground.code-workspace

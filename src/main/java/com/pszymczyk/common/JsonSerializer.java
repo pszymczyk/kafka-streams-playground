@@ -21,7 +21,7 @@ public class JsonSerializer<T> implements Serializer<T> {
         try {
             return objectMapper.writeValueAsBytes(data);
         } catch (JsonProcessingException e) {
-            log.error("Cannot serialize Kafka record!, Topic: {}, data: {}." , topic, data, e);
+            log.error("Cannot serialize Kafka record!, Topic: {}, data: {}.", topic, data, e);
             throw new RuntimeException(e);
         }
     }
