@@ -15,6 +15,8 @@ import org.apache.kafka.streams.state.Stores;
 
 import java.util.Map;
 
+import static com.pszymczyk.common.Utils.createCompactedTopic;
+
 class UserFriendlyMessagesApp {
 
     static final String MESSAGES = "app5-messages";
@@ -30,7 +32,7 @@ class UserFriendlyMessagesApp {
             Map.of(),
             new NewTopic(MESSAGES, 1, (short) 1),
             new NewTopic(USER_FRIENDLY_MESSAGES, 1, (short) 1),
-            new NewTopic(USERS, 1, (short) 1));
+            createCompactedTopic(USERS));
     }
 
     /**
