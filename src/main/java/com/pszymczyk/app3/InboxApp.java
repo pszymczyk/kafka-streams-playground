@@ -14,6 +14,8 @@ import org.apache.kafka.streams.state.Stores;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static com.pszymczyk.common.Utils.createCompactedTopic;
+
 public class InboxApp {
 
     public static final String MESSAGES = "app3-messages";
@@ -22,13 +24,14 @@ public class InboxApp {
 
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();
+
         new StreamsRunner().run(
             "localhost:9092",
             "inbox-app-main",
             builder,
             Map.of(),
             new NewTopic(MESSAGES, 1, (short) 1),
-            new NewTopic(INBOX, 1, (short) 1));
+            createCompactedTopic(INBOX));
     }
 
     public static StreamsBuilder buildKafkaStreamsTopology() {
