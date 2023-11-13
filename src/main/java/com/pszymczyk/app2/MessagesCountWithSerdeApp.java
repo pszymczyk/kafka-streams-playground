@@ -30,7 +30,7 @@ class MessagesCountWithSerdeApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()))
+        builder.stream(MESSAGES, Consumed.with(Serdes.Void(), MessageSerde.newSerde()))
             .map((nullKey, message) -> new KeyValue<>(message.receiver(), ""))
             .groupByKey()
             .count(Materialized.as("messages-count-store"))

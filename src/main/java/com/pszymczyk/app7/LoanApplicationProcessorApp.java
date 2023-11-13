@@ -36,7 +36,7 @@ class LoanApplicationProcessorApp {
             .keyValueStoreBuilder(Stores.persistentKeyValueStore("users-loans-count"), Serdes.String(), Serdes.Integer());
         builder.addStateStore(transferProcessKeyValueStore);
 
-        builder.stream(LOAN_APPLICATION_REQUESTS, Consumed.with(Serdes.String(), JsonSerdes.newSerdes(LoanApplicationRequest.class)))
+        builder.stream(LOAN_APPLICATION_REQUESTS, Consumed.with(Serdes.Void(), JsonSerdes.newSerdes(LoanApplicationRequest.class)))
             .selectKey((key, value) -> value.getRequester())
             .process(LoanApplicationProcess::new, "users-loans-count")
             .to(LOAN_APPLICATION_DECISIONS, Produced.with(Serdes.String(), JsonSerdes.newSerdes(LoanApplicationDecision.class)));

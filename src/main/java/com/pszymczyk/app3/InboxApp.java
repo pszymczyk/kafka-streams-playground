@@ -34,7 +34,8 @@ public class InboxApp {
     public static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde())).groupBy((nullKey, value) -> value.receiver())
+        builder.stream(MESSAGES, Consumed.with(Serdes.Void(), MessageSerde.newSerde()))
+            .groupBy((nullKey, value) -> value.receiver())
             .aggregate(() -> new Inbox(new ArrayList<>()),
                 (key, message, inbox1) -> inbox1.add(message),
                 Materialized.<String, Inbox>as(Stores.inMemoryKeyValueStore(STATE_STORE_NAME))

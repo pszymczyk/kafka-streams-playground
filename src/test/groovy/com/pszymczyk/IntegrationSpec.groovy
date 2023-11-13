@@ -54,10 +54,6 @@ abstract class IntegrationSpec extends Specification {
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class));
     }
 
-    protected static void produceMessage(String topic, String key, GString value) {
-        produceMessage(topic, key, value.toString())
-    }
-
     protected static void produceMessage(String topic, String key, String value) {
         kafkaProducer.send(new ProducerRecord(topic, key, value.toString())).get(2, TimeUnit.SECONDS)
     }

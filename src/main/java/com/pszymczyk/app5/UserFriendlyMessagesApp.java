@@ -61,7 +61,7 @@ class UserFriendlyMessagesApp {
         KTable<String, User> itemDetailsTable = builder.table(USERS, Consumed.with(Serdes.String(), UserSerde.newSerde()),
             Materialized.as(Stores.inMemoryKeyValueStore("user-details-store")));
 
-        KStream<String, String> userFriendlyMessagesStream = builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()))
+        KStream<String, String> userFriendlyMessagesStream = builder.stream(MESSAGES, Consumed.with(Serdes.Void(), MessageSerde.newSerde()))
             .selectKey((k, v) -> v.receiver(), Named.as("select-receiver-key"))
             .join(itemDetailsTable,
                 (message, user) -> message.value().replace("<user>", getPrettyUsername(user)));

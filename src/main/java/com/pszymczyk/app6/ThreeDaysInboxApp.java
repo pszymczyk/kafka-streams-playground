@@ -39,7 +39,7 @@ class ThreeDaysInboxApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        KStream<String, Message> messagesStream = builder.stream(MESSAGES, Consumed.with(Serdes.String(), MessageSerde.newSerde()));
+        KStream<Void, Message> messagesStream = builder.stream(MESSAGES, Consumed.with(Serdes.Void(), MessageSerde.newSerde()));
 
         KTable<Windowed<String>, Inbox> threeDaysInbox = messagesStream
             .groupBy((nullKey, message) -> message.receiver())

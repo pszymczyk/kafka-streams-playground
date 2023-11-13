@@ -8,7 +8,6 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Materialized;
-import org.apache.kafka.streams.kstream.Repartitioned;
 
 import java.util.Map;
 
@@ -37,7 +36,7 @@ class MessagesCountApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        builder.stream(MESSAGES, Consumed.with(Serdes.String(), Serdes.String()))
+        builder.stream(MESSAGES, Consumed.with(Serdes.Void(), Serdes.String()))
             .map((nullKey, message) -> new KeyValue<>(message.split("#")[2], ""))
             .groupByKey()
             .count(Materialized.as("messages-count-store"))

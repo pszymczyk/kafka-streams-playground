@@ -7,7 +7,6 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 
 import java.util.Map;
-import java.util.Objects;
 
 class MobileDevicesMarketShareApp {
 
@@ -28,10 +27,9 @@ class MobileDevicesMarketShareApp {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        builder.stream(CLICKS_TOPIC, Consumed.with(Serdes.String(), Serdes.String()))
+        builder.stream(CLICKS_TOPIC, Consumed.with(Serdes.Void(), Serdes.String()))
             .groupBy((nullKey, click) -> click.split("#")[2])
             .count()
-            .mapValues(v -> Objects.toString(v))
             .toStream().to(CLICKS_COUNT);
 
         return builder;

@@ -6,6 +6,7 @@ import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.streams.KafkaStreams
 import spock.lang.Shared
 
+import java.nio.ByteBuffer
 import java.time.Duration
 
 import static com.pszymczyk.app0.MobileDevicesMarketShareApp.CLICKS_COUNT
@@ -56,19 +57,19 @@ class MobileDevicesMarketShareAppSpec extends IntegrationSpec {
             produceMessage(CLICKS_TOPIC, "${System.currentTimeMillis()}#tree12#firefox")
             produceMessage(CLICKS_TOPIC, "${System.currentTimeMillis()}#tree12#firefox")
         and: "collect all events"
-            Map<String, String> clicksCount = [:]
+            Map<String, Long> clicksCount = [:]
             20.times {
                 def consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500))
                 logger.info("Received {} events", consumerRecords.size())
                 consumerRecords.each {
                     logger.info("{}:{}", it.key(), it.value())
-                    clicksCount.put(it.key(), it.value())
+                    clicksCount.put(it.key(), ByteBuffer.wrap(it.value()).getLong())
                 }
             }
         then:
-            clicksCount == ["firefox": "7",
-                            "IE"     : "1",
-                            "edge"   : "5",
-                            "chrome" : "8"]
+            clicksCount == ["firefox": 7L,
+                            "IE"     : 1L,
+                            "edge"   : 5L,
+                            "chrome" : 8L]
     }
 }

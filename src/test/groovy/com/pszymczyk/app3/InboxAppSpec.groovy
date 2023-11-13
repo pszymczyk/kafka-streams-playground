@@ -45,7 +45,7 @@ class InboxAppSpec extends IntegrationSpec {
                 def consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500))
                 logger.info("Received {} events", consumerRecords.size())
                 consumerRecords.each {
-                    inbox.put(it.key(), it.value())
+                    inbox.put(it.key(), new String(it.value()))
                 }
             }
         then:

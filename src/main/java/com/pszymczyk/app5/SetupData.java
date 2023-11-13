@@ -1,4 +1,4 @@
-package com.pszymczyk.app1;
+package com.pszymczyk.app5;
 
 import com.pszymczyk.common.Utils;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
-class SetupData {
+public class SetupData {
 
     private static final Logger logger = LoggerFactory.getLogger(SetupData.class);
 
@@ -24,8 +24,24 @@ class SetupData {
 
         Runtime.getRuntime().addShutdownHook(new Thread(kafkaProducer::close, "shutdown-hook-thread"));
 
-        for (var line : Utils.readLines("app1-data.txt")) {
-            kafkaProducer.send(new ProducerRecord<>("app1-messages", line), (metadata, exception) -> {
+        for (var line : Utils.readLines("app5-users-data.txt")) {
+            String[] split = line.split(":");
+            String key = split[0];
+            String value = split[1];
+            kafkaProducer.send(new ProducerRecord<>("app5-users", key, value), (metadata, exception) -> {
+                if (metadata != null) {
+                    logger.info("Message sent metadata: {}", metadata);
+                } else {
+                    logger.error("Error ", exception);
+                }
+            }).get();
+        }
+
+        for (var line : Utils.readLines("app5-messages-data.txt")) {
+            String[] split = line.split(":");
+            String key = split[0];
+            String value = split[1];
+            kafkaProducer.send(new ProducerRecord<>("app5-messages", key, value), (metadata, exception) -> {
                 if (metadata != null) {
                     logger.info("Message sent metadata: {}", metadata);
                 } else {
