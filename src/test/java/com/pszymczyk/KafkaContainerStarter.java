@@ -1,6 +1,6 @@
 package com.pszymczyk;
 
-import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 class KafkaContainerStarter {
@@ -9,7 +9,7 @@ class KafkaContainerStarter {
 
     static void start() {
         if (kafkaContainer == null) {
-            kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.0")).withKraft();
+            kafkaContainer = new KafkaContainer(DockerImageName.parse("apache/kafka-native"));
             kafkaContainer.start();
             Runtime.getRuntime().addShutdownHook(new Thread(() -> kafkaContainer.close()));
         }
