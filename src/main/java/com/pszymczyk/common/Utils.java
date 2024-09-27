@@ -5,8 +5,10 @@ import org.apache.kafka.common.config.TopicConfig;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 public class Utils {
@@ -30,10 +32,9 @@ public class Utils {
     public static NewTopic createCompactedTopic(String topicName) {
         var compactedTopic = new NewTopic(topicName, 1, (short) 1);
         compactedTopic.configs(Map.of(
-            TopicConfig.SEGMENT_MS_CONFIG, "1000",
+            TopicConfig.SEGMENT_MS_CONFIG, "" + Duration.ofMinutes(1).toMillis(),
             TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT
         ));
-
         return compactedTopic;
     }
 }

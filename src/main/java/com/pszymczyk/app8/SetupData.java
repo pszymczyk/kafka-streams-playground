@@ -24,8 +24,8 @@ public class SetupData {
 
         Runtime.getRuntime().addShutdownHook(new Thread(kafkaProducer::close, "shutdown-hook-thread"));
 
-        for (var line : Utils.readLines("app8-data.txt")) {
-            kafkaProducer.send(new ProducerRecord<>("unsorted-events", line), (metadata, exception) -> {
+        for (var line : Utils.readLines("app7-data.txt")) {
+            kafkaProducer.send(new ProducerRecord<>("loan-application-requests", line), (metadata, exception) -> {
                 if (metadata != null) {
                     logger.info("Message sent metadata: {}", metadata);
                 } else {
