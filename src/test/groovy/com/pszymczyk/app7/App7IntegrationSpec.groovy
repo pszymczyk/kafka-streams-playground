@@ -15,7 +15,7 @@ import java.time.Instant
 import static App7.APP_7_SOURCE
 import static App7.APP_7_SINK
 
-class App7Spec extends IntegrationSpec {
+class App7IntegrationSpec extends IntegrationSpec {
 
     @Shared
     KafkaStreams kafkaStreams

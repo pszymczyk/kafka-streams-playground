@@ -12,7 +12,7 @@ import java.time.Duration
 import static App8.LOAN_APPLICATION_DECISIONS
 import static App8.LOAN_APPLICATION_REQUESTS
 
-class App8Spec extends IntegrationSpec {
+class App8IntegrationSpec extends IntegrationSpec {
 
     @Shared
     KafkaStreams kafkaStreams

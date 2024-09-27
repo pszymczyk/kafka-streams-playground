@@ -11,7 +11,7 @@ import java.time.Duration
 
 import static App5.*
 
-class App5Spec extends IntegrationSpec {
+class App5IntegrationSpec extends IntegrationSpec {
 
     @Shared
     KafkaStreams kafkaStreams

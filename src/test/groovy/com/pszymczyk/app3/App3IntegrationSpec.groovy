@@ -13,7 +13,7 @@ import java.time.Duration
 import static App3.APP_3_SINK
 import static App3.APP_3_SOURCE
 
-class App3Spec extends IntegrationSpec {
+class App3IntegrationSpec extends IntegrationSpec {
 
     @Shared
     KafkaStreams kafkaStreams
