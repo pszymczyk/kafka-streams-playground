@@ -1,14 +1,12 @@
 package com.pszymczyk.app4;
 
-import com.pszymczyk.app3.App3;
 import com.pszymczyk.common.Inbox;
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.query.KeyQuery;
-import org.apache.kafka.streams.query.StateQueryRequest;
-import org.apache.kafka.streams.query.StateQueryResult;
+import org.apache.kafka.streams.state.QueryableStoreTypes;
+import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,20 +14,23 @@ import java.util.Map;
 import java.util.Scanner;
 
 import static com.pszymczyk.common.Utils.createCompactedTopic;
+import static org.apache.kafka.streams.StoreQueryParameters.fromNameAndType;
 
 class App4 {
 
     private static final Logger logger = LoggerFactory.getLogger(App4.class);
+    private static final String APPLICATION_ID = "app4";
 
     public static void main(String[] args) throws InterruptedException {
-        StreamsBuilder builder = App3.buildKafkaStreamsTopology();
+        StreamsBuilder builder = App4Stream.buildKafkaStreamsTopology();
         KafkaStreams kafkaStreams = new StreamsRunner().run(
             "localhost:9092",
-            "app4",
+            APPLICATION_ID,
             builder,
             Map.of(),
-            new NewTopic(App3.APP_3_SOURCE, 1, (short) 1),
-            createCompactedTopic(App3.APP_3_SINK));
+            new NewTopic(App4Stream.APP_4_SOURCE, 1, (short) 1),
+            createCompactedTopic(APPLICATION_ID + "-" + App4Stream.APP_4_STATE_STORE_NAME + "-changelog")
+        );
 
         while (!kafkaStreams.state().equals(KafkaStreams.State.RUNNING)) {
             logger.info("KafkaStreams state is {}", kafkaStreams.state());
@@ -46,16 +47,14 @@ class App4 {
                     break;
                 }
 
-                StateQueryRequest<Inbox> request = StateQueryRequest.inStore(App3.APP_3_STATE_STORE_NAME).withQuery(KeyQuery.withKey(line));
-                StateQueryResult<Inbox> result = kafkaStreams.query(request);
+                ReadOnlyKeyValueStore<String, Inbox> store = kafkaStreams.store(
+                    fromNameAndType(App4Stream.getGlobalStoreName(), QueryableStoreTypes.keyValueStore()));
+                Inbox inbox = store.get(line);
 
-                if (result.getPartitionResults()
-                    .values()
-                    .stream()
-                    .anyMatch(r -> r.getResult() != null)) {
-                    logger.info("Value {}.", result.getOnlyPartitionResult().getResult());
+                if (inbox != null) {
+                    logger.info("{}.", inbox);
                 } else {
-                    logger.warn("Query into state store {} failed.", App3.APP_3_STATE_STORE_NAME);
+                    logger.warn("Query failed.");
                 }
             }
         }

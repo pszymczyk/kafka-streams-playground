@@ -16,7 +16,7 @@ import java.util.Map;
 
 import static com.pszymczyk.common.Utils.createCompactedTopic;
 
-public class App3 {
+class App3 {
 
     public static final String APP_3_SOURCE = "app3-source";
     public static final String APP_3_SINK = "app3-sink";
