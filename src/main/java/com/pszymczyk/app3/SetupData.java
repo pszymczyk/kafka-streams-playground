@@ -20,7 +20,7 @@ class SetupData {
         producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         try (var kafkaProducer = new KafkaProducer<String, String>(producerProperties)) {
-            for (var line : Utils.readLines("app1-data.txt")) {
+            for (var line : Utils.readLines("app2-data.txt")) {
                 kafkaProducer.send(new ProducerRecord<>(App3.APP_3_SOURCE, line), (metadata, exception) -> {
                     if (metadata != null) {
                         logger.info("Message sent metadata: {}", metadata);

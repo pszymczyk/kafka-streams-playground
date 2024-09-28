@@ -23,8 +23,8 @@ import java.util.Map;
 
 class App7 {
 
-    static final String APP_7_SOURCE = "app6-source";
-    static final String APP_7_SINK = "app6-sink";
+    static final String APP_7_SOURCE = "app7-source";
+    static final String APP_7_SINK = "app7-sink";
 
     public static void main(String[] args) {
         StreamsBuilder builder = buildKafkaStreamsTopology();

@@ -1,4 +1,4 @@
-package com.pszymczyk.app2;
+package com.pszymczyk.app7;
 
 import com.pszymczyk.common.Utils;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -19,9 +19,9 @@ class SetupData {
         producerProperties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         producerProperties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         producerProperties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        try (var kafkaProducer = new KafkaProducer<String, String>(producerProperties);) {
+        try (var kafkaProducer = new KafkaProducer<String, String>(producerProperties)) {
             for (var line : Utils.readLines("app2-data.txt")) {
-                kafkaProducer.send(new ProducerRecord<>(App2.APP_2_SOURCE, line), (metadata, exception) -> {
+                kafkaProducer.send(new ProducerRecord<>(App7.APP_7_SOURCE, line), (metadata, exception) -> {
                     if (metadata != null) {
                         logger.info("Message sent metadata: {}", metadata);
                     } else {
