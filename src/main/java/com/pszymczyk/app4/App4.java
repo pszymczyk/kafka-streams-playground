@@ -4,6 +4,7 @@ import com.pszymczyk.common.Inbox;
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.StoreQueryParameters;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
@@ -14,7 +15,6 @@ import java.util.Map;
 import java.util.Scanner;
 
 import static com.pszymczyk.common.Utils.createCompactedTopic;
-import static org.apache.kafka.streams.StoreQueryParameters.fromNameAndType;
 
 class App4 {
 
@@ -48,7 +48,9 @@ class App4 {
                 }
 
                 ReadOnlyKeyValueStore<String, Inbox> store = kafkaStreams.store(
-                    fromNameAndType(App4Stream.getGlobalStoreName(), QueryableStoreTypes.keyValueStore()));
+                    StoreQueryParameters.fromNameAndType(App4Stream.getGlobalStoreName(),
+                        QueryableStoreTypes.keyValueStore()));
+
                 Inbox inbox = store.get(line);
 
                 if (inbox != null) {
