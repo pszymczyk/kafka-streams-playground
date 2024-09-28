@@ -32,7 +32,7 @@ class App3IntegrationSpec extends IntegrationSpec {
         kafkaStreams.close()
     }
 
-    def "Should build inbox"() {
+    def "Should aggregate messages"() {
         given:
             produceMessage(APP_3_SOURCE, "1234#andrzej123#pszymczyk#Hello! how are you?")
             produceMessage(APP_3_SOURCE, "1235#andrzej123#pszymczyk#Hi! what is going on?")
