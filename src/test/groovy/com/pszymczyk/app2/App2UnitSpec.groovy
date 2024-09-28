@@ -1,7 +1,6 @@
 package com.pszymczyk.app2
 
-import com.pszymczyk.common.Message
-import com.pszymczyk.common.MessageSerde
+
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
@@ -19,16 +18,15 @@ class App2UnitSpec extends Specification {
             def topologyTestDriver = new TopologyTestDriver(streamsBuilder.build(), properties)
             def source = topologyTestDriver.createInputTopic(App2.APP_2_SOURCE,
                     Serdes.String().serializer(),
-                    MessageSerde.newSerde().serializer())
+                    Serdes.String().serializer())
             def sink = topologyTestDriver.createOutputTopic(App2.APP_2_SINK,
                     Serdes.String().deserializer(),
                     Serdes.Long().deserializer())
         when:
-            source.pipeInput(new Message(1234L, "andrzej123", "pszymczyk", "Hello! how are you?"))
-            source.pipeInput(new Message(1235, "andrzej123", "pszymczyk", "Hello! how are you?"))
-            source.pipeInput(new Message(1236, "andrzej123", "pszymczyk", "Hello! how are you?"))
-            source.pipeInput(new Message(1237, "pszymczyk", "andrzej123", "Hello! how are you?"))
-
+            source.pipeInput("1234L#andrzej123#pszymczyk#Hello! how are you?")
+            source.pipeInput("1235#andrzej123#pszymczyk#Hello! how are you?")
+            source.pipeInput("1236#andrzej123#pszymczyk#Hello! how are you?")
+            source.pipeInput("1237#pszymczyk#andrzej123#Hello! how are you?")
         then:
             Map<String, Long> messagesCount = sink
                     .readRecordsToList()

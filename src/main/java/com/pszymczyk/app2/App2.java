@@ -1,11 +1,8 @@
 package com.pszymczyk.app2;
 
-import com.pszymczyk.common.MessageSerde;
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.kstream.Consumed;
 
 import java.util.Map;
 
@@ -28,14 +25,6 @@ class App2 {
     }
 
     static StreamsBuilder buildKafkaStreamsTopology() {
-        StreamsBuilder builder = new StreamsBuilder();
-
-        builder.stream(APP_2_SOURCE, Consumed.with(Serdes.Void(), MessageSerde.newSerde()))
-            .groupBy((k,v) -> v.receiver())
-            .count()
-            .toStream()
-            .to(APP_2_SINK);
-
-        return builder;
+        throw new RuntimeException("Not implemented");
     }
 }
