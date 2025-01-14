@@ -5,53 +5,53 @@ import org.apache.kafka.streams.processor.api.ProcessorContext;
 import org.apache.kafka.streams.processor.api.Record;
 import org.apache.kafka.streams.state.KeyValueStore;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 
-public class LoanApplicationProcess implements Processor<String, LoanApplicationRequest, String, LoanApplicationDecision> {
+public class LoanApplicationProcess implements Processor<String, String, String, SomeEvent> {
 
-    private KeyValueStore<String, Integer> usersLoansCount;
-    private ProcessorContext<String, LoanApplicationDecision> context;
+    private KeyValueStore<String, DailyTransactionsLog> dailyTransactionsLogKeyValueStore;
+    private ProcessorContext<String, SomeEvent> context;
 
+    //TODO some common interface for events
     @Override
-    public void init(ProcessorContext<String, LoanApplicationDecision> context) {
+    public void init(ProcessorContext<String, SomeEvent> context) {
         this.context = context;
-        usersLoansCount = context.getStateStore("users-loans-count");
+        this.dailyTransactionsLogKeyValueStore = context.getStateStore("daily-transactions-log");
     }
 
     @Override
-    public void process(Record<String, LoanApplicationRequest> record) {
-        context.forward(processApplication(record.value()));
+    public void process(Record<String, String> record) {
+        String[] split = record.value().split(",");
+        String buyer = split[1];
+        String seller = split[2];
+        String stock = split[3];
+        int number = Integer.parseInt(split[4]);
+
+        List.of(record.withKey(buyer).withValue(BusinessTransaction.buy(buyer, stock, number)),
+                record.withKey(seller).withValue(BusinessTransaction.sell(seller, stock, number)))
+            .forEach(x -> context.forward(x));
+
+        DailyTransactionsLog dailyTransactionsLog =
+            Optional.ofNullable(dailyTransactionsLogKeyValueStore.get(seller)).orElse(new DailyTransactionsLog(new HashMap<>()));
+
+        //TODO get date from file name in next iteration
+        LocalDate now = LocalDate.now();
+        int updatedOperationsCount = dailyTransactionsLog.log().getOrDefault(now, 0) + 1;
+        if (updatedOperationsCount > 2) {
+            context.forward(record.withKey(seller).withValue(new NonvoluntaryOperation(seller, "sell")));
+        }
+
+        dailyTransactionsLog.log().put(now, updatedOperationsCount);
+        dailyTransactionsLogKeyValueStore.put(seller, dailyTransactionsLog);
     }
 
     @Override
     public void close() {
 
-    }
-
-
-    private Record<String, LoanApplicationDecision> processApplication(LoanApplicationRequest loanApplicationRequest) {
-        Integer userLoansCount = usersLoansCount.get(loanApplicationRequest.getRequester());
-
-        if (userLoansCount == null) {
-            usersLoansCount.put(loanApplicationRequest.getRequester(), 1);
-            LoanApplicationDecision loanApplicationDecision = new LoanApplicationDecision();
-            loanApplicationDecision.setAmount(loanApplicationRequest.getAmount());
-            loanApplicationDecision.setRequester(loanApplicationRequest.getRequester());
-            return new Record<>(loanApplicationDecision.getRequester(), loanApplicationDecision, context.currentStreamTimeMs());
-        } else if (userLoansCount == 1) {
-            usersLoansCount.put(loanApplicationRequest.getRequester(), 2);
-            LoanApplicationDecision loanApplicationDecision = new LoanApplicationDecision();
-            loanApplicationDecision.setAmount(loanApplicationRequest.getAmount().multiply(new BigDecimal("0.8")));
-            loanApplicationDecision.setRequester(loanApplicationRequest.getRequester());
-            return new Record<>(loanApplicationDecision.getRequester(), loanApplicationDecision, context.currentStreamTimeMs());
-        } else {
-            usersLoansCount.put(loanApplicationRequest.getRequester(), ++userLoansCount);
-            LoanApplicationDecision loanApplicationDecision = new LoanApplicationDecision();
-            loanApplicationDecision.setAmount(loanApplicationRequest.getAmount().multiply(new BigDecimal("0.5")));
-            loanApplicationDecision.setRequester(loanApplicationRequest.getRequester());
-            return new Record<>(loanApplicationDecision.getRequester(), loanApplicationDecision, context.currentStreamTimeMs());
-        }
     }
 
 }
