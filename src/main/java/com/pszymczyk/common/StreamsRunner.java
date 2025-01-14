@@ -54,7 +54,7 @@ public class StreamsRunner {
         // disable caching to see all operations results immediately
         config.put(STATESTORE_CACHE_MAX_BYTES_CONFIG, "0");
         config.put("internal.leave.group.on.close", true);
-        config.put(StreamsConfig.topicPrefix(TopicConfig.SEGMENT_MS_CONFIG), "1000");
+        config.put(StreamsConfig.topicPrefix(TopicConfig.SEGMENT_MS_CONFIG), "60000");
         config.putAll(customProperties);
 
         Topology topology = streamsBuilder.build();
