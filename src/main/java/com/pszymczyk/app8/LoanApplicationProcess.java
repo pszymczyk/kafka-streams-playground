@@ -16,7 +16,6 @@ public class LoanApplicationProcess implements Processor<String, String, String,
     private KeyValueStore<String, DailyTransactionsLog> dailyTransactionsLogKeyValueStore;
     private ProcessorContext<String, SomeEvent> context;
 
-    //TODO some common interface for events
     @Override
     public void init(ProcessorContext<String, SomeEvent> context) {
         this.context = context;
