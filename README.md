@@ -4,7 +4,7 @@
 
 ### How do I get set up? ###
 
-* ./mwvn clean install
+* ./mvnw clean install
 
 ### Who do I talk to? ###
 
