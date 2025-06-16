@@ -9,7 +9,7 @@ class KafkaContainerStarter {
 
     static void start() {
         if (kafkaContainer == null) {
-            kafkaContainer = new KafkaContainer(DockerImageName.parse("apache/kafka-native"));
+            kafkaContainer = new KafkaContainer(DockerImageName.parse("apache/kafka-native:4.0.0"));
             kafkaContainer.start();
             Runtime.getRuntime().addShutdownHook(new Thread(() -> kafkaContainer.close()));
         }
