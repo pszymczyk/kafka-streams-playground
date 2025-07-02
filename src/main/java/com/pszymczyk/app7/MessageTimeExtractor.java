@@ -16,7 +16,7 @@ public class MessageTimeExtractor implements TimestampExtractor {
         if (value instanceof Message) {
             return timestampFromMessage(record, (Message) value);
         } else {
-            throw new IllegalArgumentException("ArticleEventTimeExtractor can only handle ArticleVisited events");
+            throw new IllegalArgumentException("MessageTimeExtractor can only handle Message");
         }
     }
 
@@ -31,8 +31,7 @@ public class MessageTimeExtractor implements TimestampExtractor {
     }
 
     private long onInvalidTimestamp(ConsumerRecord<Object, Object> record, Message message) {
-        log.error("Charging event will be dropped because it has an invalid timestamp. Timestamp: {}, record: {}", message.timestamp(), record);
+        log.error("Message will be dropped because it has an invalid timestamp. Timestamp: {}, record: {}", message.timestamp(), record);
         return -1;
     }
-
 }
