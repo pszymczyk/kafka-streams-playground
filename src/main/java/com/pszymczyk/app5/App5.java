@@ -44,7 +44,7 @@ class App5 {
         KStream<String, String> userFriendlyMessagesStream = builder.stream(APP_5_SOURCE, Consumed.with(Serdes.String(), MessageSerde.newSerde()))
             .join(itemDetailsTable,
                 (nullKey, value) -> value.receiver(),
-                (message, user) -> message.value().replace("<user>", getPrettyUsername(user)));
+                (message, user) -> message.value().replace("<usre>", getPrettyUsername(user)));
 
         userFriendlyMessagesStream.to(APP_5_SINK);
 
