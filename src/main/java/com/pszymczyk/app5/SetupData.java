@@ -24,7 +24,7 @@ class SetupData {
                 String[] split = line.split(":");
                 String key = split[0];
                 String value = split[1];
-                kafkaProducer.send(new ProducerRecord<>("app5-users", key, value), (metadata, exception) -> {
+                kafkaProducer.send(new ProducerRecord<>("app5-state", key, value), (metadata, exception) -> {
                     if (metadata != null) {
                         logger.info("Message sent metadata: {}", metadata);
                     } else {
@@ -36,7 +36,7 @@ class SetupData {
                 String[] split = line.split(":");
                 String key = split[0];
                 String value = split[1];
-                kafkaProducer.send(new ProducerRecord<>("app5-messages", key, value), (metadata, exception) -> {
+                kafkaProducer.send(new ProducerRecord<>("app5-source", key, value), (metadata, exception) -> {
                     if (metadata != null) {
                         logger.info("Message sent metadata: {}", metadata);
                     } else {
