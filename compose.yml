@@ -33,10 +33,6 @@ services:
       CONSOLE_CONFIG_FILE: |
         kafka:
           brokers: ["broker:19092"]
-          schemaRegistry:
-            enabled: false
-        connect:
-          enabled: false
     ports:
       - "8080:8080"
     depends_on:
