@@ -34,22 +34,6 @@ class App8 {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        StoreBuilder<KeyValueStore<String, DailyTransactionsLog>> transferProcessKeyValueStore = Stores.keyValueStoreBuilder(
-            Stores.inMemoryKeyValueStore("daily-transactions-log"), Serdes.String(), JsonSerdes.newSerdes(DailyTransactionsLog.class));
-        builder.addStateStore(transferProcessKeyValueStore);
-
-        builder.stream(SOURCE_TOPIC, Consumed.with(Serdes.Void(), Serdes.String()))
-            .selectKey((key, value) -> value.split(",")[2])
-            .process(LoanApplicationProcess::new, "daily-transactions-log")
-            .split()
-            .branch((key, value) -> BusinessTransaction.BUSINESS_TRANSACTION.equals(value.getType()),
-                Branched.withConsumer(ks -> ks.mapValues(BusinessTransaction.class::cast)
-                    .to(SINK_TOPIC, Produced.with(Serdes.String(), JsonSerdes.newSerdes(BusinessTransaction.class)))))
-            .branch(((key, value) -> NonvoluntaryOperation.NONVOLUNTARY_OPERATION.equals(value.getType())),
-                Branched.withConsumer(ks -> ks.mapValues(NonvoluntaryOperation.class::cast)
-                    .to(NONOVOLUNTARY_OPERATIONS_TOPIC, Produced.with(Serdes.String(), JsonSerdes.newSerdes(NonvoluntaryOperation.class)))))
-            .noDefaultBranch();
-
         return builder;
     }
 }
