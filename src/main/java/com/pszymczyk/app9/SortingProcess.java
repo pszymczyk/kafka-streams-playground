@@ -22,18 +22,7 @@ class SortingProcess implements Processor<String, UnsortedEvent, String, Unsorte
     @Override
     public void init(ProcessorContext<String, UnsortedEvent> context) {
         this.context = context;
-        this.unsortedEventsStore = context.getStateStore(APP_9_STATE);
-        context.schedule(Duration.ofMillis(500), PunctuationType.WALL_CLOCK_TIME,
-            timestamp -> {
-                try (var iterator = unsortedEventsStore.all()) {
-                    while (iterator.hasNext()) {
-                        var unsortedEvents = iterator.next();
-                        if (hasExpired(unsortedEvents.value.getLastModification().toEpochMilli(), timestamp)) {
-                            unsortedEventsStore.delete(unsortedEvents.key);
-                        }
-                    }
-                }
-            });
+
     }
 
     private boolean hasExpired(final long eventTimestamp, final long currentStreamTimeMs) {
@@ -42,21 +31,7 @@ class SortingProcess implements Processor<String, UnsortedEvent, String, Unsorte
 
     @Override
     public void process(Record<String, UnsortedEvent> record) {
-        UnsortedEvents unsortedEvents = this.unsortedEventsStore.get(record.value().processId());
-        if (unsortedEvents == null) {
-            unsortedEventsStore.put(record.value().processId(), UnsortedEvents.of(record.value()));
-            return;
-        }
 
-        unsortedEvents.add(record.value());
-        if (unsortedEvents.size() >= 3) {
-            unsortedEvents.sort();
-            unsortedEvents.forEach(unsortedEvent -> context.forward(new Record<>(unsortedEvent.processId(), unsortedEvent,
-                context.currentStreamTimeMs())));
-            unsortedEventsStore.delete(record.value().processId());
-        } else {
-            unsortedEventsStore.put(record.value().processId(), unsortedEvents);
-        }
     }
 }
 

@@ -33,15 +33,6 @@ class App9 {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        StoreBuilder<KeyValueStore<String, UnsortedEvents>> transferProcessKeyValueStore = Stores
-            .keyValueStoreBuilder(Stores.inMemoryKeyValueStore(APP_9_STATE), Serdes.String(), JsonSerdes.newSerdes(UnsortedEvents.class));
-        builder.addStateStore(transferProcessKeyValueStore);
-
-        builder.stream(APP_9_SOURCE, Consumed.with(Serdes.Void(), JsonSerdes.newSerdes(UnsortedEvent.class)))
-            .selectKey((key, value) -> value.processId())
-            .process(SortingProcess::new, APP_9_STATE)
-            .to(APP_9_SINK, Produced.with(Serdes.String(), JsonSerdes.newSerdes(UnsortedEvent.class)));
-
         return builder;
     }
 }
