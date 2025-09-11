@@ -1,3 +1,4 @@
+package com.pszymczyk.app8;
 //package com.pszymczyk.app8
 //
 //import com.jayway.jsonpath.JsonPath
@@ -12,7 +13,7 @@
 //import static App8.SINK_TOPIC
 //import static App8.SOURCE_TOPIC
 //
-//class App8IntegrationSpec extends IntegrationSpec {
+//class com.pszymczyk.app8.App8IntegrationSpec extends IntegrationSpec {
 //
 //    @Shared
 //    KafkaStreams kafkaStreams
