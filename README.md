@@ -1,6 +1,6 @@
 ### What is this repository for? ###
 
-* This repository is part of https://szkoleniekafka.pl training
+* This repository is part of https://kafkaworkshop.com training
 
 ### How do I get set up? ###
 
@@ -8,4 +8,4 @@
 
 ### Who do I talk to? ###
 
-* pawel@pszymczyk.com
+* pawel.szymczyk90@gmail.com
