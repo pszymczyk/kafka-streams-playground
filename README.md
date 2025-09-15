@@ -1,6 +1,6 @@
 ### What is this repository for? ###
 
-* This repository is part of https://kafkaworkshop.com training
+* This repository is part of www.kafkaworkshop.com
 
 ### How do I get set up? ###
 
