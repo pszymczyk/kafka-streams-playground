@@ -38,15 +38,7 @@ class App5 {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        GlobalKTable<String, User> itemDetailsTable = builder.globalTable(APP_5_STATE, Consumed.with(Serdes.String(), UserSerde.newSerde()),
-            Materialized.as(Stores.inMemoryKeyValueStore("user-details-store")));
-
-        KStream<String, String> userFriendlyMessagesStream = builder.stream(APP_5_SOURCE, Consumed.with(Serdes.String(), MessageSerde.newSerde()))
-            .join(itemDetailsTable,
-                (nullKey, value) -> value.receiver(),
-                (message, user) -> message.value().replace("<user>", getPrettyUsername(user)));
-
-        userFriendlyMessagesStream.to(APP_5_SINK);
+        //TODO
 
         return builder;
     }
