@@ -30,11 +30,7 @@ class App2 {
     static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        builder.stream(APP_2_SOURCE, Consumed.with(Serdes.Void(), MessageSerde.newSerde()))
-            .groupBy((k,v) -> v.receiver())
-            .count()
-            .toStream()
-            .to(APP_2_SINK);
+        // TODO
 
         return builder;
     }
