@@ -47,11 +47,9 @@ class App4 {
                     break;
                 }
 
-                ReadOnlyKeyValueStore<String, Inbox> store = kafkaStreams.store(
-                    StoreQueryParameters.fromNameAndType(App4Stream.getGlobalStoreName(),
-                        QueryableStoreTypes.keyValueStore()));
+                //TODO
 
-                Inbox inbox = store.get(line);
+                Inbox inbox = null;
 
                 if (inbox != null) {
                     logger.info("{}.", inbox);
