@@ -47,10 +47,4 @@ public class LoanApplicationProcess implements Processor<String, String, String,
         dailyTransactionsLog.log().put(now, updatedOperationsCount);
         dailyTransactionsLogKeyValueStore.put(seller, dailyTransactionsLog);
     }
-
-    @Override
-    public void close() {
-
-    }
-
 }

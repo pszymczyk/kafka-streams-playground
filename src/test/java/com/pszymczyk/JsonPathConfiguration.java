@@ -6,12 +6,10 @@ import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
-import groovy.transform.CompileStatic;
 
 import java.util.EnumSet;
 import java.util.Set;
 
-@CompileStatic
 class JsonPathConfiguration {
 
     static void configure() {
