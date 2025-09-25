@@ -37,15 +37,7 @@ class App3 {
     public static StreamsBuilder buildKafkaStreamsTopology() {
         StreamsBuilder builder = new StreamsBuilder();
 
-        builder.stream(APP_3_SOURCE, Consumed.with(Serdes.Void(), MessageSerde.newSerde()))
-            .groupBy((nullKey, value) -> value.receiver())
-            .aggregate(() -> new Inbox(new ArrayList<>()),
-                (key, message, inbox1) -> inbox1.add(message),
-                Materialized.<String, Inbox>as(Stores.inMemoryKeyValueStore(APP_3_STATE_STORE_NAME))
-                    .withKeySerde(Serdes.String())
-                    .withValueSerde(JsonSerdes.newSerdes(Inbox.class)))
-            .toStream()
-            .to(APP_3_SINK);
+        //TODO
 
         return builder;
     }
