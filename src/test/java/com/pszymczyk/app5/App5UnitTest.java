@@ -1,6 +1,6 @@
 package com.pszymczyk.app5;
 
-import com.pszymczyk.IntegrationSpec;
+import com.pszymczyk.IntegrationTest;
 import com.pszymczyk.common.Message;
 import com.pszymczyk.common.MessageSerde;
 import com.pszymczyk.common.User;
@@ -16,7 +16,7 @@ import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class App5UnitTest extends IntegrationSpec {
+class App5UnitTest extends IntegrationTest {
 
     @Test
     void Should_enrich_messages_with_full_user_name() {

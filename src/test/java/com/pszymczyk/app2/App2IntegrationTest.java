@@ -1,6 +1,6 @@
 package com.pszymczyk.app2;
 
-import com.pszymczyk.IntegrationSpec;
+import com.pszymczyk.IntegrationTest;
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.TopicPartition;
@@ -21,19 +21,19 @@ import static com.pszymczyk.app2.App2.APP_2_SOURCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
-class App2IntegrationTest extends IntegrationSpec {
+class App2IntegrationTest extends IntegrationTest {
 
     static KafkaStreams kafkaStreams;
 
     @BeforeAll
     static void setupSpec() {
         kafkaStreams = new StreamsRunner().run(
-            bootstrapServers,
-            "app2-spec",
-            App2.buildKafkaStreamsTopology(),
-            Map.of(),
-            new NewTopic(APP_2_SOURCE, 1, (short) 1),
-            new NewTopic(APP_2_SINK, 1, (short) 1));
+                bootstrapServers,
+                "app2-spec",
+                App2.buildKafkaStreamsTopology(),
+                Map.of(),
+                new NewTopic(APP_2_SOURCE, 1, (short) 1),
+                new NewTopic(APP_2_SINK, 1, (short) 1));
     }
 
     @AfterAll
@@ -52,16 +52,18 @@ class App2IntegrationTest extends IntegrationSpec {
 
         Map<String, Long> messagesCount = new HashMap<>();
 
-        await().atMost(5, TimeUnit.SECONDS)
-            .untilAsserted(() -> {
-                var consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500));
-                consumerRecords.forEach(record -> {
-                        logger.info("{}:{}", record.key(), record.value());
-                        messagesCount.put(record.key(), ByteBuffer.wrap(record.value()).getLong());
-                    }
-                );
-                assertEquals(3L, messagesCount.get("pszymczyk"));
-                assertEquals(1L, messagesCount.get("andrzej123"));
-            });
+        await().atMost(DEFAULT_AWAIT_TIMEOUT, TimeUnit.SECONDS)
+                .ignoreExceptions()
+                .untilAsserted(() -> {
+                    var consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500));
+                    logger.info("Received {} events", consumerRecords.count());
+                    consumerRecords.forEach(record -> {
+                                logger.info("{}:{}", record.key(), record.value());
+                                messagesCount.put(record.key(), ByteBuffer.wrap(record.value()).getLong());
+                            }
+                    );
+                    assertEquals(3L, messagesCount.get("pszymczyk"));
+                    assertEquals(1L, messagesCount.get("andrzej123"));
+                });
     }
 }

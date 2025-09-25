@@ -6,12 +6,10 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.TopologyTestDriver;
-import org.apache.kafka.streams.test.TestRecord;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

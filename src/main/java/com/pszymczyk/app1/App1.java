@@ -26,8 +26,8 @@ class App1 {
             )
         );
         KafkaStreams kafkaStreams = new KafkaStreams(topology, streamsConfig);
-        kafkaStreams.start();
         Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close, "shutdown-hook-thread"));
+        kafkaStreams.start();
     }
 
     static Topology getTopology() {

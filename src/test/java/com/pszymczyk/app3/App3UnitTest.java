@@ -1,12 +1,8 @@
 package com.pszymczyk.app3;
 
 
-import com.pszymczyk.IntegrationSpec;
-import com.pszymczyk.common.Inbox;
-import com.pszymczyk.common.InboxMessage;
-import com.pszymczyk.common.JsonSerdes;
-import com.pszymczyk.common.Message;
-import com.pszymczyk.common.MessageSerde;
+import com.pszymczyk.IntegrationTest;
+import com.pszymczyk.common.*;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
@@ -19,7 +15,7 @@ import java.util.Properties;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class App3UnitTest extends IntegrationSpec {
+class App3UnitTest extends IntegrationTest {
 
     @Test
     void Should_aggregate_messages() {

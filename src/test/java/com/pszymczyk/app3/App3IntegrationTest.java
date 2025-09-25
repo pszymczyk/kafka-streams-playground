@@ -1,7 +1,7 @@
 package com.pszymczyk.app3;
 
 import com.jayway.jsonpath.JsonPath;
-import com.pszymczyk.IntegrationSpec;
+import com.pszymczyk.IntegrationTest;
 import com.pszymczyk.common.StreamsRunner;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.TopicPartition;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-class App3IntegrationTest extends IntegrationSpec {
+class App3IntegrationTest extends IntegrationTest {
 
     static KafkaStreams kafkaStreams;
 
@@ -54,25 +54,28 @@ class App3IntegrationTest extends IntegrationSpec {
 
         Map<String, String> inbox = new HashMap<>();
 
-        await().atMost(50, TimeUnit.SECONDS)
+        await().atMost(DEFAULT_AWAIT_TIMEOUT, TimeUnit.SECONDS)
             .ignoreExceptions()
             .untilAsserted(() -> {
                 var consumerRecords = kafkaConsumer.poll(Duration.ofMillis(500));
                 logger.info("Received {} events", consumerRecords.count());
-                consumerRecords.forEach(record -> inbox.put(record.key(), new String(record.value())));
+                consumerRecords.forEach(record -> {
+                    logger.info("Received {}:{}", record.key(), new String(record.value()));
+                    inbox.put(record.key(), new String(record.value()));
+                });
 
-                assertEquals("Hello! how are you?", JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[0].message"));
-                assertNotNull(JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[0].senderTime"));
-                assertNotNull(JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[0].inboxTime"));
-                assertEquals("Hi! what is going on?", JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[1].message"));
-                assertNotNull(JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[1].senderTime"));
-                assertNotNull(JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[1].inboxTime"));
-                assertEquals("Best wishes in Valentine's day!", JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[2].message"));
-                assertNotNull(JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[2].senderTime"));
-                assertNotNull(JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[2].inboxTime"));
-                assertEquals("We have a special discount for you!", JsonPath.parse(inbox.get("andrzej123")).read("$.messages[0].message"));
-                assertNotNull(JsonPath.parse(inbox.get("andrzej123")).read("$.messages[0].senderTime"));
-                assertNotNull(JsonPath.parse(inbox.get("andrzej123")).read("$.messages[0].inboxTime"));
+                assertEquals("Hello! how are you?", JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[0].message", String.class));
+                assertNotNull(JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[0].senderTime", Long.class));
+                assertNotNull(JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[0].inboxTime", Long.class));
+                assertEquals("Hi! what is going on?", JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[1].message", String.class));
+                assertNotNull(JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[1].senderTime", Long.class));
+                assertNotNull(JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[1].inboxTime", Long.class));
+                assertEquals("Best wishes in Valentine's day!", JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[2].message", String.class));
+                assertNotNull(JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[2].senderTime", Long.class));
+                assertNotNull(JsonPath.parse(inbox.get("pszymczyk")).read("$.messages[2].inboxTime", Long.class));
+                assertEquals("We have a special discount for you!", JsonPath.parse(inbox.get("andrzej123")).read("$.messages[0].message", String.class));
+                assertNotNull(JsonPath.parse(inbox.get("andrzej123")).read("$.messages[0].senderTime", Long.class));
+                assertNotNull(JsonPath.parse(inbox.get("andrzej123")).read("$.messages[0].inboxTime", Long.class));
             });
     }
 }
